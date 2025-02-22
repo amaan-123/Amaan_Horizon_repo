@@ -1,0 +1,25 @@
+Procedure NewtonRaphsonSquareRoot(N, tolerance)
+    // Check for valid input
+    If N <= 0 then
+        Print "N must be a positive number"
+        Exit Procedure
+    End If
+
+    // Set an initial guess
+    x ← N / 2
+
+    // Loop
+    Repeat
+        previous ← x
+        /* Below formula is obtained from the Newton-Raphson iteration formula.
+        The original formula iterates the x-coordinate of the point where the tangent line to the function f(x) intersects the x-axis.
+        For finding the square root, the function f(x) is x^2 - N, and the tangent line intersects the x-axis at the square root of N.
+        */
+        //Apply the iterative formula
+        x ← 0.5 * (previous + N / previous)
+
+    //Repeat until convergence
+    Until |x - previous| < tolerance
+
+    Print "Square root of", N, "is", x
+End Procedure

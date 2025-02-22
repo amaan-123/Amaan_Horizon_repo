@@ -1,0 +1,13 @@
+// Procedure to check if a number is even or odd
+Procedure CheckEvenOrOdd
+    // Prompt user to input a number
+    input number
+    
+    // Check if the number is divisible by 2
+    if number % 2 == 0
+        // If true, output that the number is even
+        output number "is Even"
+    else
+        // If false, output that the number is odd
+        output number "is Odd"
+End Procedure

@@ -1,0 +1,34 @@
+Procedure CheckPrime
+    Input: number n
+
+    // Step 1: Input Validation
+    If n is not a natural number then
+        Print "Error: Please enter a positive integer."
+        Exit Procedure
+
+    // Step 2: Handle Special Cases
+    If n <= 1 then
+        Print n, "is not a prime number."
+        Exit Procedure
+    Else if n <= 3 then
+        Print n, "is a prime number."  // 2 and 3 are prime
+        Exit Procedure
+
+    // Step 3: Check divisibility by 2 and 3
+    If n mod 2 = 0 or n mod 3 = 0 then
+        Print n, "is not a prime number."
+        Exit Procedure
+
+    // Step 4: Use 6k ± 1 method for further checks
+    Set i = 5
+    While i * i <= n do
+        If n mod i = 0 or n mod (i + 2) = 0 then
+            Print n, "is not a prime number."
+            Exit Procedure
+        End If
+        i = i + 6
+    End While
+
+    // If no factors found, the number is prime
+    Print n, "is a prime number."
+End Procedure

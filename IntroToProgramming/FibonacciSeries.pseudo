@@ -1,0 +1,41 @@
+Procedure FibonacciSeries
+    /* Input upper limit for Fibonacci series, i.e., number of terms in the series that the user wants to generate. Let's call it "limit" */
+    Input: limit
+    
+    if limit is a positive integer then
+        /* Initialize the first two terms of the series as 0 and 1
+           1st term is fib[0], 2nd term is fib[1] */
+        fib[0] <- 0
+        fib[1] <- 1
+        
+        /* Generate the series from the 3rd term to the nth term */
+        for each i from 2 to limit - 1 do
+            fib[i] <- fib[i - 1] + fib[i - 2]
+        end for
+    end if
+    /* Output the generated Fibonacci series */
+    output fib[0 to limit - 1]
+End Procedure
+
+/*Procedure FibonacciSeries_Iterative(limit):
+    Read limit
+
+    if limit is a positive integer then
+        // Initialize the first two terms of the series as 0 and 1
+        prev <- 0
+        curr <- 1
+
+        // Print the first term
+        Print prev
+
+        // Generate and print terms from the 2nd to the nth
+        For each i in range [2, limit] do:
+            nextTerm <- prev + curr
+            // Update for next iteration
+            prev <- curr
+            curr <- nextTerm
+            Print prev
+            i=i+1
+        End For
+    end if
+End Procedure*/

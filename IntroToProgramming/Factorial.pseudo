@@ -1,0 +1,32 @@
+// Procedure to calculate the factorial of a number
+Procedure Factorial(number)
+    // Check if the input is an integer
+    if type(number) ≠ integer then
+        output "Factorial is only defined for integers"
+        return
+    end if
+    
+    // Check if the input is a negative number
+    if number < 0 then
+        output "Factorial is not defined for negative numbers"
+        return
+    end if
+    
+    // Base case: factorial of 0 is 1
+    if number = 0 then
+        return 1
+    else
+        // Recursive case: factorial of n is n * factorial of (n-1)
+        return number * Factorial(number - 1)
+    end if
+End Procedure
+
+// Main procedure to get input and display the result
+Procedure Main
+    // Get the input number from the user
+    input number
+    // Calculate the factorial of the input number
+    result = Factorial(number)
+    // Output the result
+    output result
+End Procedure

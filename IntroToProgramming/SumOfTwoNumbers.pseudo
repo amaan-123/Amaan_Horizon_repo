@@ -1,0 +1,10 @@
+Procedure SumOfTwoNumbers
+    // Define inputs
+    input: num1, num2
+    
+    // Calculate the sum of the two numbers
+    sum <- num1 + num2
+    
+    // Output the result
+    output: sum
+End Procedure

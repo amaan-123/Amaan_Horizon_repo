@@ -1,0 +1,22 @@
+// Procedure to swap two numbers
+Procedure SwapNumbers
+    // Input the two numbers
+    input num1, num2
+
+    // Temporary variable to hold the value of num1 during the swap
+    temp <- num1
+
+    // Assign the value of num2 to num1
+    num1 <- num2
+
+    // Assign the original value of num1 (stored in temp) to num2
+    num2 <- temp
+
+    // Output the swapped numbers
+    output num1, num2
+End Procedure
+
+// It is generally not necessary to store the input numbers into separate variables 'a' and 'b'
+// unless you need to preserve the original values of num1 and num2 for later use.
+// In the context of simply swapping two numbers, using num1 and num2 directly is more efficient and readable.
+// A temporary variable 'temp' is essential for the swapping logic to work correctly.

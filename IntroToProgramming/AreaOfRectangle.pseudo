@@ -1,0 +1,17 @@
+Procedure AreaOfRectangle
+    // Input: length and breadth of the rectangle
+    input: length, breadth
+
+    // Check if the input dimensions are valid (greater than 0)
+    if length <= 0 or breadth <= 0
+        // Output an error message for invalid input
+        Output "Invalid input"
+        // Exit the procedure
+        return
+    else
+        // Calculate the area of the rectangle
+        area = length * breadth
+        // Output the calculated area
+        Output "Area of rectangle is ", area
+    End If
+End Procedure
