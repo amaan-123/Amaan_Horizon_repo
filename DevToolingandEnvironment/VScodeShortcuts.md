@@ -97,7 +97,3 @@ Enhance your productivity in Visual Studio Code by mastering these essential sho
 - **Toggle Line Comment**: Add or remove line comment.
   - **Shortcut**: `Ctrl+/`
   - **Use Case**: Quickly comment or uncomment lines.
-
-- **
-
-::contentReference[oaicite:0]{index=0}
