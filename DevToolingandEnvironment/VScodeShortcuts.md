@@ -30,6 +30,10 @@ Enhance your productivity in Visual Studio Code by mastering these essential sho
 
 ## Basic Editing
 
+- **Add another selection elsewhere**:
+  - Hold `Alt` (Windows) and **click** at the start of a new selection.
+  - Repeat this step to select multiple, disconnected lines.
+
 - **Cut Line**: Cut the entire line.
   - **Shortcut**: `Ctrl+X`
   - **Use Case**: Remove a line without selecting it.
