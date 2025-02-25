@@ -1,4 +1,6 @@
-# Introduction to Git - Video Notes
+# Introduction to Git Recap | *Learn with Dr G*
+
+- <URL:https://www.youtube.com/watch?v=9uGS1ak_FGg>
 
 <!-- Metadata
 - Title:Introduction to Git Recap | Learn with Dr G
@@ -9,7 +11,7 @@
 
 ## Introduction
 
-The realm of software development is increasingly dependent on effective version control systems, with **Git** standing out as a vital player in this domain. This chapter synthesizes insights from a recent live stream hosted by Dr. G, which serves as an introduction to Git, a widely used tool that enables developers to manage their source code history. Git is essential for collaboration, tracking changes, and maintaining the integrity of codebases. This summary encapsulates the fundamental concepts, commands, and best practices associated with Git, elucidating its significance in modern software development.
+The realm of software development is increasingly dependent on effective version control systems, with **Git** standing out as a vital player in this domain. Git is essential for collaboration, tracking changes, and maintaining the integrity of codebases. This summary encapsulates the fundamental concepts, commands, and best practices associated with Git, elucidating its significance in modern software development.
 
 **Key Vocabulary and Concepts:**
 
@@ -77,12 +79,6 @@ The need to revert back to previous commits can arise in development workflows.
 - **Reverting Commits**: The command `git revert <commit_hash>` allows users to create a new commit that undoes changes from a specified commit. This is particularly useful when changes need to be rolled back without losing the commit history.
 
 - **Checking Out Older Versions**: By using `git checkout <commit_hash>`, developers can revert their working directory to a specific point in the commit history, allowing for inspection or modification of past project states.
-
-## Conclusion
-
-In summary, the introductory session on Git provided by Dr. G is a valuable resource for developers seeking to enhance their understanding of version control. Through a series of practical demonstrations, key commands were introduced, illustrating how to set up Git, manage repository files, and recover from errors. The insights shared underscore the importance of committing changes thoughtfully, using descriptive messages, and leveraging Git’s powerful recovery and tracking features.
-
-As software development continues to evolve, mastering tools like Git is essential for both individual developers and collaborative teams. The knowledge gained from this session not only lays a solid foundation for effective version control practices but also prepares attendees for more advanced topics in future discussions. For those interested in further learning, Dr. G encourages exploring additional resources and modules available through the provided online platforms.
 
 ### Key Takeaways
 
