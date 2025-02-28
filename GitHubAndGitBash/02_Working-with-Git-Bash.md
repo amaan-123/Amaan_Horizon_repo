@@ -176,16 +176,16 @@
 
 - Your branch may be behind main branch, Rebase will get changes from main into your branch
 - To Rebase:
-  - Got to your branch e.g. `git checkout nasir-0325`
+  - Go to your branch e.g. `git checkout nasir-0325`
   - Rebase by executing `git rebase main`
-  - Save, Commit, Stage any of your chnages
+  - Save, Commit, Stage any of your changes
   - Push changes to get your branch to latest
 
 ## Session-4: Fetch, Merge, Pull
 
 - Fetch gets changes from the remote repo to the local repo without make modifications in the local repo
 - Add a File in the remote repo and then go to local repo and run `git diff <source-branch> origin/<target-branch>` e.g. `git diff main origin/main`
-- In the local repo run `git fetch all`
+- In the local repo run `git fetch --all`
 - In the local repo run again `git diff main origin/main`- and observe the output
 - While in local repo merge remote fetched changes into the local repo by running `git merge`
 - `git pull` = `git fetch` + `git merge`
