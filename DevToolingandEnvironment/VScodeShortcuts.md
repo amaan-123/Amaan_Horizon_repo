@@ -55,7 +55,7 @@ Enhance your productivity in Visual Studio Code by mastering these essential sho
   - **Use Case**: Quickly delete unwanted lines.
 
 - **Insert Line Below/Above**: Add a new line without breaking the current one.
-  - **Shortcut**: `Ctrl+Enter` (below) or `Ctrl+Shift+Enter` (above)
+  - **Shortcut**: ~~`Ctrl+Enter` (below) or~~ `Ctrl+Shift+Enter` (above)
   - **Use Case**: Insert lines seamlessly during coding.
 
 - **Jump to Matching Bracket**: Navigate between matching brackets.
@@ -101,3 +101,74 @@ Enhance your productivity in Visual Studio Code by mastering these essential sho
 - **Toggle Line Comment**: Add or remove line comment.
   - **Shortcut**: `Ctrl+/`
   - **Use Case**: Quickly comment or uncomment lines.
+
+### Settings
+
+- Settings are managed in a JSON file.
+- **Key-value pairs** represent options and their values.
+- Customizations are stored in a separate file.
+- Common settings to change:
+  - `editor.fontSize`: Changes the editor font size.
+  - `files.autoSave`:  Toggles autosave.
+    - `files.autoSaveDelay`: Sets autosave delay in milliseconds.
+  - `editor.tabSize`:  Changes tab size.
+  - `editor.wordWrap`: Toggles word wrap.
+  - `terminal.integrated.fontSize`: Changes terminal font size.
+    - `terminal.integrated.shell.windows`: Sets the terminal shell for Windows
+
+### Opening Projects
+
+- Open a folder using the "Open Folder" button.
+- Select a folder in Explorer and choose "Open with Code".
+- Open from the command line: `code .`.
+
+### Integrated Terminal
+
+- Open with `View > Integrated Terminal` or `Ctrl + ~`.
+
+### Intellisense Features
+
+- Intellisense provides code completion, parameter info, and quick info.
+- Works by default with JavaScript, TypeScript, JSON, HTML, CSS, SASS (Syntactically Awesome StyleSheets) and LESS (Leaner CSS).
+- Camel case hinting is supported.
+- `Go to Definition`: Right-click on a function and select "Go to Definition" to see its contents.
+- `Peek Definition`:  Right-click and select "Peek Definition" to view the function in a pop-up.
+- `Change all occurrences`: Right-click and select "Change All Occurrences" to change all instances of a selected text.
+
+### Emmet
+
+- Emmet is for HTML and CSS.
+- `h1 + Tab`: Creates an h1 tag.
+- `h1.test + Tab`: Creates an h1 tag with a class of "test".
+- `h1#test + Tab`: Creates an h1 tag with an ID of "test".
+- `#test + Tab`: Creates a div with the ID of "test".
+- `.foo + Tab`: Creates a div with the class of "foo".
+- `li*4 + Tab`:  Creates four list items.
+- `! + Tab`: Generates an HTML boilerplate.
+- `Emmet Include Languages`: Add support for Emmet in template engines.
+
+<!-- ### Extensions
+
+- **Bracket Pair Colorizer**: Adds colors to bracket pairs.
+- **Live Server**: Provides a development server with auto-reload functionality.
+  - Right-click on an HTML file and select "Open with Live Server".
+  - Click the port number in the status bar to stop the server.
+- **Open in Browser**: Opens HTML files in the default browser.
+- **VS Code Icons**: Adds icons for file types.
+- **Faker**: Generates fake data.
+  - Open the command palette and type "Faker".
+- **PHP Intellisense**: Provides intellisense for PHP.
+- **Angular Snippets**:  Code highlighting and hinting for Angular.
+- **ES6 Snippets**: Code snippets for ES6+ JavaScript.
+- **React Native Tools**: Snippets for React, React Native, and Redux.
+- **View to Snippets**:  Code snippets for View.
+- **Python**: Provides support for Python development. -->
+
+### Version Control
+
+- Initialize a repository by clicking the icon in the version control tab.
+- `Stage All Changes`: Adds files to the staging area.
+- Commit staged changes with a commit message.
+- Add a remote repository.
+- Push to GitHub.
+- `.gitignore` file: Excludes files from the Git repository.
