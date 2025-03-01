@@ -68,9 +68,29 @@ Dr. G introduces more advanced commands that enhance Git's functionality.
 
 Mistakes are inevitable in development, but Git offers mechanisms for recovery.
 
-- **Deleting Files**: If a file is deleted using `rm`, it is removed from the working directory. However, Git retains the last committed version. The command `git checkout -- index.html` can recover it.
+- **Recovering a Deleted File**: If a file is deleted using `rm`, it is removed from the working directory. However, Git retains the last committed version. The command `git checkout -- index.html` can recover it.
   
-- **Using git reset**: For instances where a file is removed using Git commands (e.g., `git rm`), the `git reset HEAD <filename>` command is necessary to restore the file to the last committed state.
+- **Recovering a File Removed with Git Commands**: For instances where a file is removed using Git commands (e.g., `git rm`), the `git reset HEAD <filename>` command is necessary to restore the file to the last committed state.
+  - `HEAD` refers to the latest commit.
+  - If you remove a file using `git rm`, Git stages the deletion. Running `git reset HEAD <filename>` unstages the deletion so that the file’s removal is no longer in the staging area. However, note that if the file was deleted from both the working directory and the index, unstaging the change does not automatically restore the file in your working directory. You would typically follow up with:
+  `git checkout --filename`
+
+## Undoing Commits
+
+- **Undo the Last Commit:** `git reset HEAD~1`
+  - This command moves the branch pointer one commit backward, effectively “undoing” the most recent commit while preserving the changes in the working directory (unless you add additional flags).
+- **Undo Multiple Commits Using a Commit Hash:** `git reset [commit hash]`
+  - This resets the branch pointer to the specified commit. All commits made after that commit become “undone” (again, with the changes preserved in the working directory unless using a hard reset).
+- **Discarding Changes Entirely (Hard Reset):** `git reset --hard [commit hash]`
+  - This command resets both the staging area and the working directory to match the specified commit, discarding any changes made after that commit.
+
+## Forking Repositories
+
+- Forking is creating a new repository with the same code and settings as another repository.
+- It is useful for contributing to open-source projects.
+- To fork a repository, click the "Fork" button on GitHub.
+- After forking, you can make changes to your copy of the repository.
+- To merge changes with the original repository, create a pull request.
 
 ## Reverting Changes
 

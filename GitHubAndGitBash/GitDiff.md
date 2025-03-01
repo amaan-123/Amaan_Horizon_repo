@@ -32,6 +32,12 @@ git diff main feature-branch
 
 Replace `main` and `feature-branch` with the branch names you're comparing. This helps in understanding potential conflicts or changes that will be introduced.
 
+You can also compare differences between two branches (say current branch is already "main" & other branch is "feature1"):
+
+```bash
+git diff feature1
+```
+
 ## 4. Before Pulling Remote Changes
 
 To view changes on the remote repository before integrating them:

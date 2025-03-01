@@ -34,6 +34,14 @@ Enhance your productivity in Visual Studio Code by mastering these essential sho
   - Hold `Alt` (Windows) and **click** at the start of a new selection.
   - Repeat this step to select multiple, disconnected lines.
 
+- **Change all occurrences**:
+  - **Shortcut**: `Ctrl+F2` Or `Ctrl+Shift+L`
+  - **Use Case**: To change all instances of a selected text.
+
+- **Add Selection to Next Find Match**:
+  - **Shortcut**: `Ctrl + D`
+  - **Use Case**: This adds the next occurrence of the current selection to the selection.
+
 - **Cut Line**: Cut the entire line.
   - **Shortcut**: `Ctrl+X`
   - **Use Case**: Remove a line without selecting it.
