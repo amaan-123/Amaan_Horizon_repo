@@ -582,3 +582,194 @@ console.log(anotherCheckIn() === globalThis);
 5. `anotherCheckIn() === globalThis` is `true`.
 
 This demonstrates how `this` behaves differently depending on the context in which it is used.
+
+## Questions - Part 6
+
+Explain the concepts involved in the v46promises.js code.
+
+## Answers - Part 6
+
+This code demonstrates the use of **JavaScript Promises**, which are a way to handle asynchronous operations.
+
+### 1. **What is a Promise?**
+
+A Promise in JavaScript is an object that represents the eventual completion (or failure) of an asynchronous operation and its resulting value. It has three states:
+
+- **Pending**: The operation is still in progress.
+- **Fulfilled**: The operation completed successfully.
+- **Rejected**: The operation failed.
+
+### 2. **The `promiseTimeout` Function**
+
+```javascript
+function promiseTimeout(ms) {
+    return new Promise((resolve, reject) => {
+        setTimeout(resolve, ms);
+        // setTimeout(reject, ms); 
+        // Uncomment to test rejection & comment the resolve
+    });
+}
+```
+
+- This function creates and returns a new Promise.
+- Inside the Promise, the `setTimeout` function is used to simulate a delay of `ms` milliseconds.
+- After the delay, the `resolve` function is called, which fulfills the Promise.
+- If you uncomment the `reject` line and comment out `resolve`, the Promise will be rejected instead.
+
+### 3. **Chaining Promises**
+
+```javascript
+promiseTimeout(2000)
+    .then(() => {
+        console.log('Done!!');
+        return promiseTimeout(1000);
+    }).then(() => {
+        console.log('Also done!');
+        return Promise.resolve(42);
+    }).then((result) => {
+        console.log(result);
+    }).catch(() => {
+        console.log('Error!');
+    });
+```
+
+- **`promiseTimeout(2000)`**: This starts a Promise that resolves after 2 seconds.
+- **`.then()`**: This method is used to handle the fulfillment of a Promise. It takes a callback function that runs when the Promise resolves.
+  - The first `.then()` logs `'Done!!'` and starts another Promise with a 1-second delay.
+  - The second `.then()` logs `'Also done!'` and returns a resolved Promise with the value `42`.
+  - The third `.then()` receives the value `42` and logs it.
+- **`.catch()`**: This method is used to handle errors (rejections). If any Promise in the chain is rejected, the `.catch()` block will run.
+
+### 4. **Key Concepts**
+
+- **Asynchronous Execution**: Promises allow you to write asynchronous code that looks more like synchronous code, making it easier to read and maintain.
+- **Chaining**: You can chain multiple `.then()` calls to handle sequential asynchronous operations.
+- **Error Handling**: The `.catch()` block ensures that errors are caught and handled gracefully.
+
+### 5. **Output of the Code**
+
+If you run the code as it is:
+
+1. After 2 seconds, it logs: `Done!!`
+2. After another 1 second, it logs: `Also done!`
+3. Finally, it logs: `42`
+
+If you uncomment the `reject` line and comment out `resolve`, the `.catch()` block will run, and it will log: `Error!`.
+
+## Questions - Part 7
+
+Explain the theory involved in v48async_await.js (especially async await). Also, help me understand the flow of execution of code.
+
+## Answers - Part 7
+
+### **1. What is `async` and `await`?**
+
+- **`async`**: Declares a function as asynchronous. An `async` function always returns a Promise, even if you don't explicitly return one.
+- **`await`**: Pauses the execution of an `async` function until the Promise it is waiting for is resolved or rejected. It allows you to write asynchronous code in a synchronous style, making it easier to read and understand.
+
+---
+
+### **2. Code Breakdown**
+
+#### **`promiseTimeout` Function**
+
+```javascript
+function promiseTimeout(ms) {
+    return new Promise((resolve, reject) => {
+        setTimeout(resolve, ms);
+    });
+}
+```
+
+- This function creates a Promise that resolves after `ms` milliseconds using `setTimeout`.
+- It simulates a delay.
+
+#### **`longRunningOperation` Function**
+
+```javascript
+async function longRunningOperation() {
+    // logic here, say calling a server - something that takes time
+    return 42;
+}
+```
+
+- This is an `async` function that simulates a long-running operation (e.g., fetching data from a server).
+- It returns the value `42`. Since it's an `async` function, it implicitly wraps the return value in a Promise. So, calling this function returns `Promise { 42 }`.
+
+#### **`run` Function**
+
+```javascript
+async function run() {
+    console.log('Start!!');
+    await promiseTimeout(2000);
+    const response = await longRunningOperation();
+    console.log(response);
+    console.log('Stop!!');
+}
+```
+
+- **`console.log('Start!!')`**: Logs "Start!!" to the console.
+- **`await promiseTimeout(2000)`**: Pauses the execution of the `run` function for 2 seconds until the Promise returned by `promiseTimeout` resolves.
+- **`const response = await longRunningOperation()`**: Waits for the `longRunningOperation` function to resolve and assigns the resolved value (`42`) to the `response` variable.
+- **`console.log(response)`**: Logs the value of `response` (which is `42`).
+- **`console.log('Stop!!')`**: Logs "Stop!!" to the console.
+
+---
+
+### **3. Flow of Execution**
+
+1. The `run` function is called.
+2. **Step 1**: Logs `"Start!!"` to the console.
+3. **Step 2**: Encounters `await promiseTimeout(2000)`. The function pauses for 2 seconds while the Promise resolves.
+4. **Step 3**: After 2 seconds, execution resumes. It encounters `await longRunningOperation()`. The function pauses again until the Promise resolves.
+5. **Step 4**: The Promise resolves with the value `42`, which is assigned to `response`.
+6. **Step 5**: Logs `42` to the console.
+7. **Step 6**: Logs `"Stop!!"` to the console.
+
+---
+
+### **4. Key Concepts**
+
+#### **Synchronous vs Asynchronous Execution**
+
+- Without `await`, the code would not wait for the Promises to resolve. For example:
+
+    ```javascript
+    promiseTimeout(2000);
+    console.log('Stop!!');
+    ```
+
+    In this case, `"Stop!!"` would be logged immediately, and the delay would occur afterward.
+
+#### **`await` Behavior**
+
+- When you use `await`, the function pauses execution at that point until the Promise resolves. This makes the code behave as if it were synchronous, even though it's asynchronous under the hood.
+
+#### **Error Handling**
+
+- If any `await`ed Promise is rejected, the `run` function will throw an error. You can handle this using a `try-catch` block:
+
+    ```javascript
+    async function run() {
+        try {
+            await promiseTimeout(2000);
+            const response = await longRunningOperation();
+            console.log(response);
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
+    ```
+
+---
+
+### **5. Output of the Code**
+
+If you run the code as it is:
+
+1. Logs: `"Start!!"`
+2. Waits for 2 seconds.
+3. Logs: `42`
+4. Logs: `"Stop!!"`
+
+This demonstrates how `async` and `await` make asynchronous code easier to read and maintain.
