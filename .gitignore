@@ -403,3 +403,4 @@ FodyWeavers.xsd
 MSLearnJSnotes/
 demo-resume/
 *.png
+.env
