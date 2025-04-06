@@ -6,3 +6,7 @@ h2 {
 h3 {
     color: darkblue;
 }
+pre {
+    font-size: medium; 
+    font-family: sans-serif;
+}

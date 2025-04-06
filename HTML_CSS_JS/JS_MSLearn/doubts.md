@@ -773,3 +773,88 @@ If you run the code as it is:
 4. Logs: `"Stop!!"`
 
 This demonstrates how `async` and `await` make asynchronous code easier to read and maintain.
+
+## Questions - Part 8
+
+What is the better way to add external JS file link to html?
+
+## Answers - Part 8
+
+There are a few ways to include an external JavaScript (JS) file in an HTML document, and which one is "better" depends on **what you're trying to achieve**—especially in terms of **page load performance** and **script behavior**.
+
+### ✅ Best Practice: Use `<script>` tag with `src` attribute at the bottom of `<body>` OR use `defer`
+
+---
+
+### 🔹 Option 1: At the end of `<body>` – Classic & Reliable
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Page</title>
+</head>
+<body>
+    <!-- HTML content -->
+
+    <!-- Load JS here -->
+    <script src="script.js"></script>
+</body>
+</html>
+```
+
+#### ✅ Pros - option1
+
+- Ensures the HTML is loaded before the JS runs.
+- Simple and reliable.
+
+---
+
+### 🔹 Option 2: In `<head>` with `defer` (Recommended Modern Way)
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Page</title>
+    <script src="script.js" defer></script>
+</head>
+<body>
+    <!-- HTML content -->
+</body>
+</html>
+```
+
+#### ✅ Pros -option2
+
+- JS loads **in parallel** with HTML, but runs **after** the DOM is fully parsed.
+- Great for **performance and maintainability**.
+- Good when you want all your `<script>` tags organized in the `<head>`.
+
+---
+
+### 🔹 Option 3: In `<head>` with `async` (use sparingly)
+
+```html
+<head>
+    <script src="script.js" async></script>
+</head>
+```
+
+#### ⚠️ Caution
+
+- Loads and executes **as soon as it’s available**, possibly **before the DOM is ready**.
+- Great for analytics scripts or things that don’t depend on DOM structure.
+- Not ideal for scripts that manipulate the DOM directly.
+
+---
+
+### ✅ Recommendation for Most Use Cases
+
+```html
+<script src="your-script.js" defer></script>
+```
+
+Put it in the `<head>` if you're using `defer`, or at the **bottom of the `<body>`** if you're not.
+
+---

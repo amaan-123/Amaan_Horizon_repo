@@ -45,7 +45,7 @@
     </p>
 
     <h3>The src Attribute</h3>
-    <pre style="font-size: medium; font-family: sans-serif;">HTML images are defined with the img tag, and the filename of the image source is specified in the src attribute:
+    <pre>HTML images are defined with the img tag, and the filename of the image source is specified in the src attribute:
     There are two ways to specify the URL in the src attribute:
 
     1. Absolute URL - Links to an external image that is hosted on another website. Example: 
@@ -81,14 +81,30 @@
     <li><code class="w3-codespan">_parent</code> - Opens the document in the parent frame</li>
     <li><code class="w3-codespan">_top</code> - Opens the document in the full body of the window</li>
     </ul>
+    <pre>Example:
+    <a href ="https://github.com/amaan-123" target="_blank">This is a link to my github that opens in a new tab</a>
+    </pre>
     
+    <h3>HTML Links - Use an Image as a Link</h3>
+    <p>To use an image as a link, just put the <code class="w3-codespan">&lt;img&gt;</code> tag inside the <code class="w3-codespan">&lt;a&gt;</code> tag:</p>
+    <p>The image below is a link. Try to click on it.</p>
+    <a href="https://github.com/amaan-123"><img src="githup_profile.png" alt="amaan-123's github" style="width:42px;height:42px"; title="amaan-123's github"></a>
+
+    <h3>Link to an Email Address</h3>
+    <p>To create a link that opens in the user's email program (to let them send a new email), use mailto: inside the href attribute:</p>
+    <p><a href="mailto:someone@example.com">Send email</a></p>
+    
+    <h3>Button as a Link</h3>
+    <p>Click the button to go to the HTML tutorial.</p>
+    <button onclick="document.location='https://www.w3schools.com/html/html_links.asp'">HTML Tutorial</button>
+
     <hr>
     <h2>HTML Paragraphs</h2>
     <p>HTML paragraphs are defined with the &lt;p&gt; tag.
     A paragraph always starts on a new line, and browsers automatically add 
     some white space (a margin) before and after a paragraph.</p>
-    <pre style="font-size: medium; font-family: sans-serif;">
-    The HTML &lt;pre&gt; element defines preformatted text.
+    <pre>
+    The HTML &lt;pre&gt; element defines pre-formatted text.
     The text inside a &lt;pre&gt; element is displayed in a fixed-width font 
     (usually Courier), and it preserves both spaces and line breaks:
     </pre>
