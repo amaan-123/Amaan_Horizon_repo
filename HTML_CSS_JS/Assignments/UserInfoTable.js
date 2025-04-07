@@ -1,7 +1,3 @@
-let name = document.getElementById("user-name").value;
-let age = document.getElementById("user-age").value;
-let phone = document.getElementById("user-phone").value;
-
 const addUser = () => {
     const name = document.getElementById("user-name").value;
     const age = document.getElementById("user-age").value;
