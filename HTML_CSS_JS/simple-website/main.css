@@ -1,3 +1,4 @@
+/* The three themes are defined using CSS variables (defined using the -- prefix), and the styles are applied to the body and various elements. */
 :root {
   --green: #00FF00;
   --white: #FFFFFF;
@@ -5,6 +6,11 @@
   --blue: #0000FF;
   --lightBlue: #ADD8E6;
 }
+/*The :root selector targets the root element of the document, which is the <html> element in an HTML page.
+
+Using :root for defining CSS variables ensures that these variables are globally accessible throughout the entire stylesheet.
+
+Once defined, these variables can be used anywhere in the CSS file by referencing them with the var() function.*/
 
 body {
   background: var(--bg);
