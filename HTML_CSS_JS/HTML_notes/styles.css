@@ -10,3 +10,9 @@ pre {
     font-size: medium; 
     font-family: sans-serif;
 }
+a:hover {
+    background-color: yellow;;
+}
+li:nth-child(odd) {
+    color: green;
+}
