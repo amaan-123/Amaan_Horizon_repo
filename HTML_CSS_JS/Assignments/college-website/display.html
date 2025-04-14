@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Submitted Information</title>
+    <link rel="stylesheet" href="/Assignments/college-website/styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Submitted Information</h1>
+        <div id="displayData"></div>
+        <a href="index.html">Go Back</a>
+    </div>
+    <script>
+        // Retrieve data from localStorage
+        const formData = JSON.parse(localStorage.getItem('formData'));
+
+        // Display the data
+        const displayDiv = document.getElementById('displayData');
+        if (formData) {
+            displayDiv.innerHTML = `
+                <p><strong>Full Name:</strong> ${formData.fullName}</p>
+                <p><strong>Email:</strong> ${formData.email}</p>
+                <p><strong>Phone:</strong> ${formData.phone}</p>
+                <p><strong>Date of Birth:</strong> ${formData.dob}</p>
+                <p><strong>Course:</strong> ${formData.course}</p>
+                <p><strong>Address:</strong> ${formData.address}</p>
+            `;
+        } else {
+            displayDiv.innerHTML = '<p>No data found. Please submit the form first.</p>';
+        }
+    </script>
+</body>
+</html>

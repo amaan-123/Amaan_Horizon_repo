@@ -1,0 +1,68 @@
+/* Global styles for the website */
+body{
+    background-color: plum;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+.header{
+    display: flex;
+    text-align: center;
+    justify-content: space-between;
+    background-color: rgba(41, 6, 56, 0.801);
+    color: white;
+}
+
+#navbar{
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Optional: Adjust spacing between logo and menu */
+    padding: 10px; /* Optional: Add padding for better spacing */
+    background-color: purple;
+}
+
+#header-logo{
+    width: 80px;
+    height: auto; 
+    margin-top: 2.5px;
+    margin-left: 5px;
+}
+
+#menu{
+    display: flex;
+    text-align: center;
+    justify-content: center;
+    list-style: none; /*Remove default bullet points*/
+    margin: 0;
+    padding: 0;
+}
+
+#menu li {
+    margin: 0 15px; /* Add spacing between menu items */
+}
+
+#menu a {
+    text-decoration: none; /*Remove underline from links*/
+    color: white; /* Adjust color as needed */
+}
+
+.banner{
+    display: flex;
+    justify-content: center;
+}
+
+#admissionForm{
+    margin-top: 10px;
+    padding: 20px;
+}
+
+.form-group{
+    display: flex;
+    flex-direction: column;
+    display: flex;
+    flex-direction: column; /* Align label and input vertically */
+    padding: 10px;
+}
+
+.form-group input{
+    padding: 5px;
+}
