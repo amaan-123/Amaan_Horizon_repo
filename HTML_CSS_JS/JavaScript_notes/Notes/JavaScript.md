@@ -40,6 +40,185 @@ Switch to `strict` mode to get more useful errors when you make mistakes.
 'use strict';
 ```
 
+## DOM Traversal
+
+The YouTube video "Learn JavaScript DOM Traversal In 15 Minutes" by Web Dev Simplified explains **nine techniques for selecting and traversing elements within the Document Object Model (DOM) using JavaScript**. The video uses a simple HTML structure with a grandparent (red square), two parents (green rectangles), and children (blue rectangles) to illustrate these techniques. The video also links a blank `script.js` file to demonstrate the JavaScript code.
+
+Here is a detailed description of the video with the corresponding code:
+
+**1. Selecting Elements by ID using `document.getElementById()`**
+
+- The video starts by emphasizing the importance of selecting elements in the DOM.
+- To demonstrate selecting by ID, an ID of `grandparent-id` is added to the grandparent element in the HTML.
+- The following JavaScript code is then used in `script.js` to select the grandparent element by its ID and change its background color:
+
+     ```javascript
+     const grandparent = document.getElementById('grandparent-id');
+     grandparent.style.backgroundColor = 'lightgray';
+     ```
+
+- A helper function `changeColor` is introduced to simplify changing the background color of elements:
+
+     ```javascript
+     function changeColor(element) {
+       element.style.backgroundColor = 'lightgray';
+     }
+     ```
+
+- The code is then updated to use this function:
+
+     ```javascript
+     changeColor(grandparent);
+     ```
+
+**2. Selecting Elements by Class Name using `document.getElementsByClassName()`**
+
+- The video explains how to select multiple elements that share a common class name. The parent elements in the HTML have the class `parent`.
+- The following code attempts to select all parent elements and change their color:
+
+     ```javascript
+     const parents = document.getElementsByClassName('parent');
+     // parents.forEach(changeColor); // This would result in an error
+     ```
+
+- The video points out that `getElementsByClassName()` returns an **HTMLCollection**, which does not have a `forEach` method directly.
+- The HTMLCollection needs to be converted to an array to use `forEach`:
+
+     ```javascript
+     const parents = Array.from(document.getElementsByClassName('parent'));
+     parents.forEach(changeColor);
+     ```
+
+- It's highlighted that only one element can have a specific ID, while multiple elements can share the same class name.
+
+**3. Selecting Elements using `document.querySelector()`**
+
+- The video introduces `document.querySelector()`, which allows selecting the **first element** that matches a specified CSS selector.
+- It demonstrates replacing `getElementById()` with `querySelector()` to select the grandparent by its ID using the CSS selector `#grandparent-id`:
+
+     ```javascript
+     const grandparent = document.querySelector('#grandparent-id');
+     changeColor(grandparent);
+     ```
+
+- It also shows how to select the grandparent using its class name with the CSS selector `.grandparent`, noting that even if multiple elements had this class, only the first one would be selected:
+
+     ```javascript
+     const grandparent = document.querySelector('.grandparent');
+     changeColor(grandparent);
+     ```
+
+- An example of selecting the first parent element using its class is provided:
+
+     ```javascript
+     const parent = document.querySelector('.parent');
+     changeColor(parent);
+     ```
+
+**4. Selecting Elements using `document.querySelectorAll()`**
+
+- To select **all elements** that match a CSS selector, the video introduces `document.querySelectorAll()`.
+- It demonstrates selecting all parent elements and changing their color:
+
+     ```javascript
+     const parents = document.querySelectorAll('.parent');
+     parents.forEach(changeColor);
+     ```
+
+- The video states that `querySelector` and `querySelectorAll` are the preferred methods for selecting elements due to their consistency and the use of familiar CSS selectors. The speaker mentions using them almost exclusively.
+
+**5. Traversing Down the DOM: Getting Children using the `children` property**
+
+- The video explains how to access the direct children of an element using the `children` property, which returns an **HTMLCollection**.
+- The following code shows how to get all the children of the grandparent (which are the parent elements) and change their color:
+
+     ```javascript
+     const parents = Array.from(grandparent.children);
+     parents.forEach(changeColor);
+     ```
+
+- It also demonstrates how to access a specific child by index and then get its children:
+
+     ```javascript
+     const parentOne = parents;
+     const children = Array.from(parentOne.children);
+     changeColor(children); // Changes the color of the first child of the first parent
+     ```
+
+**6. Traversing Down the DOM: Using `querySelector()` and `querySelectorAll()` on any element**
+
+- The video emphasizes that `querySelector`, `querySelectorAll`, `getElementById`, and `getElementsByClassName` can be used on **any element** in the DOM, not just the `document`.
+- This allows for more targeted selection within specific parts of the DOM tree.
+- An example shows how to directly select the first child of the grandparent using `querySelector()`:
+
+     ```javascript
+     const childOne = grandparent.querySelector('.child');
+     changeColor(childOne);
+     ```
+
+- Another example demonstrates selecting all children of the grandparent using `querySelectorAll()`:
+
+     ```javascript
+     const children = grandparent.querySelectorAll('.child');
+     children.forEach(changeColor);
+     ```
+
+**7. Traversing Up the DOM: Getting the Parent using the `parentElement` property**
+
+- The video explains how to move up the DOM tree from a child element to its parent using the `parentElement` property.
+- An ID of `child-1` is added to one of the child elements in the HTML.
+- The following code selects this child and then navigates up to its parent and grandparent, changing their colors:
+
+     ```javascript
+     const childOne = document.querySelector('#child-1');
+     changeColor(childOne); // Changes color of the child
+
+     const parent = childOne.parentElement;
+     changeColor(parent); // Changes color of the parent
+
+     const grandparent = parent.parentElement;
+     changeColor(grandparent); // Changes color of the grandparent
+     ```
+
+- The video briefly mentions `parentNode` but recommends using `parentElement` to ensure that an element is always selected.
+
+**8. Traversing Up the DOM: Using the `closest()` method**
+
+- The `closest()` method is introduced as a way to traverse upwards to the **nearest ancestor** (parent, grandparent, etc.) that matches a specified CSS selector.
+- It starts from the element on which it's called and moves up the tree.
+- The following code demonstrates how to go from `childOne` directly to the grandparent by using `closest()` with the `.grandparent` selector:
+
+     ```javascript
+     const grandparent = childOne.closest('.grandparent');
+     changeColor(grandparent);
+     ```
+
+- The video highlights that `closest()` stops at the first matching ancestor it finds.
+
+**9. Traversing Sideways in the DOM: Getting Siblings using `nextElementSibling` and `previousElementSibling`**
+
+- The final part of the video covers how to navigate between sibling elements (elements at the same level in the DOM tree).
+- The `nextElementSibling` property returns the next sibling element in the DOM.
+- The `previousElementSibling` property returns the previous sibling element.
+- The following code shows how to select `childOne` and then get its next sibling (`childTwo`) and change its color:
+
+     ```javascript
+     const childOne = document.querySelector('#child-1');
+     const childTwo = childOne.nextElementSibling;
+     changeColor(childTwo);
+     ```
+
+- It also demonstrates how to go back to the previous sibling using `previousElementSibling`:
+
+     ```javascript
+     const childOneAgain = childTwo.previousElementSibling;
+     changeColor(childOneAgain);
+     ```
+
+- The speaker mentions that these sibling selectors are used less frequently compared to the other methods discussed.
+
+The video concludes by reiterating the importance of these DOM traversal skills in JavaScript development and promotes the creator's full JavaScript course.
+
 ## JavaScript Can Change HTML Content
 
 ### Add interactivity - example: `button` for theme switch

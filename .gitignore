@@ -399,8 +399,7 @@ FodyWeavers.xsd
 # JetBrains Rider
 *.sln.iml
 
-# Personal Notes from MS LEARN
+# amaan-123's changes
 MSLearnJSnotes/
 demo-resume/
-*.png
 .env
