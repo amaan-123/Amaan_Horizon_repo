@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0"> <title>DOM Manipulation</title>
+<link rel="stylesheet" href="style.css">
+<script src="script.js" defer></script>
+</head>
+
+<body>
+  <div class="container" id="container">
+    <div class="box" id="box-1" onclick="wasClicked(event)">box-1</div>
+    <div class="box random" id="box-2" onmouseover="mouseOver(event)">box-2</div>
+    <div class="box" id="box-3" onmousemove="mouseMove(event)">box-3</div>
+  </div>
+
+  <form action="#">
+    <input type="text" id="nameInput" onkeypress="keyPressEvent(event)" onkeyup="keyUpEvent(event)" onkeydown="keyDownEvent(event)" placeholder="Type something...">
+  </form>
+
+</body>
+</html>

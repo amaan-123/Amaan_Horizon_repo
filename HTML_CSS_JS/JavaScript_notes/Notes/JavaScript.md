@@ -240,6 +240,294 @@ In your HTML file, add a `button` element. Put the `button` inside of a `div` el
 ...
 ```
 
+## Event Listeners and Handlers in Javascript
+
+Here are detailed notes with accompanying code examples based on the YouTube video transcript "Event Handling in Javascript | Event Listeners and Handlers in Javascript | Web Development #47" by Coding Shuttle by Anuj Bhaiya:
+
+### **Introduction to DOM Events**
+
+- An **event** allows you to write JavaScript code that reacts to certain situations.
+- Events enable dynamic behavior on websites, such as responding to user interactions (clicks, keyboard input) or browser actions (page loading).
+- Examples of events include:
+  - User clicking on a mouse button.
+  - A web page loading.
+  - A form element's value being changed.
+  - Mouse hovering over an element.
+  - Keyboard input.
+
+### **Two Ways to Capture Events**
+
+The video discusses two primary ways to handle events in JavaScript:
+
+1. **By using Event Handlers (Inline HTML Attributes)**
+2. **By using Event Listeners (`addEventListener` method)**
+
+#### **1. Event Handlers (Inline HTML Attributes)**
+
+- JavaScript provides various kinds of **event handlers** that get triggered based on specific actions on HTML elements.
+- These are typically defined as **attributes directly within the HTML elements**.
+- Common event handler attributes include:
+  - `onclick`: Triggered when an element is clicked.
+  - `onload`: Triggered when an element (often `<body>`) has finished loading.
+  - `onmouseover`: Triggered when the mouse pointer moves over an element.
+  - `onmouseout`: Triggered when the mouse pointer moves out of an element.
+  - `onmousemove`: Triggered when the mouse pointer is moving while it is over an element.
+  - `onkeydown`: Triggered when a key is pressed down.
+  - `onkeypress`: Triggered when a key is pressed and released (repeatedly if held down for most keys, but doesn't include all keys like Shift, Alt, Ctrl, or arrow keys).
+  - `onkeyup`: Triggered when a key is released.
+  - `onfocus`: Triggered when an element gains focus (e.g., when an input field is clicked into).
+  - `onblur`: Triggered when an element loses focus.
+  - `onchange`: Triggered when the value of an input element changes.
+  - And many more.
+
+- **Example: `onclick` event handler**
+
+    ```html
+    <div id="box1">Box 1</div>
+    <script>
+      function myfunction() {
+        console.log("I was clicked");
+      }
+    </script>
+    ```
+
+    ```html
+    <div id="box1" onclick="myfunction()">Box 1</div>
+    ```
+
+    When "Box 1" is clicked, the `myfunction()` in the JavaScript will be executed, and "I was clicked" will be logged to the console.
+
+- **Example: `onmouseover` event handler**
+
+    ```html
+    <div id="box2">Box 2</div>
+    <script>
+      function mouseOverHandler() {
+        console.log("Mouse over");
+      }
+    </script>
+    ```
+
+    ```html
+    <div id="box2" onmouseover="mouseOverHandler()">Box 2</div>
+    ```
+
+    When the mouse cursor moves over "Box 2", "Mouse over" will be logged to the console.
+
+- **Example: `onmousemove` event handler**
+
+    ```html
+    <div id="box2">Box 2</div>
+    <script>
+      function mouseMoveHandler() {
+        console.log("Mouse move");
+      }
+    </script>
+    ```
+
+    ```html
+    <div id="box2" onmousemove="mouseMoveHandler()">Box 2</div>
+    ```
+
+    While the mouse cursor is moving within "Box 2", "Mouse move" will be logged repeatedly to the console.
+
+- **Example: Keyboard event handlers (`onkeydown`, `onkeypress`, `onkeyup`)**
+
+    ```html
+    <form>
+      <input type="text" id="nameInput">
+    </form>
+    <script>
+      function keyDownHandler() {
+        console.log("Key Down");
+      }
+      function keyPressHandler() {
+        console.log("Key Pressed");
+      }
+      function keyUpHandler() {
+        console.log("Key Up");
+      }
+      const nameInput = document.getElementById('nameInput');
+      nameInput.onkeydown = keyDownHandler;
+      nameInput.onkeypress = keyPressHandler;
+      nameInput.onkeyup = keyUpHandler;
+    </script>
+    ```
+
+  - `onkeydown` is triggered when a key is initially pressed down.
+  - `onkeypress` is triggered while the key is pressed (between `keydown` and `keyup`).
+  - `onkeyup` is triggered when the key is released.
+
+**2. Event Listeners (`addEventListener` method)**
+
+- Event listeners provide a more flexible and recommended way to handle events.
+- With event listeners, you define the event handling logic entirely within your JavaScript code, keeping it separate from the HTML structure.
+- To use an event listener, you first need to **select the HTML element** you want to attach the event to.
+- Then, you use the `addEventListener()` method on that element.
+- The `addEventListener()` method takes **two mandatory arguments** and an optional third argument:
+    1. The **type of event** to listen for (a string, e.g., `'click'`, `'mouseover'`, `'keydown'`). **Note that you do not use the `on` prefix here**.
+    2. The **callback function** to be executed when the event occurs. This can be a named function or an anonymous arrow function.
+    3. An **optional boolean value** indicating whether to use capturing or bubbling for event propagation (default is `false` for bubbling).
+
+- **Example: `click` event listener**
+
+    ```html
+    <div id="box1">Box 1</div>
+    <script>
+      const box1 = document.getElementById('box1');
+      box1.addEventListener('click', () => {
+        console.log("Click by Event Listener");
+      });
+    </script>
+    ```
+
+    When "Box 1" is clicked, the arrow function will be executed, and "Click by Event Listener" will be logged to the console.
+
+- **Benefits of using Event Listeners:**
+  - **Separation of Concerns:** JavaScript logic is kept separate from HTML structure.
+  - **Multiple Event Listeners:** You can attach multiple event listeners for the same event type to the same element. If you try to define multiple `onclick` attributes in HTML, the last one will override the previous ones.
+
+    ```javascript
+    const box1 = document.getElementById('box1');
+    box1.addEventListener('click', () => {
+      console.log("Click by Event Listener 1");
+    });
+    box1.addEventListener('click', () => {
+      console.log("Click by Event Listener 2");
+    });
+    ```
+
+    In this case, both "Click by Event Listener 1" and "Click by Event Listener 2" will be logged to the console when "Box 1" is clicked.
+
+- **The Event Object:**
+  - The callback function in an event listener can receive an **event object** as an argument. This object contains information about the event that occurred.
+  - You can name this parameter as you like (e.g., `event`, `e`).
+  - The event object provides various properties and methods related to the event, such as:
+    - `target`: The element that triggered the event.
+    - `clientX`, `clientY`: The horizontal and vertical coordinates of the mouse pointer at the time of the event.
+    - `key`: The value of the key pressed during a keyboard event.
+    - And much more.
+
+  - **Example: Accessing the event object for a `click` event**
+
+      ```javascript
+      const box1 = document.getElementById('box1');
+      box1.addEventListener('click', (event) => {
+        console.log("Event Object:", event);
+        console.log("Click X:", event.clientX);
+        console.log("Click Y:", event.clientY);
+      });
+      ```
+
+  - **Example: Accessing mouse coordinates on `mousemove`**
+
+      ```javascript
+      const box1 = document.getElementById('box1');
+      box1.addEventListener('mousemove', (event) => {
+        console.log("Mouse X:", event.clientX, "Mouse Y:", event.clientY);
+      });
+      ```
+
+  - **Example: Accessing the pressed key on `keypress`**
+
+      ```html
+      <form>
+        <input type="text" id="nameInput">
+      </form>
+      <script>
+        const nameInput = document.getElementById('nameInput');
+        nameInput.addEventListener('keypress', (event) => {
+          console.log("Key Pressed:", event.key);
+        });
+      </script>
+      ```
+
+  - **Difference between `keypress` and `keydown` for special keys:**
+    - `keypress` is mainly for character keys (letters, numbers, symbols). It might not fire for special keys like Backspace or arrow keys.
+    - `keydown` tracks the physical keys pressed, so it will fire for all keys, including Backspace, arrow keys, Shift, Alt, Ctrl, etc.
+
+  - **Example: Using `keydown` to capture all key presses**
+
+    ```javascript
+    const nameInput = document.getElementById('nameInput');
+    nameInput.addEventListener('keydown', (event) => {
+      console.log("Key Down:", event.key);
+    });
+    ```
+
+  - **Example: `focus` event listener**
+
+      ```html
+      <form>
+        <input type="text" id="nameInput">
+      </form>
+      <script>
+        const nameInput = document.getElementById('nameInput');
+        nameInput.addEventListener('focus', (event) => {
+          console.log("Input focused:", event);
+        });
+      </script>
+      ```
+
+      The `focus` event is triggered when the input field gains focus. The `key` property might not be directly relevant for the `focus` event itself.
+
+### **Event Propagation: Bubbling and Capturing**
+
+- When an event occurs on an HTML element, it goes through a process called **event propagation**, which determines the order in which event listeners are triggered.
+- There are two phases of event propagation:
+    1. **Bubbling (Default Behavior)**: The event first triggers the handler on the **innermost** element that generated the event, and then "bubbles up" to the handlers on its parent elements in the DOM tree, all the way up to the `document`.
+    2. **Capturing**: The event first triggers the handlers on the **outermost** ancestor elements (starting from the `document`) and then propagates down to the target element.
+
+- **Example of Event Bubbling:**
+
+    ```html
+    <div id="container">
+      <div id="box1">Box 1</div>
+    </div>
+    <script>
+      const container = document.getElementById('container');
+      const box1 = document.getElementById('box1');
+
+      box1.addEventListener('click', () => {
+        console.log("Click on Box");
+      });
+
+      container.addEventListener('click', () => {
+        console.log("Click on Container");
+      });
+    </script>
+    ```
+
+    When you click on "Box 1", you will first see "Click on Box" logged, and then "Click on Container". This is because the click event on `box1` bubbles up to its parent, `container`.
+
+- **Enabling Event Capturing:**
+  - You can enable the capturing phase by passing `true` as the **third optional argument** to the `addEventListener()` method.
+  - The default value of this argument is `false`, which means bubbling is used.
+
+- **Example of Event Capturing:**
+
+    ```html
+    <div id="container">
+      <div id="box1">Box 1</div>
+    </div>
+    <script>
+      const container = document.getElementById('container');
+      const box1 = document.getElementById('box1');
+
+      box1.addEventListener('click', () => {
+        console.log("Click on Box");
+      });
+
+      container.addEventListener('click', () => {
+        console.log("Click on Container (Capturing)");
+      }, true); // 'true' enables capturing for the container's listener
+    </script>
+    ```
+
+    Now, when you click on "Box 1", you will first see "Click on Container (Capturing)" logged, and then "Click on Box". This is because the click event is first captured by the container's listener before reaching the target element (`box1`).
+
+This detailed explanation and the accompanying code examples cover the key concepts of event handling in JavaScript as presented in the provided YouTube video transcript.
+
 ## Add an event handler
 
 To make the `button` do something when you select it, you need an **event handler** in your JavaScript file. An **event handler** is a way to run a JavaScript `function` when an event happens on the page. For the `button`, let's add an event handler for the `click` event; the event handler function runs when the click event occurs.
