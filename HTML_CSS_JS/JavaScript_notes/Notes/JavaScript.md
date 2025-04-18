@@ -520,58 +520,234 @@ The video discusses two primary ways to handle events in JavaScript:
 
       container.addEventListener('click', () => {
         console.log("Click on Container (Capturing)");
-      }, true); // 'true' enables capturing for the container's listener
-    </script>
+      }, true);
+
+      // or 
+
+      /*container.addEventListener('click', () => {
+        console.log("Click on Container (Capturing)");
+      }, { capture: true });*/
     ```
 
     Now, when you click on "Box 1", you will first see "Click on Container (Capturing)" logged, and then "Click on Box". This is because the click event is first captured by the container's listener before reaching the target element (`box1`).
 
-This detailed explanation and the accompanying code examples cover the key concepts of event handling in JavaScript as presented in the provided YouTube video transcript.
+### Capturing vs. Bubbling Order
 
-## Add an event handler
+- The event flow has three phases: the **capturing phase**, the **target phase** (when the event reaches the target element), and the **bubbling phase**.
+- First, capture listeners are triggered from the `document` down to the target's parent.
+- Then, the event reaches the target element, and its listeners (both capture and bubble) are triggered.
+- Finally, the event bubbles up from the target element to the `document`, triggering bubble listeners along the way.
 
-To make the `button` do something when you select it, you need an **event handler** in your JavaScript file. An **event handler** is a way to run a JavaScript `function` when an event happens on the page. For the `button`, let's add an event handler for the `click` event; the event handler function runs when the click event occurs.
+- **Code demonstrating both capturing and bubbling listeners:**
 
-1. Before you can add the event handler, you need a reference to the `button` element. In your JavaScript file, use `document.querySelector` to get the `button` reference.
+    ```javascript
+    document.addEventListener('click', () => {
+      console.log('document capture');
+    }, true);
 
-    ```js
-        const switcher = document.querySelector('.btn');
-    ```
+    grandparent.addEventListener('click', () => {
+      console.log('grandparent capture');
+    }, true);
 
-    `switcher` is now a reference to the button in the page.
+    parent.addEventListener('click', () => {
+      console.log('parent capture');
+    }, true);
 
-2. Next, add the event handler for the `click` event. In the following code, you add a listener for the `click` event and define an event handler function that the browser executes when the `click` event occurs.
+    child.addEventListener('click', () => {
+      console.log('child capture');
+    }, true);
 
-    ```js
-    switcher.addEventListener('click', function() {
-        document.body.classList.toggle('light-theme');
-        document.body.classList.toggle('dark-theme');
+    child.addEventListener('click', () => {
+      console.log('child bubble');
+    });
+
+    parent.addEventListener('click', () => {
+      console.log('parent bubble');
+    });
+
+    grandparent.addEventListener('click', () => {
+      console.log('grandparent bubble');
+    });
+
+    document.addEventListener('click', () => {
+      console.log('document bubble');
     });
     ```
 
-    In the preceding code, you used the `toggle` method to modify the `<body>` element's `class` attribute. This method automatically adds or removes the `light-theme` and `dark-theme` classes.
+**`stopPropagation()` Method**
 
-3. However, the label for the `button` also needs to be updated to show the correct theme, so you need to add an `if statement` to determine the current theme, and update the `button` label.
+- The `stopPropagation()` method of the event object prevents the event from further propagating up or down the DOM tree (depending on the current phase).
+- If `stopPropagation()` is called in a capture listener, the event will not trigger any further capture listeners or any listeners in the target or bubbling phases on descendant elements.
+- If called in a bubble listener, it will prevent the event from bubbling up to parent elements.
 
-Here's what your JavaScript code should look like with the **event handler** added:
+- **Code demonstrating `stopPropagation()` in the parent capture phase:**
 
-```js
-'use strict';
+    ```javascript
+    document.addEventListener('click', () => {
+      console.log('document capture');
+    }, true);
 
-const switcher = document.querySelector('.btn');
+    grandparent.addEventListener('click', () => {
+      console.log('grandparent capture');
+    }, true);
 
-switcher.addEventListener('click', function() {
-    document.body.classList.toggle('light-theme');
-    document.body.classList.toggle('dark-theme');
+    parent.addEventListener('click', (e) => {
+      console.log('parent capture');
+      e.stopPropagation();
+    }, true);
 
-    const className = document.body.className;
-    if(className == "light-theme") {
-        this.textContent = "Dark";
-    } else {
-        this.textContent = "Light";
+    child.addEventListener('click', () => {
+      console.log('child bubble');
+    });
+
+    parent.addEventListener('click', () => {
+      console.log('parent bubble');
+    });
+
+    grandparent.addEventListener('click', () => {
+      console.log('grandparent bubble');
+    });
+    ```
+
+- **Code demonstrating `stopPropagation()` in the child bubble phase:**
+
+    ```javascript
+    child.addEventListener('click', (e) => {
+      console.log('child bubble');
+      e.stopPropagation();
+    });
+
+    parent.addEventListener('click', () => {
+      console.log('parent bubble');
+    });
+
+    grandparent.addEventListener('click', () => {
+      console.log('grandparent bubble');
+    });
+    ```
+
+**`once` Option for Event Listeners**
+
+- You can use the `once` option in the third argument of `addEventListener` to make an event listener run only **once**.
+- After the event listener is triggered for the first time, it is automatically removed.
+
+- **Code demonstrating the `once` option:**
+
+    ```javascript
+    parent.addEventListener('click', () => {
+      console.log('parent');
+    }, { once: true });
+
+    child.addEventListener('click', () => {
+      console.log('child');
+    });
+
+    grandparent.addEventListener('click', () => {
+      console.log('grandparent');
+    });
+    ```
+
+**`removeEventListener()` Method**
+
+- The `removeEventListener()` method is used to **remove** an event listener from an element.
+- It takes the same two arguments as `addEventListener`: the event type and the callback function that was originally attached.
+- To successfully remove a listener, you need to pass the **exact same function reference** that was used when adding the listener. Anonymous functions defined inline cannot be easily removed.
+
+- **Code demonstrating adding and removing an event listener using a named function:**
+
+    ```javascript
+    function printHi() {
+      console.log('hi');
     }
-});
-```
+
+    parent.addEventListener('click', printHi);
+
+    setTimeout(() => {
+      parent.removeEventListener('click', printHi);
+    }, 2000);
+    ```
+
+- **Incorrect way to try and remove an inline anonymous function:**
+
+    ```javascript
+    parent.addEventListener('click', () => {
+      console.log('hi');
+    });
+
+    setTimeout(() => {
+      parent.removeEventListener('click', () => {
+        console.log('hi');
+      });
+    }, 2000);
+    ```
+
+### **Event Delegation**
+
+- Event delegation is a technique where you attach a **single event listener to a parent element** to handle events that occur on its descendant elements.
+- This is particularly useful for dynamically added elements, as you don't need to attach event listeners to each new element.
+- You can use the `event.target` property within the parent's event listener to determine which descendant element triggered the event.
+- The `Element.matches()` method can be used to check if the `event.target` matches a specific CSS selector.
+
+- **Initial attempt to add listeners to all divs (will not work for dynamically added divs):**
+
+    ```javascript
+    const divs = document.querySelectorAll('div');
+    divs.forEach(div => {
+      div.addEventListener('click', () => {
+        console.log('hi');
+      });
+    });
+
+    const newDiv = document.createElement('div');
+    newDiv.style.width = '200px';
+    newDiv.style.height = '200px';
+    newDiv.style.backgroundColor = 'purple';
+    document.body.append(newDiv);
+    ```
+
+- **Manually adding an event listener to a dynamically created div:**
+
+    ```javascript
+    const newDiv = document.createElement('div');
+    newDiv.style.width = '200px';
+    newDiv.style.height = '200px';
+    newDiv.style.backgroundColor = 'purple';
+    document.body.append(newDiv);
+
+    newDiv.addEventListener('click', () => {
+      console.log('hi');
+    });
+    ```
+
+- **Event delegation approach using `document.addEventListener` and `event.target.matches()`:**
+
+    ```javascript
+    document.addEventListener('click', (e) => {
+      if (e.target.matches('div')) {
+        console.log('hi');
+      }
+    });
+    ```
+
+**Creating a reusable `addGlobalEventListener` function**
+
+- The video suggests creating a utility function for event delegation.
+
+- **Reusable `addGlobalEventListener` function:**
+
+    ```javascript
+    function addGlobalEventListener(type, selector, callback) {
+      document.addEventListener(type, e => {
+        if (e.target.matches(selector)) {
+          callback(e);
+        }
+      });
+    }
+
+    addGlobalEventListener('click', 'div', (e) => {
+      console.log('hi');
+    });
+    ```
 
 ## JavaScript Output
 
@@ -1063,6 +1239,128 @@ The only exception is that you can call the `window.print()` method in the brows
   spanHi.style.backgroundColor = 'red'; // Sets the background color to red
   ```
 
+## 🌟 Top DOM Collection Types (Most Used ➡️ Less Used)
+
+- - -
+
+### **1. `NodeList`**
+
+- **Returned by:** `document.querySelectorAll()`
+- **Iterable?** ✅ Yes (`forEach`, `for...of`)
+- **Live?** ❌ No (static snapshot)
+
+#### 💡 Use Case1
+
+When you want to select **all matching elements by CSS selectors** and loop over them easily:
+
+```js
+const buttons = document.querySelectorAll('.btn');
+buttons.forEach(btn => btn.addEventListener('click', handleClick));
+```
+
+- - -
+
+### **2. `HTMLCollection`**
+
+- **Returned by:** `getElementsByClassName()`, `getElementsByTagName()`, `element.children`
+- **Iterable?** ❌ No `forEach` (needs conversion)
+- **Live?** ✅ Yes
+
+#### 💡 Use Case2
+
+Used when you want a **live collection** that updates automatically when the DOM changes:
+
+```js
+const items = document.getElementsByClassName('item'); // live
+// Convert if you want .forEach:
+Array.from(items).forEach(item => console.log(item));
+```
+
+- - -
+
+### **3. `DOMTokenList`**
+
+- **Returned by:** `element.classList`
+- **Iterable?** ✅ Yes (`forEach`, `for...of`)
+- **Live?** ✅ Yes (represents real-time class list)
+
+#### 💡 Use Case3
+
+Used to manage class names easily:
+
+```js
+element.classList.add('active');
+element.classList.toggle('dark-mode');
+element.classList.contains('open');
+```
+
+- - -
+
+### **4. `NamedNodeMap`**
+
+- **Returned by:** `element.attributes`
+- **Iterable?** ❌ No modern methods
+- **Live?** ✅ Yes
+
+#### 💡 Use Case4
+
+Used to access all attributes of an element, rarely needed unless working with dynamic attribute manipulation:
+
+```js
+const attrs = document.getElementById('myDiv').attributes;
+console.log(attrs[0].name, attrs[0].value);
+```
+
+- - -
+
+### **5. `StyleSheetList`**
+
+- **Returned by:** `document.styleSheets`
+- **Iterable?** ❌ No direct `.forEach` (use conversion)
+- **Live?** ✅ Yes
+
+#### 💡 Use Case5
+
+Used when dynamically inspecting or modifying CSS stylesheets:
+
+```js
+for (let sheet of document.styleSheets) {
+  console.log(sheet.href); // External stylesheet links
+}
+```
+
+- - -
+
+### **6. `CSSRuleList`**
+
+- **Returned by:** `stylesheet.cssRules`
+- **Iterable?** ❌ No `.forEach`
+- **Live?** ✅ Yes
+
+#### 💡 Use Case6
+
+Used in more advanced dynamic style manipulations:
+
+```js
+const rules = document.styleSheets[0].cssRules;
+console.log(rules[0].selectorText);
+```
+
+- - -
+
+### 📌 Summary Table 2
+
+| Collection Type   | `forEach`? | Live? | Common Use                      |
+|-------------------|------------|-------|---------------------------------|
+| `NodeList`        | ✅         | ❌    | Element groups (querySelectorAll) |
+| `HTMLCollection`  | ❌         | ✅    | Class/tag-based groups          |
+| `DOMTokenList`    | ✅         | ✅    | Manipulate classList            |
+| `NamedNodeMap`    | ❌         | ✅    | Inspect attributes              |
+| `StyleSheetList`  | ❌         | ✅    | Access all stylesheets          |
+| `CSSRuleList`     | ❌         | ✅    | Access CSS rules in stylesheets |
+
+- - -
+
 ## String & Array Methods
 
 Here are **some of the most commonly chained methods**, grouped by **data type**:
@@ -1385,7 +1683,7 @@ const index = array.findIndex((element, index, array) => {
 const idx = [5, 12, 8, 130].findIndex(num => num > 10); // 1 (index of 12)
 ```
 
-### 📌 Summary Table
+### 📌 Summary Table 1
 
 | Method      | Returns       | Use case                   |
 |-------------|---------------|----------------------------|
