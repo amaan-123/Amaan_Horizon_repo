@@ -858,3 +858,42 @@ There are a few ways to include an external JavaScript (JS) file in an HTML docu
 Put it in the `<head>` if you're using `defer`, or at the **bottom of the `<body>`** if you're not.
 
 ---
+
+## Questions - Part 9
+
+Can we execute a script using node in any terminal, where the .js file mentions some code like "document.getElementById"? remember that in the html file, the .js file is linked in script tag, but the element is not interacted with through the browser, we are just running the code in local terminal's console, not the same webpage in browser?
+
+## Answers - Part 9
+
+No, you cannot execute a script containing `document.getElementById` or other DOM-related code using Node.js in a terminal. Node.js is a server-side runtime environment and does not have access to the DOM or browser-specific APIs like `document` or `window`. These APIs are only available in a browser environment.
+
+If you try to run such a script in Node.js, it will throw a `ReferenceError` because `document` is not defined.
+
+To work with DOM-related code in a Node.js environment, you would need to use a library like [JSDOM](https://github.com/jsdom/jsdom) to simulate a DOM. Here's an example of how you could use JSDOM:
+
+```javascript
+// Install JSDOM first using: npm install jsdom
+const { JSDOM } = require('jsdom');
+
+// Simulate a DOM
+const dom = new JSDOM(`
+  <!DOCTYPE html>
+  <html>
+    <body>
+      <button id="myButton">Click!</button>
+    </body>
+  </html>
+`);
+
+// Access the DOM
+const document = dom.window.document;
+const button = document.getElementById('myButton');
+button.addEventListener('click', () => {
+  console.log('Button clicked!');
+});
+
+// Simulate a button click
+button.click();
+```
+
+If you want to run your script as it is, you need to execute it in a browser environment, such as by opening the linked HTML file in a browser.
