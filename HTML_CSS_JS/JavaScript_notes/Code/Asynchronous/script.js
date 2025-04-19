@@ -47,3 +47,44 @@
 // button.addEventListener('click', function() {
 //   console.log('Button clicked!'); // This is an async callback
 // });
+
+// // Promises
+// const promiseWithData = new Promise((resolve, reject) => {
+//   setTimeout(() => {
+//     const foodTruckFound = false;
+//     if (foodTruckFound) {
+//       resolve('bringing tacos');
+//     } else {
+//       reject('not bringing tacos, food truck not there');
+//     }
+//   }, 2000);
+// });
+// function onFulfillmentWithData(message) {
+//   console.log(message);
+//   console.log('Set up the table to eat tacos');
+// }
+// function onRejectionWithData(errorMessage) {
+//   console.log(errorMessage);
+//   console.log('Start cooking pasta');
+// }
+// promiseWithData.then(onFulfillmentWithData).catch(onRejectionWithData);
+
+
+// const promise1 = Promise.resolve('Promise 1 resolved');
+// const promise2 = new Promise(resolve => setTimeout(() => resolve('Promise 2 resolved'), 100));
+// const notAPromise = 'Not a promise';
+// Promise.all([promise1, promise2, notAPromise])
+//   .then(results => console.log('All resolved:', results))
+//   .catch(error => console.error('One or more rejected:', error));
+
+// const promiseSuccess = Promise.resolve('Success');
+// const promiseFailure = Promise.reject('Failure');
+
+// Promise.allSettled([promiseSuccess, promiseFailure])
+//   .then(results => console.log('All settled:', results));
+
+const promiseFast = new Promise(resolve => setTimeout(() => resolve('Fast promise'), 100));
+const promiseSlow = new Promise(resolve => setTimeout(() => resolve('Slow promise'), 500));
+
+Promise.race([promiseFast, promiseSlow])
+  .then(result => console.log('First to resolve:', result));

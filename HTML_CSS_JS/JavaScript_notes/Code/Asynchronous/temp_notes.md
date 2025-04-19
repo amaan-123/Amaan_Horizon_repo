@@ -242,4 +242,228 @@ asyncOperation1(function(result1) {
 - **Promises**, introduced in ES6, provide an alternative and recommended approach to handle asynchronous code, making it more readable and manageable compared to nested callbacks.
 - Promise chaining helps to avoid the deep nesting of callback hell.
 
-In summary, callback functions are fundamental to asynchronous JavaScript, allowing for code to be executed after certain events or time delays. However, excessive nesting of callbacks can lead to "callback hell," which promises aim to solve.
+## Promises in JavaScript
+
+### Introduction to Promises
+
+- In about eighty percent of the interviews, questions about promises are asked, especially for senior developer positions.
+- A thorough understanding of promises is crucial.
+- Promises can be understood through a simple analogy.
+
+### Promise Analogy
+
+- Scenario: You and your roommate want to have dinner at home. You'll make soup, and your roommate will get tacos from a food truck.
+- You ask your roommate to text you when they reach the food truck so you can start setting the table, and also if they can't get tacos so you can make pasta instead.
+- Your roommate promises to text.
+- Analogy to JavaScript and Promises:
+  - Your friend is like a **promise** in JavaScript.
+  - Your friend going to the food truck and you preparing soup simultaneously is like an **asynchronous operation** in JavaScript (fetching tacos).
+  - The status of the tacos is initially **pending** until you receive a message.
+  - When your friend texts "can get tacos", your desire is **fulfilled**, and you set up the table (success callback).
+  - When your friend texts "cannot get tacos", your desire is **rejected**, and you cook pasta (failure callback).
+
+### MDN Definition of a Promise
+
+- A promise is a **proxy for a value not necessarily known when the promise is created**.
+- It allows you to **associate handlers with an asynchronous action's eventual success value or failure reason**.
+- Breakdown of the definition:
+  - **Proxy for a value:** Your friend promises to inform you about the tacos (the promise value).
+  - **Not necessarily known when created:** You don't know if they can get tacos or not when the promise is made.
+  - **Associate handlers:** You decide what to do (set table or cook pasta) based on whether the promise is fulfilled or rejected.
+
+### Technical Definition of a Promise
+
+- A promise is simply an **object in JavaScript**.
+- A promise is always in one of three states:
+  - **Pending:** Initial state, neither fulfilled nor rejected.
+  - **Fulfilled:** The operation completed successfully.
+  - **Rejected:** The operation failed.
+
+### Why Use Promises?
+
+- Promises help us **deal with asynchronous code in a far simpler way compared to callbacks**.
+- Promises help avoid **callback hell**, making the code more readable and maintainable.
+
+### How to Work with Promises
+
+- Six key points about a promise:
+  - Your friend (promise).
+  - Can get tacos / cannot get tacos (promised value).
+  - Fulfilling the promise.
+  - Rejecting the promise.
+  - Success callback (set up the table).
+  - Failure callback (cook pasta).
+- Three things to understand in code:
+  - How to **create a promise**.
+  - How to **fulfill or reject the promise**.
+  - How to **execute callback functions** based on the promise state.
+
+#### Creating a Promise
+
+- An instance of a promise is created using the `new` keyword with the `Promise` constructor function.
+
+```javascript
+const promise = new Promise(() => {});
+```
+
+#### Fulfilling or Rejecting a Promise
+
+- The `Promise` constructor function accepts one function as its argument (an arrow function in the example).
+- This function receives two arguments: **`resolve`** and **`reject`**, which are both functions.
+- Calling `resolve()` changes the promise status from pending to fulfilled.
+- Calling `reject()` changes the promise status to rejected.
+- `resolve` and `reject` are typically called after an asynchronous operation.
+- Example using `setTimeout`:
+
+```javascript
+const promise = new Promise((resolve, reject) => {
+  setTimeout(() => {
+    const foodTruckFound = true; // Example condition
+    if (foodTruckFound) {
+      resolve(); // Promise fulfilled after 5 seconds
+    } else {
+      reject(); // Promise rejected after 5 seconds
+    }
+  }, 5000);
+});
+```
+
+#### Executing Callback Functions
+
+- The promise object provides access to two methods: **`then()`** and **`catch()`**.
+- **`then()`** accepts the **on fulfillment** callback function, which is executed automatically when the promise is fulfilled (when `resolve()` is called).
+- **`catch()`** accepts the **on rejection** callback function, which is executed automatically when the promise is rejected (when `reject()` is called).
+- Example:
+
+```javascript
+function onFulfillment() {
+  console.log('Set up the table to eat tacos');
+}
+
+function onRejection() {
+  console.log('Start cooking the pasta');
+}
+
+promise.then(onFulfillment);
+promise.catch(onRejection);
+```
+
+#### Passing Data with Resolve and Reject
+
+- You can pass arguments to `resolve()` or `reject()`.
+- The argument passed to `resolve()` is automatically injected as the argument to the **on fulfillment** callback in `then()`.
+- The argument passed to `reject()` is automatically injected as the argument to the **on rejection** callback in `catch()`.
+- Example:
+
+```javascript
+const promiseWithData = new Promise((resolve, reject) => {
+  setTimeout(() => {
+    const foodTruckFound = true;
+    if (foodTruckFound) {
+      resolve('bringing tacos');
+    } else {
+      reject('not bringing tacos, food truck not there');
+    }
+  }, 5000);
+});
+
+function onFulfillmentWithData(message) {
+  console.log(message);
+  console.log('Set up the table to eat tacos');
+}
+
+function onRejectionWithData(errorMessage) {
+  console.log(errorMessage);
+  console.log('Start cooking pasta');
+}
+
+promiseWithData.then(onFulfillmentWithData).catch(onRejectionWithData);
+```
+
+### Interview Tips on Promises
+
+- Begin by explaining **what a promise is in your own words**, focusing on its use for async operations.
+- Use a **real-world analogy** to illustrate the concept.
+- Talk about the **three states of a promise**: pending, fulfilled, and rejected.
+- Explain the function passed to the promise constructor and the roles of **`resolve` and `reject`**.
+- Describe the **on fulfillment and on rejection callback functions** and how they are used with `then()` and `catch()`.
+
+### Further Details About Promises
+
+#### The `then()` Function
+
+- The `then()` function can accept two arguments: the on fulfillment callback (first argument) and the on rejection callback (second argument).
+
+```javascript
+promise.then(onFulfillment, onRejection);
+```
+
+- However, using **`catch()` is encouraged** over passing the rejection callback as the second argument to `then()`.
+- Reason: `catch()` can handle errors not only from the promise itself but also any errors that might be thrown within the on fulfillment callback function.
+
+#### Chaining Promises
+
+- Both `then()` and `catch()` methods **return promises**.
+- This allows for **chaining of `then()` and `catch()` methods**.
+
+```javascript
+promise
+  .then(result => {
+    // Do something with the result and return a new promise
+    return fetch('/api/followers');
+  })
+  .then(followers => {
+    // Process followers
+    console.log('Followers:', followers);
+  })
+  .catch(error => {
+    // Handle errors
+    console.error('Error:', error);
+  });
+```
+
+- Promise chaining helps solve the problem of **callback hell**, making asynchronous code look more readable and maintainable, almost like synchronous code.
+
+#### Static Methods of Promises
+
+##### `Promise.all()`
+
+- Takes an **iterable of promises (e.g., an array)** as input.
+- Returns a **single promise** that resolves to an **array of the results** of all the input promises.
+- The returned promise will resolve **when all of the input promises have resolved** or if the input iterable is empty.
+- It **rejects immediately if any of the input promises reject**, with the rejection message or error of the first rejected promise.
+
+```javascript
+const promise1 = Promise.resolve('Promise 1 resolved');
+const promise2 = new Promise(resolve => setTimeout(() => resolve('Promise 2 resolved'), 100));
+const notAPromise = 'Not a promise';
+
+Promise.all([promise1, promise2, notAPromise])
+  .then(results => console.log('All resolved:', results))
+  .catch(error => console.error('One or more rejected:', error));
+```
+
+##### `Promise.allSettled()`
+
+- Waits for **all input promises to complete**, regardless of whether they fulfill or reject.
+- Returns a promise that resolves to an **array of objects**, where each object describes the outcome of each input promise (either `status: "fulfilled"` with a `value`, or `status: "rejected"` with a `reason`).
+
+```javascript
+const promiseSuccess = Promise.resolve('Success');
+const promiseFailure = Promise.reject('Failure');
+
+Promise.allSettled([promiseSuccess, promiseFailure])
+  .then(results => console.log('All settled:', results));
+```
+
+##### `Promise.race()`
+
+- Returns a promise that **fulfills or rejects as soon as one of the promises in the iterable fulfills or rejects**, with the value or reason from that promise.
+
+```javascript
+const promiseFast = new Promise(resolve => setTimeout(() => resolve('Fast promise'), 100));
+const promiseSlow = new Promise(resolve => setTimeout(() => resolve('Slow promise'), 500));
+
+Promise.race([promiseFast, promiseSlow])
+  .then(result => console.log('First to resolve:', result));
+```
