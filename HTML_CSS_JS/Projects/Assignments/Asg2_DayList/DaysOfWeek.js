@@ -1,15 +1,27 @@
-const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+const list = document.getElementById('list');
 
-const showDays = () => {
-    const list = document.getElementById("days-list");
-    list.innerHTML = ""; // Clear old list if button is clicked multiple times
-  
-    days.forEach(day => {
-      const li = document.createElement("li");
-      li.textContent = day;
-      list.appendChild(li);
-    });
-  };
-  
-  document.getElementById("show-days-btn").addEventListener("click", showDays);
-  
+function display() {
+  if (!list) return;
+  list.innerHTML = ""; // Clear the list
+  const fragment = document.createDocumentFragment(); // Create a DocumentFragment
+
+  days.forEach(day => {
+    const li = document.createElement('li'); // Create a new <li> element
+    li.innerText = day; // Set the text of the <li>
+    if (day === "Saturday" || day === "Sunday") {
+      li.classList.add('weekend'); // Add the 'weekend' class for styling
+    }
+    fragment.appendChild(li); // Add the <li> to the fragment
+  });
+
+  list.appendChild(fragment); // Append the fragment to the DOM
+}
+
+const erase = () => {
+  if (!list) return;
+  list.innerHTML = ""; // Clear the list
+};
+
+document.getElementById('show').addEventListener('click', display);
+document.getElementById('clear').addEventListener('click', erase);
