@@ -2267,11 +2267,11 @@ fetchData();
 ```javascript
 function resolveHello() {
   return new Promise(resolve => setTimeout(() => resolve("hello"), 2000));
-}
+};
 
 function resolveWorld() {
   return new Promise(resolve => setTimeout(() => resolve("world"), 1000));
-}
+};
 
 async function sequentialStart() {
   console.time("sequentialStart");
@@ -2280,8 +2280,7 @@ async function sequentialStart() {
   const world = await resolveWorld();
   console.log(world); // Waits additional 1 second
   console.timeEnd("sequentialStart"); // Total time: ~3 seconds
-}
-
+};
 sequentialStart();
 ```
 
@@ -2294,37 +2293,34 @@ sequentialStart();
 ```javascript
 async function concurrentStart() {
   console.time("concurrentStart");
-  const helloPromise = resolveHello();
-  const worldPromise = resolveWorld();
-  const hello = await helloPromise;
-  console.log(hello); // Waits for resolveHello (2 seconds)
-  const world = await worldPromise;
-  console.log(world); // worldPromise likely already resolved (1 second)
+  const hello = resolveHello();
+  const world = resolveWorld();
+  console.log(await hello); // Waits for resolveHello (2 seconds)
+  console.log(await world); // resolveWorld likely already resolved (1 second)
   console.timeEnd("concurrentStart"); // Total time: ~2 seconds
-}
-
+};
 concurrentStart();
 ```
 
-- In `concurrentStart`, both `resolveHello()` and `resolveWorld()` start fetching their values concurrently. The `await helloPromise;` will wait for 2 seconds. By that time, `worldPromise` has likely already resolved (after 1 second), so `await worldPromise;` will execute almost immediately. The total time is roughly the time taken by the longest operation (2 seconds).
+- In `concurrentStart`, both `resolveHello()` and `resolveWorld()` start fetching their values concurrently. The `await hello` will wait for 2 seconds. By that time, `world` has likely already resolved (after 1 second), so `await world` will execute almost immediately. The total time is roughly the time taken by the longest operation (2 seconds).
 
 #### Parallel Execution
 
 - For true parallel execution (in the context of JavaScript's single-threaded nature and browser capabilities), you can use `Promise.all()` with async functions. `Promise.all()` takes an array of promises and resolves when all of them have resolved.
 
 ```javascript
-async function parallelStart() {
-  console.time("parallelStart");
-  const [hello, world] = await Promise.all([resolveHello(), resolveWorld()]);
-  console.log(world); // Resolves after 1 second
-  console.log(hello); // Resolves after 2 seconds
-  console.timeEnd("parallelStart"); // Total time: ~2 seconds
-}
-
-parallelStart();
+function parallel() {
+  console.time("parallel");
+  Promise.all([, 
+    (async () => console.log(await resolveHello())),
+    (async () => console.log(await resolveWorld())),
+  ]);
+  console.timeEnd("parallel"); // Total time: ~2 seconds
+};
+parallel();
 ```
 
-- In `parallelStart`, `Promise.all()` waits for both `resolveHello()` and `resolveWorld()` to complete. The promise returned by `Promise.all()` resolves after the longest of the input promises (2 seconds in this case). The `console.log` statements will then execute. The output order depends on when each promise resolves.
+- In `parallel`, `Promise.all()` waits for both `resolveHello()` and `resolveWorld()` to complete. The promise returned by `Promise.all()` resolves after the longest of the input promises (2 seconds in this case). The `console.log` statements will then execute. The output order depends on when each promise resolves.
 
 ```javascript
 async function parallelStartAgain() {
@@ -2349,6 +2345,180 @@ parallelStartAgain();
 - The **async keyword** marks a function as asynchronous and ensures it **always returns a promise** (either explicitly or implicitly by wrapping the return value in a resolved promise).
 - The **await keyword** can only be used inside an `async` function and **pauses the function's execution until the awaited promise settles**, returning its resolved value.
 - Understanding sequential, concurrent, and parallel execution patterns with async/await is crucial for optimizing asynchronous code performance.
+
+## JavaScript Runtime Environment and Asynchronous JavaScript
+
+The JavaScript runtime environment comprises several parts that work together to execute JavaScript code, especially asynchronous operations. These parts include:
+
+- **JavaScript Engine**: Consists of the **Memory Heap** (for memory allocation) and the **Call Stack** (for tracking function execution).
+- **Browser's Web APIs**: Functions provided by the browser (and Node.js), such as `setTimeout`, `fetch`, DOM manipulation, etc., which are not part of the core JavaScript language.
+- **Callback Queue (Task Queue or Message Queue)**: A queue that holds callback functions waiting to be executed. It follows a First-In, First-Out (FIFO) principle.
+- **Event Loop**: Its primary job is to continuously check if the **Call Stack** is empty. If it is, it takes the first callback from the **Microtask Queue or Callback Queue** and pushes it onto the **Call Stack** for execution.
+- **Microtask Queue**: A separate queue specifically for microtasks, which have a higher priority than tasks in the **Callback Queue**. Promises' `then`, `catch`, and `finally` callbacks are examples of microtasks.
+
+### 1) Synchronous Code Execution
+
+In its most basic form, JavaScript is a **synchronous, blocking, single-threaded language**. This means code executes line by line, one at a time, from top to bottom. When a function is called, it's pushed onto the **Call Stack**, and it's popped off when the function returns.
+
+```javascript
+console.log('first');
+console.log('second');
+console.log('third');
+```
+
+Execution flow:
+
+1. The global scope is pushed onto the **Call Stack**.
+2. `console.log('first')` is pushed onto the **Call Stack**, 'first' is logged to the console, and then `console.log('first')` is popped off.
+3. `console.log('second')` is pushed onto the **Call Stack**, 'second' is logged to the console, and then `console.log('second')` is popped off.
+4. `console.log('third')` is pushed onto the **Call Stack**, 'third' is logged to the console, and then `console.log('third')` is popped off.
+5. The global scope is popped off the **Call Stack**.
+
+![alt text](image-1.png)
+
+### 2) Asynchronous `setTimeout` Code Execution
+
+`setTimeout` is a **Web API** function that allows you to execute a callback function after a specified delay.
+
+```javascript
+console.log('first');
+setTimeout(() => {
+  console.log('second');
+}, 2000);
+console.log('third');
+```
+
+Execution flow:
+
+1. The global scope is pushed onto the **Call Stack**.
+2. `console.log('first')` is pushed, 'first' is logged, and then popped.
+3. `setTimeout(...)` is pushed. The callback function and the delay (2000ms) are handed over to the **Web API**. `setTimeout` itself is then popped off the **Call Stack**. The browser starts a 2-second timer in the background.
+4. `console.log('third')` is pushed, 'third' is logged, and then popped.
+5. The global scope finishes executing, and the **Call Stack** is empty.
+6. After 2 seconds, the **Web API** pushes the callback function (`() => { console.log('second'); }`) into the **Callback Queue**.
+7. The **Event Loop** checks if the **Call Stack** is empty. Since it is, it takes the callback function from the **Callback Queue** and pushes it onto the **Call Stack**.
+8. `console.log('second')` inside the callback is pushed, 'second' is logged, and then popped.
+9. The callback function is popped off the **Call Stack**.
+
+![alt text](image-2.png)
+
+![alt text](image-3.png)
+
+![alt text](image-4.png)
+
+**`setTimeout` with 0ms delay**: Even with a 0ms delay, the callback function is still placed in the **Callback Queue** and will only be executed when the **Call Stack** is empty. This means it won't execute immediately but after all the currently executing synchronous code has finished.
+
+![alt text](image-21.png)
+
+### 3) Asynchronous Promise Code Execution
+
+Promises are used to handle the eventual completion (or failure) of asynchronous operations. When an asynchronous operation that returns a Promise (like `fetch`) is initiated, the Promise object is created immediately. The `then` and `catch` methods attach callbacks that will be executed when the Promise is resolved or rejected, respectively. These callbacks are placed in the **Microtask Queue**.
+
+```javascript
+console.log('first');
+const promise = fetch('https://api.example.com/data');
+promise.then(data => {
+  console.log('promise value', data);
+});
+console.log('second');
+```
+
+Execution flow:
+
+1. The global scope is pushed onto the **Call Stack**.
+2. `console.log('first')` is pushed, 'first' is logged, and then popped.
+3. `fetch(...)` is pushed. The `fetch` operation (a **Web API**) is initiated to make a network request. A Promise object is created in memory. `fetch` itself is popped off the **Call Stack**. The network request happens in the background.
+4. `promise.then(...)` is pushed. The success callback function (`data => { console.log('promise value', data); }`) is added to the Promise object's internal "on fulfillment" list. `promise.then` is popped off.
+5. `console.log('second')` is pushed, 'second' is logged, and then popped.
+6. The global scope finishes executing, and the **Call Stack** is empty.
+7. Once the `fetch` operation completes in the background (let's say it resolves with some data), the **Web API** signals the Promise resolution. The Promise then takes its "on fulfillment" callbacks and places them into the **Microtask Queue** along with the resolved value.
+8. The **Event Loop** checks if the **Call Stack** is empty. It then checks the **Microtask Queue**. Since the **Microtask Queue** is not empty, it takes the first microtask (the `then` callback) and pushes it onto the **Call Stack** with the resolved data.
+9. `console.log('promise value', data)` inside the `then` callback is pushed, the promise value is logged, and then popped.
+10. The `then` callback is popped off the **Call Stack**.
+11. The **Event Loop** again checks the **Call Stack** and **Microtask Queue** (both are empty).
+
+![alt text](image-5.png)
+
+![alt text](image-6.png)
+
+![alt text](image-7.png)
+
+![alt text](image-8.png)
+
+![alt text](image-9.png)
+
+![alt text](image-10.png)
+
+### 4) Asynchronous `setTimeout` + Promise Code Execution
+
+When both `setTimeout` and Promises are involved, the **Event Loop** gives **higher priority to the Microtask Queue over the Task Queue (Callback Queue)**. This means that any Promise callbacks in the **Microtask Queue** will be executed before any `setTimeout` callbacks in the **Task Queue**, even if the `setTimeout` timer finishes first.
+
+```javascript
+setTimeout(() => {
+  console.log('first');
+}, 0);
+
+const promise = fetch('https://api.example.com/data');
+promise.then(data => {
+  console.log('promise value', data);
+});
+
+let i = 0;
+while (i < 1000000000) {
+  i++;
+}
+
+console.log('second');
+```
+
+Execution flow:
+
+1. The global scope is pushed onto the **Call Stack**.
+2. `setTimeout(...)` is pushed. The callback (`() => { console.log('first'); }`) and delay (0ms) are sent to the **Web API**. `setTimeout` is popped. The **Web API** immediately places the callback in the **Task Queue**.
+3. `fetch(...)` is pushed. The `fetch` operation starts (a **Web API**), and a Promise is created. `fetch` is popped.
+4. `promise.then(...)` is pushed. The success callback (`data => { console.log('promise value', data); }`) is added to the Promise. `promise.then` is popped.
+5. The `while` loop starts and blocks the **JavaScript execution thread** for a few seconds.
+6. `console.log('second')` is reached after the `while` loop finishes, pushed, 'second' is logged, and popped.
+7. The global scope finishes, and the **Call Stack** is empty.
+8. Meanwhile, the `fetch` operation completes, and its promise is resolved. The `then` callback is placed in the **Microtask Queue**.
+9. The **Event Loop** checks the **Call Stack** (empty) and then the **Microtask Queue** (not empty). It takes the `then` callback from the **Microtask Queue** and pushes it onto the **Call Stack**.
+10. `console.log('promise value', data)` is executed.
+11. The `then` callback is popped. The **Microtask Queue** is now empty.
+12. The **Event Loop** checks the **Call Stack** (empty) and then the **Task Queue** (not empty). It takes the `setTimeout` callback and pushes it onto the **Call Stack**.
+13. `console.log('first')` is executed.
+14. The `setTimeout` callback is popped. The **Task Queue** is now empty.
+
+The output of this code will be:
+
+```bash
+second
+promise value <data>
+first
+```
+
+This demonstrates the priority of the **Microtask Queue** over the **Task Queue**.
+
+![alt text](image-11.png)
+
+![alt text](image-12.png)
+
+![alt text](image-13.png)
+
+![alt text](image-14.png)
+
+![alt text](image-15.png)
+
+![alt text](image-16.png)
+
+![alt text](image-17.png)
+
+![alt text](image-18.png)
+
+![alt text](image-19.png)
+
+![alt text](image-20.png)
+
+**Event Loop Summary**: The **Event Loop** continuously checks the **Call Stack**. If it's empty, it first processes any pending microtasks in the **Microtask Queue**. If the **Microtask Queue** is also empty, it then takes the oldest task from the **Task Queue** and moves it to the **Call Stack** for execution. This process repeats indefinitely, allowing JavaScript to handle asynchronous operations without blocking the main thread.
 
 ## Ice-cream & Asynchronous JS
 
