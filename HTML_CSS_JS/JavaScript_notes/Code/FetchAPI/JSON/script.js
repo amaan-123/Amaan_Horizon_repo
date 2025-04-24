@@ -1,4 +1,5 @@
-// // Code Source: https://javascript.info/json
+// // Code Source till line 273 https://javascript.info/json
+// // Source for lines 274-312, MDN web docs using ChatGPT: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON
 
 // // 1. https://javascript.info/json#json-stringify
 // "use strict";
@@ -249,24 +250,63 @@
 // console.log( meetup.date.getDate() ); // Error!
 // // The value of meetup.date is a string, not a Date object. How could JSON.parse know that it should transform that string into a Date?
 
-// Let’s pass to JSON.parse the reviving function as the second argument, that returns all values “as is”, but date will become a Date:
-let str = '{"title":"Conference","date":"2017-11-30T12:00:00.000Z"}';
-let meetup = JSON.parse(str, function(key, value) {
-  if (key == 'date') return new Date(value);
-  return value;
-});
-console.log( meetup.date.getDate() ); // now works!
+// // Let’s pass to JSON.parse the reviving function as the second argument, that returns all values “as is”, but date will become a Date:
+// let str = '{"title":"Conference","date":"2017-11-30T12:00:00.000Z"}';
+// let meetup = JSON.parse(str, function(key, value) {
+//   if (key == 'date') return new Date(value);
+//   return value;
+// });
+// console.log( meetup.date.getDate() ); // now works!
 
-// By the way, that works for nested objects as well:
-let schedule = `{
-  "meetups": [
-    {"title":"Conference","date":"2017-11-30T12:00:00.000Z"},
-    {"title":"Birthday","date":"2017-04-18T12:00:00.000Z"}
-  ]
+// // By the way, that works for nested objects as well:
+// let schedule = `{
+//   "meetups": [
+//     {"title":"Conference","date":"2017-11-30T12:00:00.000Z"},
+//     {"title":"Birthday","date":"2017-04-18T12:00:00.000Z"}
+//   ]
+// }`;
+// schedule = JSON.parse(schedule, function(key, value) {
+//   if (key == 'date') return new Date(value);
+//   return value;
+// });
+// console.log( schedule.meetups[1].date.getDate() ); // works!
+
+const jsonText = `{
+  "browsers": {
+    "firefox": {
+      "name": "Firefox",
+      "pref_url": "about:config",
+      "releases": {
+        "1": {
+          "release_date": "2004-11-09",
+          "status": "retired",
+          "engine": "Gecko",
+          "engine_version": "1.7"
+        }
+      }
+    }
+  }
 }`;
-schedule = JSON.parse(schedule, function(key, value) {
-  if (key == 'date') return new Date(value);
-  return value;
-});
-console.log( schedule.meetups[1].date.getDate() ); // works!
 
+console.log(JSON.parse(jsonText));
+
+
+/*The code in lines 273-290 does not display the object in the `"releases"` property of the `"firefox"` object because the `console.log(JSON.parse(jsonText));` statement only parses the JSON string and outputs the entire parsed object to the console. However, the output in the terminal may truncate the displayed object if it is too large or deeply nested, depending on the terminal's display settings or Node.js's default behavior for logging objects.*/
+
+// ### How to Fix or Verify:
+// 1. **Access the Specific Property**: If you want to explicitly display the `"releases"` property only, you can access it directly after parsing:
+   const parsedData1 = JSON.parse(jsonText);
+   console.log(parsedData1.browsers.firefox.releases);
+   
+// Useful for our case:   
+// 2. **Inspect the Full Object**: Use `console.dir` with options to display the entire object without truncation:
+   const parsedData = JSON.parse(jsonText);
+   console.dir(parsedData, { depth: null, colors: true });   
+
+// 3. **Use a Debugger**: Run the script with a debugger to inspect the parsed object:
+   // node inspect script.js   
+
+// 4. **Stringify the Parsed Object**: Convert the parsed object back to a JSON string for full visibility:
+   const parsedData2 = JSON.parse(jsonText);
+   console.log(JSON.stringify(parsedData2, null, 2));
+// By using one of these methods, you can ensure that the `"releases"` property is fully visible in the output.
