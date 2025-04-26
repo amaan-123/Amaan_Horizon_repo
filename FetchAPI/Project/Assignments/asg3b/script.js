@@ -1,3 +1,8 @@
+// TO DO:
+// 1. 
+// Update table rows one-by-one
+// Not all at once
+
 'use strict';
 
 document.getElementById("getData").addEventListener("click",response)

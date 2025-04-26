@@ -1,3 +1,9 @@
+// TO DO:
+// 1. 
+// Strictly use Javascript code only
+// i.e., try to not use HTML tags here
+
+
 'use strict';
 
 document.getElementById("getData").addEventListener("click",response)
