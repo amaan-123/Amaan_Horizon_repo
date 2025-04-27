@@ -1,36 +1,45 @@
-// TO DO:
-// 1. 
-// Update table rows one-by-one
-// Not all at once
-
 'use strict';
 
-document.getElementById("getData").addEventListener("click",response)
+let userData = []; // Store API response data
+let currentIndex = 0; // Track the current row to display
 
-function response(){
+document.getElementById("getData").addEventListener("click", response);
 
-  fetch('https://jsonplaceholder.typicode.com/users')
-  .then(response => response.json())
-  .then(data => {
-    const table = document.getElementById("userTable")
-    table.innerHTML = ""
-    data.forEach(user => {
-      const tRow = document.createElement("tr")
+async function response() {
+  try {
+    // Fetch data only if not already fetched
+    if (userData.length === 0) {
+      const res = await fetch('https://jsonplaceholder.typicode.com/users');
+      userData = await res.json();
 
-      const tId = document.createElement("td")
-      tId.innerHTML = user.id
-      const tName = document.createElement("td")
-      tName.innerHTML = user.name
-      const tEmail = document.createElement("td")
-      tEmail.innerHTML = user.email
+      // Remove placeholder row
+      const placeholderRow = document.querySelector("#userTable .placeholder-row");
+      if (placeholderRow) {
+        placeholderRow.remove();
+      }
+    }
 
-      tRow.append(tId)
-      tRow.append(tName)
-      tRow.append(tEmail)
+    // Add one row per click
+    if (currentIndex < userData.length) {
+      const user = userData[currentIndex];
+      const table = document.getElementById("userTable");
 
-      table.append(tRow)
-    })
-    document.getElementById("response").innerHTML = output
-  })
-  .catch(error => console.log(error))
-} 
+      const tRow = document.createElement("tr");
+      const tId = document.createElement("td");
+      tId.innerHTML = user.id;
+      const tName = document.createElement("td");
+      tName.innerHTML = user.name;
+      const tEmail = document.createElement("td");
+      tEmail.innerHTML = user.email;
+
+      tRow.append(tId, tName, tEmail);
+      table.append(tRow);
+
+      currentIndex++; // Increment index for the next row
+    } else {
+      alert("All rows have been displayed.");
+    }
+  } catch (error) {
+    console.error("Error fetching data:", error);
+  }
+}
