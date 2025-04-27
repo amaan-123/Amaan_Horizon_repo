@@ -1,28 +1,32 @@
-// TO DO:
-// 1. 
-// Strictly use Javascript code only
-// i.e., try to not use HTML tags here
-
-
 'use strict';
 
-document.getElementById("getData").addEventListener("click",response)
+document.getElementById("getData").addEventListener("click", response);
 
-function response(){
+async function response() {
+  try {
+    const res = await fetch('https://jsonplaceholder.typicode.com/comments');
+    const data = await res.json();
 
-  fetch('https://jsonplaceholder.typicode.com/comments')
-  .then(response => response.json())
-  .then(data => {
-    let output = `<h2>Response Text</h2>`
+    const responseDiv = document.getElementById("response");
+    responseDiv.innerHTML = ""; // Clear previous content
+
+    const heading = document.createElement("h2");
+    heading.textContent = "Response Text";
+    responseDiv.appendChild(heading);
+
     data.forEach(comment => {
-      output += `
-      <hr>
-        <h3>${comment.name}</h3>
-        <p>${comment.body}</p>
-      `
-      }
-    )
-    document.getElementById("response").innerHTML = output
-  })
-  .catch(error => console.log(error))
-} 
+      const hr = document.createElement("hr");
+      responseDiv.appendChild(hr);
+
+      const title = document.createElement("h3");
+      title.textContent = comment.name;
+      responseDiv.appendChild(title);
+
+      const body = document.createElement("p");
+      body.textContent = comment.body;
+      responseDiv.appendChild(body);
+    });
+  } catch (error) {
+    console.error(error);
+  }
+}
