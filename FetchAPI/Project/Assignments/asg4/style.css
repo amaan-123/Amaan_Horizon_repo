@@ -1,0 +1,95 @@
+/* General Reset: Removes default browser styles for consistency */
+body, h1, textarea, button, table {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Body Styling: Sets a clean background and centers content */
+body {
+  font-family: 'Arial', sans-serif;
+  background-color: #f4f4f9; /* Light gray background for a modern look */
+  color: #333; /* Dark gray text for readability */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 20px;
+}
+
+/* Container Styling: Adds spacing and centers the content */
+#container {
+  background: #ffffff; /* White background for contrast */
+  padding: 20px;
+  border-radius: 10px; /* Rounded corners for a modern feel */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+  max-width: 600px;
+  width: 100%;
+  text-align: center;
+}
+
+/* Heading Styling */
+h1 {
+  font-size: 24px;
+  margin-bottom: 20px;
+  color: #444; /* Slightly darker gray for emphasis */
+}
+
+/* Textarea Styling */
+textarea {
+  width: 100%;
+  height: 100px;
+  border: 1px solid #ccc; /* Light border for structure */
+  border-radius: 5px;
+  padding: 10px;
+  font-size: 16px;
+  resize: none; /* Prevent resizing for consistent layout */
+  outline: none;
+  transition: border-color 0.3s ease; /* Smooth transition for focus effect */
+}
+
+textarea:focus {
+  border-color: #007bff; /* Blue border on focus */
+}
+
+/* Button Styling */
+button {
+  background-color: #007bff; /* Blue background for primary action */
+  color: #fff; /* White text for contrast */
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease; /* Smooth hover effect */
+}
+
+button:hover {
+  background-color: #0056b3; /* Darker blue on hover */
+}
+
+/* Table Styling */
+table {
+  width: 100%;
+  margin-top: 20px;
+  border-collapse: collapse; /* Removes gaps between table cells */
+}
+
+thead {
+  background-color: #007bff; /* Blue background for header */
+  color: #fff; /* White text for contrast */
+}
+
+th, td {
+  padding: 10px;
+  text-align: left;
+  border: 1px solid #ddd; /* Light border for structure */
+}
+
+tbody tr:nth-child(even) {
+  background-color: #f9f9f9; /* Alternating row color for readability */
+}
+
+tbody tr:hover {
+  background-color: #f1f1f1; /* Highlight row on hover */
+}
