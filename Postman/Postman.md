@@ -350,3 +350,119 @@ console.log(pm.response.json())
 7\. Scroll to the bottom of the logs in the console. You will see your most recent request `POST https://library-api.poistmanlabs.com/books`. The response data from the API is logged in the console because of the code in our **Tests** tab. You can expand the data by clicking on the small arrow to the left:
 
 ![Postman screenshot: Response data from the API is logged to the Postman console because of the code in the Tests tab of the request](https://everpath-course-content.s3-accelerate.amazonaws.com/instructor%2F26fp2261340y1ukokimvca8su%2Fpublic%2F1649760951%2Ffirst+script+3.1649760951509.png)
+
+## Scripting in Postman
+
+### The `pm` object
+
+Postman has a helper object named `pm` that gives you access to data about your postman environment, requests, responses, variables and testing utilities.
+
+For example, you can access the JSON response body from the API with: **`pm.response.json()`**
+
+### Setting and getting collection variables
+
+The `pm` object allows you to set and get collection variables.
+
+To set a collection variable use the `.set()` method with the variable name and the variable value parameters:
+
+```javascript
+pm.collectionVariables.set("variableName", value)
+```
+
+To get a collection variable use the `.get()` method and specify the name of the variable you want to retrieve:
+
+```javascript
+pm.collectionVariables.get("variableName")
+```
+
+### Local variables
+
+We can also store local variables inside our scripts using JavaScript.
+
+There are two ways to define a variable in JavaScript: using the `const` or `let` keywords.
+
+### Set the new book id as a variable
+
+Saving a value as a variable allows you to use it in other requests. Let's grab the `id` of a newly added book and save it so we can use it in future requests.
+
+1. In the **Body** tab of the _"add a book"_ request, change the details to yet another new book to add.
+2. In the **Scripts** tab of the _"add a book"_ request, replace the console.log() statement with this code:
+
+    ```javascript
+    const id = pm.response.json().id
+    pm.collectionVariables.set("id", id)
+    ```
+
+    This first line assigns the `id` value from the API response to a local variable named `id`. This variable is `const` because the variable value doesn't change in the script. The second line sets this value to a collection variable called `id`.
+
+    ![Postman screenshot: Add a script in the Tests tab for setting the collection variable named id](https://everpath-course-content.s3-accelerate.amazonaws.com/instructor%2F26fp2261340y1ukokimvca8su%2Fpublic%2F1719600836%2Fimage+%2895%29.1719600836771.png)
+3. **Save** your request
+4. **Send** your request. When the `201` response comes back from the API with you newly created book, the Tests script will run and save the book's `id` as a collection variable automatically.
+5. View your collection variables by clicking on your **Postman Library API v2** collection, then the **Variables** tab. The `id` variable has been automatically assigned the id of your new book as its Current Value! You can now use `{{id}}` anywhere in your collection to access this value.
+
+    ![Postman screenshot: A collection variable named id has been automatically added by our Tests tab script](https://everpath-course-content.s3-accelerate.amazonaws.com/instructor%2F26fp2261340y1ukokimvca8su%2Fpublic%2F1649770495%2Fset+id+2.1649770495600.png)
+
+## PATCH request: Check out a book
+
+code{ font-weight: normal; }
+
+Someone wants to check out the book you just added. As librarian, you will update the library database via the API to mark the book's `checkedOut` status from `false` to `true`.
+
+The [API documentation](https://documenter.getpostman.com/view/15567703/UVyxRtng#1c3ce860-e1ee-4957-b517-2e3068021abc) allows updating a book by id by making an authorized request with the updated information to: `PATCH https://library-api.postmanlabs.com/books/:id`
+
+1. Hover on your **Postman Library API v2** collection, click the three dots, and select **Add request**. Name your new request _"checkout a book"_.
+2. Set the request method to **PATCH** and the request URL to `{{baseUrl}}/books/:id`
+
+    ![Postman screenshot: Add a PATCH request to /books/:id](https://everpath-course-content.s3-accelerate.amazonaws.com/instructor%2F26fp2261340y1ukokimvca8su%2Fpublic%2F1649785811%2Fcheckout+1.1649785811831.png)
+3. Set the value of path variable `id` to `{{id}}`. This will use the value of our collection variable named `id` that was set in the script of the _"add a book"_ request.
+
+    ![Postman screenshot: Set the path variable named id to be the value of the collection variable named id](https://everpath-course-content.s3-accelerate.amazonaws.com/instructor%2F26fp2261340y1ukokimvca8su%2Fpublic%2F1649786360%2Fcheckout+2.1649786360490.png)
+4. Add a raw JSON body in the **Body** tab for updating the `checkedOut` property to `true`:
+
+    ```javascript
+    { 
+      "checkedOut": true 
+    }
+    ```
+
+    ![Postman screenshot: Body tab of the PATCH request is set to raw JSON type, and a body for updating the checkedOut property to true is set](https://everpath-course-content.s3-accelerate.amazonaws.com/instructor%2F26fp2261340y1ukokimvca8su%2Fpublic%2F1649790706%2Fcheckout+4.1649790706385.png)
+5. Make sure in the **Authorization** tab that the Auth type is set to _"Inherit from parent"_. This will use the API Key set at the collection level on our PATCH request.
+
+    ![Postman screenshot: The Authorization tab of the request is set to inherit the auth settings from the parent (collection)](https://everpath-course-content.s3-accelerate.amazonaws.com/instructor%2F26fp2261340y1ukokimvca8su%2Fpublic%2F1649791078%2Fcheckout+5.1649791078839.png)
+6. **Save** your request.
+7. **Send** your request.
+
+You should get a `200 OK` response that shows the updated data about your book. Notice how `checkedOut` is now `true`
+
+![Postman screen: response from the API after updating the book's checkedOut property to true](https://everpath-course-content.s3-accelerate.amazonaws.com/instructor%2F26fp2261340y1ukokimvca8su%2Fpublic%2F1649791688%2Fcheckedout+7.1649791688026.png)
+
+Now if you return to your _"get book by id"_ request, update the id path variable value to `{{id}}` , **Save** and **Send**, you will see the same updated data.
+
+![Postman screenshot: "get a book" request shows the updated book data for the book with the given id](https://everpath-course-content.s3-accelerate.amazonaws.com/instructor%2F26fp2261340y1ukokimvca8su%2Fpublic%2F1649795407%2Fcheckedout+8.1649795407165.png)
+
+## DELETE: Delete a book
+
+code{ font-weight: normal; }
+
+Oops! The person that checked out your book accidentally lost it... you will need to delete it from the library database. The API documentation shows that books can be deleted with the `DELETE /books/:id path`
+
+The `DELETE` request has a similar format to the `PATCH` request, so let's copy the `PATCH` request to make our new request.
+
+1. Hover over your _"checkout a book"_ request, click the three dots icon, then select **Duplicate** to create a copy of the request. Rename your new request _"delete a book"_.
+
+    ![Postman screenshot: Duplicate a request by hovering on it and clicking the triple dots icon, then select Duplicate](https://everpath-course-content.s3-accelerate.amazonaws.com/instructor%2F26fp2261340y1ukokimvca8su%2Fpublic%2F1649797504%2Fdelete+1.1649797504471.png)
+2. Set the request method of the _"delete a book"_ request to `DELETE`.
+3. Make sure the request **Body** is empty. This endpoint does not require a body.
+4. In the **Params** tab, make sure the path variable id is set to `{{id}}`. Your request should now look like this:
+
+    ![Postman screenshot: DELETE book request](https://everpath-course-content.s3-accelerate.amazonaws.com/instructor%2F26fp2261340y1ukokimvca8su%2Fpublic%2F1649797563%2Fdelete+2.1649797563376.png)
+5. **Save** your request.
+6. **Send** your request.
+
+You should get a `204 No Content` response from the API. This means the server successfully deleted the book, and won't send any response body back. Remember: if you ever wonder what a status code means, you can hover on it in Postman for an explanation.
+
+![Postman screenshot: 204 response from API](https://everpath-course-content.s3-accelerate.amazonaws.com/instructor%2F26fp2261340y1ukokimvca8su%2Fpublic%2F1649797638%2Fdelete+3.1649797638274.png)
+
+Is it really gone? Without changing anything, try sending your request again. Since you are sending a request to delete a book with an id that no longer exists, you get a `404` error.
+
+![Postman screenshot: 404 response from server. Book with the given id is not found (because we deleted it!)](https://everpath-course-content.s3-accelerate.amazonaws.com/instructor%2F26fp2261340y1ukokimvca8su%2Fpublic%2F1649797906%2Fdelete+4.1649797906195.png)
