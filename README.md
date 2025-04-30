@@ -4,12 +4,16 @@ This is a repo to reflect amaan-123's assignment answers & associated files for 
 
 ## Folder Structure
 
+- `DevToolingandEnvironment/` - Tools and environment setup guides.
+- `GitHubAndGitBash/` - Git and GitHub-related resources and notes.
 - `HTML_CSS_JS/` - Contains HTML, CSS, and JavaScript-related projects and notes.
 - `FetchAPI/` - Notes and projects related to Fetch API.
-- `GitHubAndGitBash/` - Git and GitHub-related resources and notes.
-- `DevToolingandEnvironment/` - Tools and environment setup guides.
 
 ## Resources Used
+
+### Dev Tooling and Environment
+
+- [Visual Studio Code Intro & Setup](https://www.youtube.com/watch?v=fnPhJHN0jTE)
 
 ### Git and GitHub
 
