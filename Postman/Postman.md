@@ -1,8 +1,10 @@
 # Postman Notes
 
+## API Beginner Series
+
 > Source: <https://academy.postman.com/path/api-beginner>
 
-## API types
+### API types
 
 The term API is often used to refer to web APIs, which allow communication between computers that are joined by the internet. While this course will focus on Web APIs, it is important to keep in mind that the term "API" can apply to a broad range of interfaces:
 
@@ -19,7 +21,7 @@ Multiple API types may be used to achieve a simple task. For example, uploading 
 2. Software library API for the image to be processed with filters
 3. Web API for sending your image to Instagram's servers so your friends can like it
 
-## API architectures
+### API architectures
 
 There is more than one way to build and consume APIs. These are some of the most common architecture types you may come across:
 
@@ -31,7 +33,7 @@ There is more than one way to build and consume APIs. These are some of the most
 - gRPC (Google Remote Procedure Call)
 - MQTT (MQ Telemetry Transport)
 
-## API accessibility
+### API accessibility
 
 APIs also vary in the scope of who can access them:
 
@@ -55,7 +57,7 @@ These API client interfaces allow you to easily:
 - Keep track of request history
 - Write tests
 
-## Visualize your data
+### Visualize your data
 
 ![alt text](image.png)
 
@@ -67,7 +69,7 @@ These API client interfaces allow you to easily:
 
 ![alt text](image-5.png)
 
-## Response Codes
+### Response Codes
 
 | Code range | Meaning | Example |
 | --- | --- | --- |
@@ -76,7 +78,7 @@ These API client interfaces allow you to easily:
 | `4xx` | Client error | `400` - Bad request  `401` - Unauthorized  `403` - Not permitted  `404` - Not found |
 | `5xx` | Server error | `500` - Internal server error  `502` - Bad gateway  `504` - Gateway timeout |
 
-## Request URL
+### Request URL
 
 In addition to a request method, a request must include a request URL that indicates where to make the API call. A request URL has three parts:
 
@@ -466,3 +468,362 @@ You should get a `204 No Content` response from the API. This means the server s
 Is it really gone? Without changing anything, try sending your request again. Since you are sending a request to delete a book with an id that no longer exists, you get a `404` error.
 
 ![Postman screenshot: 404 response from server. Book with the given id is not found (because we deleted it!)](https://everpath-course-content.s3-accelerate.amazonaws.com/instructor%2F26fp2261340y1ukokimvca8su%2Fpublic%2F1649797906%2Fdelete+4.1649797906195.png)
+
+## Intro to Postman - Notes on Youtube Playlist by Postman
+
+> Source: <https://www.youtube.com/playlist?list=PLM-7VG-sgbtAgGq_pef5y_ruIUBPpUgNJ>
+
+## Intro to Postman | Part 2: Authorize a Request
+
+- This video series is for people new to Postman.
+- The focus of this video is on how to **authorize a request in Postman**.
+- Not all APIs can be accessed without providing **credentials**.
+- The API needs to know who you are and check if you are allowed to access or change data.
+- The example API used is the **GitHub API**.
+
+### Using the GitHub API to Create a Repository
+
+- The video uses the GitHub API documentation to figure out how to create a new repository.
+- The goal is to create a repository **for the authenticated user**.
+- The endpoint for this action is `/user/repos`.
+- This request needs to be a **POST request**.
+- The base URL for the GitHub API is `api.github.com`.
+
+### Attempting the Request Without Authorization
+
+- In Postman, create a new tab and paste the base URL `api.github.com`.
+- Select `POST` from the dropdown menu.
+- Add the endpoint `/user/repos`.
+- Sending the request without providing any body initially results in a `401 Unauthorized` status code.
+- **401 Unauthorized** means you are not authorized because credentials haven't been provided.
+- It doesn't make sense for GitHub to create a repository if it doesn't know who you are.
+
+### Authentication Using Tokens
+
+- When working with APIs, usernames and passwords are not typically used.
+- **Tokens** are used instead; they are a form of a temporary password.
+- Tokens sometimes provide limited access to an account.
+
+### Creating a Personal Access Token on GitHub
+
+- To get a token, go to `github.com`.
+- From your GitHub profile, navigate to **Settings**.
+- In Settings, go to **Developer settings**.
+- Select **Personal access tokens**.
+- Click on **Generate new token**.
+- Provide a **note** for the token (e.g., `postman`) which is important for later knowing why the token was created.
+- Select a low **expiration date** (e.g., 7 days) so the token expires and becomes unusable.
+- Select **scopes**, which tie permissions to the token.
+- By default, usernames/passwords have full access, but for this task, only the necessary permissions are needed.
+- To create a repository, only the **`repo` scope** is selected.
+- Scroll down and click **Generate token**.
+- **Copy the generated token**. (Note: The token shown in the video is invalidated after recording).
+
+### Using the Token in Postman for Authorization
+
+- Postman offers **authentication helpers**.
+- These are built-in tools to make authorization easier.
+- In the Postman request tab, below the URL, select the **Authorization** tab.
+- From the dropdown list, select **Bearer Token**.
+- Paste the copied token into the token field.
+- Click **Send**.
+- The status code is now `400 Bad Request` instead of `401 Unauthorized`. This indicates that authentication is working.
+- The response message states that the body should be a JSON object.
+
+### Saving the Request
+
+- Since progress is being made, it's recommended to save the request.
+- Create a new collection (e.g., `github api`).
+- Save the request with a name (e.g., `create repository`).
+
+### Handling Sensitive Data: Using Variables
+
+- It's **not a good idea** to put sensitive data like tokens directly into the request fields, especially if sharing the collection.
+- The concept of **variables** is introduced to handle this.
+- Select the token value in the authorization tab.
+- An option **Set as a new variable** appears. Click this.
+- Name the variable (e.g., `token`).
+- Select the **scope** as **Collection**. (The request must be saved in a collection first to see the collection scope option).
+- Click **Set variable**.
+- Hovering over the variable name in the request now shows the saved value.
+- Postman uses a specific syntax for variables inside requests: **double curly brackets** `{{variableName}}`.
+
+```bash
+{{token}}
+```
+
+- Sending the request with `{{token}}` in the token field still works, confirming the variable is being replaced correctly by Postman.
+
+### Managing Collection Variables
+
+- To make changes to a collection variable, open the collection's context menu and select **Edit**.
+- Go to the **Variables** tab within the collection settings.
+- Variables have an **Initial Value** and a **Current Value**.
+- The **Initial Value** is what will be shared with others if the collection is exported.
+- It is recommended to put a placeholder like "put your token" in the Initial Value so recipients know they need to replace it with their own token.
+- The **Current Value** is private to your account and is what Postman uses when sending requests.
+- It is safe to keep your actual, valid token in the Current Value.
+- Click **Save** after making changes to variables.
+- The request in the tab still works correctly after saving the variable.
+
+### How Bearer Token Authorization Works (Headers)
+
+- The **authorization helper** in Postman for Bearer Token creates a new **header**.
+- Go to the **Headers** tab in the request.
+- A header named `Authorization` is added.
+- The value of this header is `Bearer` followed by the token (or the variable `{{token}}`).
+
+```bash
+Authorization: Bearer {{token}}
+```
+
+- **Headers** are another way to pass data to an API.
+- Headers are generally not directly connected to filtering endpoint data (query parameters are used for that).
+- Headers are used for things like **authentication information** or data useful for ensuring the message is delivered and understood properly.
+- Tokens are most commonly passed in headers for authorization purposes.
+
+### Providing the Request Body
+
+- The previous `400 Bad Request` error indicated the body was missing or invalid.
+- Go back to the API documentation to find out what needs to be sent in the body.
+- The documentation states the information should be formatted as **JSON**.
+- Looking at the parameters, `name` is the **only required parameter**.
+- Other optional parameters like `description` can also be submitted.
+- These parameters are expected to be part of the **request body**.
+- In Postman, select the **Body** tab.
+- Choose the **raw** option.
+- From the format dropdown, select **JSON**.
+- Create a valid JSON object with the required `name` parameter and an optional `description`.
+
+```json
+{
+  "name": "Created from Postman",
+  "description": "All right"
+}
+```
+
+- Click **Send** again.
+- This time, the status code is **`201 Created`**.
+- **201 Created** means a new resource (the repository) has been successfully created.
+- The response body contains details about the newly created repository (ID, name, URL, etc.).
+- The new repository can be verified on the GitHub profile web interface.
+
+### Troubleshooting Common Beginner Errors
+
+- When encountering errors, it's important to look at the **status code** to understand the type of error.
+- Also, look for hints in the **response body**.
+- **`400 Bad Request`**: Something is wrong with the request itself.
+  - Example: Not providing a body when required. The hint might say "body should be a JSON object".
+  - Example: Providing an invalid JSON format. Postman might try to help, but the error could be "problems parsing json".
+- **`404 Not Found`**: The address (URL) is incorrect.
+  - Example: An extra space in the URL makes it a different, non-existent address.
+- **`401 Unauthorized`**: The bearer token is not configured correctly or is invalid.
+  - Check for extra spaces or unwanted characters in the token value.
+- For further troubleshooting, check the video description, post a comment, or post a question in the Postman community.
+
+Here are detailed markdown notes from the provided video transcript excerpts on writing API tests in Postman:
+
+## Intro to Postman | Part 3: Write API Tests
+
+- This video is part of a series for people new to Postman.
+- The focus is on how to **write your first API tests in Postman**.
+- Previous videos covered building requests and inspecting responses manually.
+
+### What is API Testing?
+
+- You have already been doing a basic form of API testing by building requests and inspecting the response body and status code manually to see if calls were successful.
+- This manual process is time-consuming and prone to errors, especially with multiple requests.
+- **Automated API testing** involves writing code in Postman that automatically checks if relevant criteria have been fulfilled.
+- Postman allows both manual testing and automating the process.
+- Automated checks can significantly speed up testing (e.g., checking 100 endpoints in 10 seconds).
+
+### Writing Your First Test in Postman
+
+- The first step to automating tests in Postman is to write a test.
+- Tests are written in the **Tests tab** of a request.
+- Postman provides a **snippets panel** on the right side of the Tests tab which is great for beginners to get started.
+
+### Adding a Status Code Test
+
+- Select a snippet like **"Status code is 200"**.
+- This generates JavaScript code in the Tests tab.
+- The code uses the `pm.test` function.
+- The `pm.test` function takes two parameters: the name of the test (e.g., "Status code is 200") and a callback function containing the **assertions**.
+- The assertion generated by the snippet is `pm.response.to.have.status(200)`.
+- This test code is executed _once the response from the server has been received_.
+- Assertions are made on the response using the **`pm` object**.
+
+```javascript
+pm.test("Status code is 200", function () {
+    pm.response.to.have.status(200);
+});
+```
+
+### Running the Test and Handling Failure
+
+- Running the request with the initial snippet (expecting 200) after creating a repository might result in a **`422 Unprocessable Entity`** status code because a repository with the same name already exists.
+- The **Test Results** section will show the test failing.
+- The failure message will indicate what was expected (status 200) and what was received (status 422).
+
+### Importance of Failing Tests
+
+- It is **very important to ensure that your tests will fail** if the condition is not met.
+- If a test passes from the beginning, you should deliberately change something to make it fail to confirm it's working correctly.
+- A common beginner mistake is to incorrectly format the `pm.test` function, often by closing the function or removing necessary parts, which can result in a test that _always passes_ because it contains **no assertions**.
+
+```javascript
+// Example of a common beginner mistake that results in a test with no assertions
+pm.test("Status code is 200", function () {
+    // Missing assertion here
+}); // Parenthesis might be misplaced or content inside the function missing
+```
+
+- Always ensure your test fails when it should before trusting that it passes when it should.
+
+### Fixing the Status Code Test for Repository Creation
+
+- When creating data via an API, the expected successful status code is often **`201 Created`**.
+- The API error message indicates the repository name already exists, requiring a change to the request body's `name` property.
+- Update the test to expect status code **`201`** by changing both the test name and the assertion.
+
+```javascript
+pm.test("Status code is 201", function () {
+    pm.response.to.have.status(201);
+});
+```
+
+- After changing the repository name in the request body and updating the test to expect `201`, the test should pass upon sending.
+
+### Testing Response Body Properties
+
+- Testing only the status code may not be sufficient; a `201` status doesn't guarantee the data created is exactly what was intended (e.g., the name or description might be incorrect).
+- You can write tests to check specific properties returned in the response body.
+- Use the snippet **"Response body: JSON value check"**.
+- This snippet provides code to:
+    1. Get the response body as a JavaScript object.
+    2. Write an expectation using `pm.expect`.
+
+```javascript
+pm.test("Your test name", function () {
+    var jsonData = pm.response.json();
+    pm.expect(jsonData.value).to.eql(100);
+});
+```
+
+- **Explanation of the code:**
+  - `var jsonData = pm.response.json();` : This line parses the JSON response body into a JavaScript object, making its properties accessible.
+  - `pm.expect(jsonData.value).to.eql(100);` : This is the assertion. It expects the property `value` within the `jsonData` object to deeply equal `100`.
+
+### Modifying the JSON Body Test
+
+- Based on the repository creation example, you might want to check if the `description` provided in the request body is present and correct in the response body.
+- The initial snippet might fail because the expected property (`value`) doesn't exist in the response, resulting in `undefined`, and the expected value (`100`) is incorrect.
+- Modify the assertion to check the `description` property and compare it to the expected string value.
+
+```javascript
+pm.test("Description is correct", function () { // Changed test name
+    var jsonData = pm.response.json();
+    pm.expect(jsonData.description).to.eql("All right"); // Checking 'description' property against the expected string
+});
+```
+
+- Running the request with both the `201` status code test and the description test should show both tests passing if the response body contains the expected description.
+- You can check other properties from the response body by inspecting the received JSON and modifying the assertion accordingly.
+
+### Handling Dynamic Data: Using Variables in Scripts
+
+- **Hard-coded data**, like the repository name in the request body, is annoying because it needs to be changed manually for each request to create a unique repository.
+- **Dynamic data** is needed to solve this.
+- Postman variables can be used, but for values that change _before_ the request runs, they need to be set in a **pre-request script**.
+- **Pre-request scripts** run _before_ the request is executed.
+- **Test scripts** run _after_ the response is received.
+- To set a Postman variable from a script, use `pm.collectionVariables.set()` (or `pm.environmentVariables.set()`, etc.).
+  - The first argument is the variable name (e.g., `"repositoryName"`).
+  - The second argument is the value to set.
+
+```javascript
+// In the Pre-request Script tab
+pm.collectionVariables.set("repositoryName", "test value"); // Example setting a static value
+```
+
+- Use the variable in the request body using the `{{variableName}}` syntax.
+
+```json
+{
+  "name": "{{repositoryName}}",
+  "description": "All right"
+}
+```
+
+- Sending the request will now use the value set by the pre-request script in the body. This alone is not dynamic randomness, but it shows the variable concept works.
+
+### Adding Randomness to the Repository Name
+
+- To make the repository name dynamic, add randomness in the pre-request script.
+- Define a JavaScript variable (using `const` or `var`) to hold a random string. **Do not confuse these JavaScript variables with Postman variables**.
+- A built-in JavaScript function can be used to generate a random string.
+
+```javascript
+// In the Pre-request Script tab
+const randomString = Math.random().toString(36).substring(7); // Example generating a random string
+```
+
+- Combine a base name with the random string to create a unique repository name.
+- Set a **Postman variable** (like `repositoryName`) using `pm.collectionVariables.set()` with the combined dynamic string as the value.
+
+```javascript
+// In the Pre-request Script tab
+const randomString = Math.random().toString(36).substring(7);
+const repoName = "my repository " + randomString; // Combine base name and random string
+
+// Set the Postman collection variable
+pm.collectionVariables.set("repositoryName", repoName);
+```
+
+- Ensure you are passing the JavaScript variable `repoName` (without quotes) to `pm.collectionVariables.set()`, not the string `"repoName"`.
+- Now, each time the request is sent, the pre-request script generates a unique name, and the request body uses this dynamic value via the `{{repositoryName}}` variable.
+
+### Testing the Dynamic Repository Name
+
+- Add another test in the Tests tab to verify that the repository name returned in the response matches the name that was dynamically generated and sent in the request.
+- Copy an existing test snippet.
+- The test should compare the `name` property from the response JSON (`jsonData.name`) to the value of the `repositoryName` Postman variable.
+- **Important:** You cannot use the `{{variableName}}` syntax _inside scripts_ (Pre-request or Tests).
+- To access the value of a Postman variable _inside a script_, use the `pm.collectionVariables.get()` method.
+  - Provide the variable name as a string argument (e.g., `"repositoryName"`). **Do not include curly brackets**.
+
+```javascript
+// In the Tests tab
+pm.test("Repository name is correct", function () { // Changed test name
+    var jsonData = pm.response.json();
+    // Get the generated repository name from the collection variable
+    const expectedName = pm.collectionVariables.get("repositoryName");
+
+    pm.expect(jsonData.name).to.eql(expectedName);
+});
+```
+
+- Running this test initially might fail because GitHub's API often replaces spaces in repository names with dashes. The returned name will have dashes, while the value retrieved from the Postman variable still has spaces.
+- To make the test pass, use a string function like `replaceAll()` on the expected name (retrieved from the variable) to replace spaces with dashes before comparing.
+
+```javascript
+// In the Tests tab
+pm.test("Repository name is correct", function () {
+    var jsonData = pm.response.json();
+    const generatedName = pm.collectionVariables.get("repositoryName");
+
+    // Replace spaces with dashes in the generated name to match GitHub's behavior
+    const expectedName = generatedName.replaceAll(" ", "-"); // Using replaceAll
+
+    pm.expect(jsonData.name).to.eql(expectedName);
+});
+```
+
+- With this adjustment, the test for the repository name should pass.
+
+### Summary of Testing
+
+- By writing tests, you replace manual checks with automated assertions.
+- Examples include checking the status code and properties from the response body.
+- You only need to look at the **Test Results** to know if the request worked as expected.
+- Tests also serve as documentation for the API's functionality (e.g., noting that spaces in names are replaced with dashes). If the API behavior changes, the test will fail, indicating the change.
