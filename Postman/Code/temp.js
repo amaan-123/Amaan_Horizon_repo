@@ -1,4 +1,10 @@
 //  Approach 2: Using fetch() (manual HTTP request)
+// Below script code is suggested by Postman
+// It is from the code snippets suggestion in:
+// Collection: AzureOpenAIAPI
+// Folder: ChatCompletion
+// Request: POST ChatCompletion
+
 const myHeaders = new Headers();
 myHeaders.append("Content-Type", "application/json");
 myHeaders.append("api-key", "placeholder");

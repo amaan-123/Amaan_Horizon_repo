@@ -6,7 +6,7 @@ Comparing **two different ways to call Azure OpenAI's API**:
 
 ## ✅ Approach 1: **Using the official `openai` NPM package**
 
-(script.js: from Azure website)
+(HTML_CSS_JS\Projects\OpenAIApi\script.js: sourced from Azure website deployment model page)
 
 ```js
 import { AzureOpenAI } from "openai";
@@ -17,7 +17,7 @@ await client.chat.completions.create({...});
 
 ## 🆚 Approach 2: **Using `fetch()` (manual HTTP request)**
 
-(temp.js: Postman's suggested code)
+(Postman\Code\temp.js: sourced via Postman's suggested code)
 
 ```js
 fetch("https://.../chat/completions?api-version=...", requestOptions)

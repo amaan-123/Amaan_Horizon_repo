@@ -4,8 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Azure OpenAI API</title>
-  <!-- <script src="script.js" type="module" defer></script> -->
-  <script src="temp.js" defer></script> 
+  <!-- Removed: <script src="script.js" type="module" defer></script> -->
+  <script src="fetch.js" defer></script> 
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -23,11 +23,11 @@
       <tr><td id = "userQuery"></td></tr>
     </table>
 
-    <!-- Table 2: Model's output
+    <!-- Table 2: Model's output -->
     <table class="tftable" border="1">
-      <tr><th>Response from {{{response.model}}}:</th></tr>
-      <tr><td>{{{response.choices.[0].message.content}}}</td></tr>
-    </table> -->
+      <tr><th id = "modelName">Model used:</th></tr>
+      <tr><td id = "modelOutput"></td></tr>
+    </table>
   </div>
   
   <noscript>Plese allow JavaScript</noscript>
