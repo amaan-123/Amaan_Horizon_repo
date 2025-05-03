@@ -18,8 +18,8 @@ Markdown tracker with interactive checkboxes for revision and to-do items, and *
 
 ## 1. DevTooling (VS Code, CLI)
 
-* [x] 🔴 VS Code setup and extensions
-* [x] 🟡 Terminal basics (navigation, commands)
+* [x] 🟢 VS Code setup and extensions
+* [x] 🟢 Terminal basics (navigation, commands)
 * [x] 🔴 Command palette, multi-cursor, IntelliSense
 * [x] 🟢 Git integration in VS Code
 * [ ] 🔴 Debugger in VS Code
@@ -43,21 +43,21 @@ Markdown tracker with interactive checkboxes for revision and to-do items, and *
 
 * [x] 🟢 Headings, paragraphs, links, images, lists
 * [x] 🟢 Forms and basic input types
-* [x] 🔴 HTML entities and semantic elements
-* [ ] 🔴 Form attributes: `action`, `method`, `required`, etc.
-* [ ] 🔴 Accessibility (ARIA, labels, alt texts)
+* [-] 🔴 HTML entities and semantic elements
+* [x] 🟡 Form attributes: `action`, `method`, `required`, etc.
+* [-] 🟡 Accessibility (ARIA, labels, alt texts)
 * [ ] 🔴 SEO-friendly HTML practices
-* [ ] 🔴 HTML tables
+* [x] 🟡 HTML tables
 * [ ] 🔴 Meta tags
 
 ## 4. CSS
 
-* [x] 🔴 Inline, internal, external styles
+* [x] 🟡 Inline, internal, external styles
 * [ ] 🔴 Box model
 * [ ] 🔴 Flexbox
 * [ ] 🔴 Grid layout
 * [ ] 🔴 Media queries and responsive design
-* [ ] 🔴 Pseudo-classes and pseudo-elements
+* [-] 🔴 Pseudo-classes and pseudo-elements
 * [ ] 🔴 Positioning and z-index
 * [ ] 🔴 CSS variables
 * [ ] 🔴 Transitions and animations
@@ -67,15 +67,15 @@ Markdown tracker with interactive checkboxes for revision and to-do items, and *
 
 * [x] 🟡 Variables, data types, operators
 * [x] 🟡 Functions: declaration, arrow, expressions
-* [x] 🔴 DOM manipulation (selectors, events)
-* [x] 🔴 JSON.parse and JSON.stringify
+* [x] 🟡 DOM manipulation (selectors, events)
+* [x] 🟡 JSON.parse and JSON.stringify
 * [x] 🟡 Promises, async/await
-* [ ] 🔴 Closures and scope
+* [x] 🟡 Closures and scope
 * [ ] 🔴 Event bubbling and delegation
-* [ ] 🔴 Fetch API deep dive (headers, status codes, options)
+* [x] 🟡 Fetch API deep dive (headers, status codes, options)
 * [ ] 🔴 ES6+ features: spread/rest, destructuring, template literals
 * [ ] 🔴 Module system (import/export)
-* [ ] 🔴 Error handling (try/catch, finally)
+* [x] 🟡 Error handling (try/catch, finally)
 * [ ] 🔴 JavaScript Classes and OOP
 * [ ] 🔴 LocalStorage/sessionStorage
 * [ ] 🔴 Debounce/throttle
@@ -84,16 +84,17 @@ Markdown tracker with interactive checkboxes for revision and to-do items, and *
 ## 6. APIs (Frontend)
 
 * [x] 🟢 Fetch API basics
-* [ ] 🔴 Fetch with async/await and error handling
-* [ ] 🔴 REST API principles (GET, POST, PUT, DELETE)
-* [ ] 🔴 HTTP basics: headers, body, status codes
+* [ ] 🟢 Fetch with async/await and error handling
+* [ ] 🟢 REST API principles (GET, POST, PUT, DELETE)
+* [ ] 🟢 HTTP basics: headers, body, status codes
 * [ ] 🔴 CORS and same-origin policy
 * [ ] 🔴 API rate limits and authentication (API keys, tokens)
 
 ## 7. Postman
 
 * [x] 🟢 Sending basic requests (GET, POST)
-* [ ] 🔴 Using headers and auth tokens
+* [x] 🟢 Using headers and auth tokens
+* [-] 🔴 Visualising responses
 * [ ] 🔴 Environment variables and test scripts
 * [ ] 🔴 Saving collections
 * [ ] 🔴 Mock servers
@@ -101,7 +102,7 @@ Markdown tracker with interactive checkboxes for revision and to-do items, and *
 
 ## 8. C# (using Visual Studio 2022)
 
-* [x] 🔴 Hello World, variables, data types
+* [x] 🟢 Hello World, variables, data types
 * [ ] 🔴 Control structures (if, loops)
 * [ ] 🔴 Methods and parameters
 * [ ] 🔴 Classes and Objects
