@@ -4,9 +4,7 @@ Markdown tracker with interactive checkboxes for revision and to-do items, and *
 
 ## Immediate TO-DO's
 
-- Postman: 
 - Azure OpenAI API
-
   - Hide API Key using .env
   - Style welcoming & modern
   - Click-to-show token usage details
@@ -18,12 +16,12 @@ Markdown tracker with interactive checkboxes for revision and to-do items, and *
 - Postman playlist & docs: scripts, testing & visualiser
 - Browser Reading list
 
->✅ Checkbox States
+> ✅ Checkbox States
 >
 >- `[x]` → Completed
 >- `[ ]` → To-do / Not yet started
 >- `[-]` → Need revision / In progress
-
+>
 > 🏷️ Understanding Level Tags
 >
 >| Tag           | Meaning                                                               |
