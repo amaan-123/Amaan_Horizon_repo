@@ -1,8 +1,25 @@
 {
+  "name": "openaiapi",
+  "version": "1.0.0",
+  "description": "Comparing **two different ways to call Azure OpenAI's API**:",
+  "main": "fetch.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "format": "prettier --write *.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
   "type": "module",
   "dependencies": {
     "@azure/core-auth": "^1.9.0",
     "@azure/identity": "latest",
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0",
     "openai": "latest"
+  },
+  "devDependencies": {
+    "prettier": "^3.5.3"
   }
 }

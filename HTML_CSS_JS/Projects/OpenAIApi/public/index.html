@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Azure OpenAI API</title>
+  <link rel="stylesheet" href="styles.css">
+  <!-- no type="module" import of openai here -->
+  <script src="fetch.js" defer></script>
+</head>
+<body>
+  <div class="container">
+    <form>
+      <label for="userPrompt">Your question:</label><br>
+      <textarea
+        id="userPrompt"
+        name="userPrompt"
+        placeholder="Ask here!…"
+        required
+      ></textarea><br>
+      <button type="submit" id="ask">Send!</button>
+    </form>
+
+    <!-- Table 1: User's input -->
+    <table class="tftable" border="1" style="margin-bottom:20px">
+      <tr><th>Your “user” prompt:</th></tr>
+      <tr><td id="userQuery"></td></tr>
+    </table>
+
+    <!-- Table 2: Model's output -->
+    <table class="tftable" border="1">
+      <tr><th id="modelName">Model used:</th></tr>
+      <tr><td id="modelOutput"></td></tr>
+    </table>
+  </div>
+
+  <noscript>Please enable JavaScript to use this page.</noscript>
+</body>
+</html>

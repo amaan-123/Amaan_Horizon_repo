@@ -1,222 +1,123 @@
-# Using Azure OpenAI API
+# Azure OpenAI Web Chat Project
 
-Comparing **two different ways to call Azure OpenAI's API**:
+This repository demonstrates a simple web application that lets users enter a prompt and receive a response from the Azure OpenAI API. It uses a secure Node.js/Express backend to hide API keys and a plain HTML/CSS/JavaScript frontend.
 
 ---
 
-## ✅ Approach 1: **Using the official `openai` NPM package**
+## 📁 Project Structure
 
-(HTML_CSS_JS\Projects\OpenAIApi\script.js: sourced from Azure website deployment model page)
-
-```js
-import { AzureOpenAI } from "openai";
-...
-const client = new AzureOpenAI(options);
-await client.chat.completions.create({...});
-```
-
-## 🆚 Approach 2: **Using `fetch()` (manual HTTP request)**
-
-(Postman\Code\temp.js: sourced via Postman's suggested code)
-
-```js
-fetch("https://.../chat/completions?api-version=...", requestOptions)
-  .then(...);
+```md
+.gitignore          # Repo-wide files/folders to ignore in Git
+HTML_CSS_JS/Projects/OpenAIApi
+├── .env                # Environment variables (API key, endpoint, port) - ignored
+├── package.json        # NPM dependencies and scripts
+├── package-lock.json   # Exact dependency tree
+├── server.js           # Express server with /api/chat endpoint
+└── public/             # Frontend static assets
+    ├── index.html      # Main HTML page
+    ├── styles.css      # Basic styling
+    └── fetch.js        # Frontend JS to call /api/chat
 ```
 
 ---
 
-## 🔍 Key Differences
+## 🔧 Setup & Installation
 
-| Feature / Aspect               | `openai` SDK (Approach 1)                            | `fetch()` (Postman Approach 2)                                       |
-| ------------------------------ | ---------------------------------------------------- | -------------------------------------------------------------------- |
-| ✅ **Ease of use**              | Simple, less boilerplate                             | Verbose; you manually build headers, URL, and JSON body              |
-| ✅ **Built-in features**        | Auto handles parsing, retries, validation, and types | You must do all error checking, retries, and parsing yourself        |
-| ✅ **Maintainability**          | Easier to read, debug, and extend                    | More prone to bugs or missing pieces (e.g., headers, URL formatting) |
-| ✅ **Type safety (in TS)**      | SDK has typed definitions                            | No types unless you add them yourself                                |
-| 🛠️ **Fine-grained control**   | Less exposed (you use SDK abstraction)               | Total control over raw HTTP call                                     |
-| 🌍 **Environment flexibility** | Best in Node.js environments                         | Works in both Node.js *and* browsers (if CORS is allowed)            |
-| 📦 **Dependencies**            | Requires `openai` NPM package                        | Native JS (no external libs needed)                                  |
+1. **Clone the repo**
 
----
+   ```bash
+   git clone https://github.com/yourusername/azure-openai-webchat.git
+   cd azure-openai-webchat
+   ```
 
-### 🔎 Which is better and why?
+2. **Install dependencies**
 
-#### ✅ **Recommended: Use the SDK (Approach 1)** if
+   ```bash
+   npm install
+   ```
 
-* You're building **Node.js apps** (backend, CLI tools, server-side logic).
-* You want **cleaner code, error handling, and official support**.
-* You're still learning — it reduces complexity and focuses on logic.
+3. **Create a file** in the project root:
 
-#### ✅ **Use `fetch()` (Approach 2)** if
+   ```env
+   AZURE_OPENAI_KEY=your_api_key_here
+   AZURE_OPENAI_ENDPOINT=https://<your-resource>.cognitiveservices.azure.com
+   PORT=3000
+   ```
 
-* You're writing **frontend code in a browser** (like in React/Vue apps).
-* You want **zero dependencies** or don’t want to install a package.
-* You're debugging or exploring via Postman or quick demos.
+4. **Git ignore secrets** by verifying `.gitignore` contains:
 
----
+   ```gitignore
+   node_modules/
+   .env
+   .vscode/
+   ```
 
-### 💡 Conclusion
+5. **Start the server**
 
-For your **current C#/.NET/JavaScript full-stack learning path**, and especially for **Node.js apps**, using the **`openai` SDK** is the better and more professional approach. Use `fetch()` mainly for front-end or when you need low-level control (e.g., custom HTTP clients).
+   ```bash
+   npm start
+   ```
 
----
-
-## Understanding script.js (Approach 1)
-
-Let's walk through the working Azure OpenAI script step by step — **line by line, in easy terms**, especially focusing on the parts highlighted: `import`, `export`, `options`, `new AzureOpenAI()`, and `chat.completions.create()`.
-
-## Using Azure OpenAI Services for chat completions
+6. **Open the app** Navigate to `http://localhost:3000` in your browser.
 
 ---
 
-### 🔹1. `import { AzureOpenAI } from "openai";`
+## 🚀 How It Works
 
-* **What's happening:**  
-  You're telling JavaScript to use the `AzureOpenAI` class from the `"openai"` library you installed using `npm install openai`.
-  
-* **Why:**  
-  This class is your **entry point** to connect and talk to Azure's OpenAI API.
+### **The flow:  form → fetch.js → server.js → Azure → back to fetch.js**
 
----
+### 1. Frontend (`public/index.html` + `public/fetch.js`)
 
-### 🔹2. Constants for configuration
+* Loads a simple form and two result tables (prompt & response).
+* Listens for the form submission, reads the user prompt, and sends a POST to `/api/chat` using `fetch()`.
+* The response from the server (JSON with the AI reply) is displayed in the page.
 
-```js
-const endpoint = "placeholder.cognitiveservices.azure.com/";
-const modelName = "o3-mini";
-const deployment = "o3-mini";
-```
+### 2. Backend (`server.js`)
 
-* **`endpoint`:**  
-  This is your Azure OpenAI **resource URL** (from your Azure portal). It tells the code **where** to send requests.
+* Uses **Express** to serve all files in `public/` as static assets.
+* Parses JSON bodies with `express.json()`.
+* Defines **POST \*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\***\`\`:
 
-* **`modelName` and `deployment`:**  
-  These tell Azure which AI model to use (like GPT-4 or GPT-3.5), and the exact **deployment name** you've configured on Azure.
+  1. Reads `{ prompt }` from the request body.
+  2. Calls Azure OpenAI chat completions endpoint using `node-fetch` (or global fetch).
+  3. Uses `process.env.AZURE_OPENAI_KEY` and `AZURE_OPENAI_ENDPOINT` from `.env`.
+  4. Returns the JSON response to the frontend.
 
 ---
 
-### 🔹3. `export async function main() { ... }`
+## 💡 Key Learnings
 
-* **`export` keyword:**  
-  Makes this `main()` function available for import in other files (you’re writing a module). Even if you're not using it elsewhere now, it’s a **good habit**.
+* **Security best practices**:
 
-* **`async function`:**  
-  Because talking to an API involves **waiting** for a response (i.e., it's asynchronous), this function is marked `async` so we can use `await` inside it.
+  * Never expose API keys in frontend code.
+  * Use a `.env` file + `dotenv` to load secrets in Node.js.
+  * Add `.env` and `node_modules/` to `.gitignore`.
 
----
+* **Express fundamentals**:
 
-### 🔹4. `const apiKey`, `apiVersion`, and `options`
+  * Serving static files via `express.static()`.
+  * Handling JSON POST requests.
 
-```js
-const apiKey = "placeholder";
-const apiVersion = "2024-12-01-preview";
-const options = { endpoint, apiKey, deployment, apiVersion }
-```
+* **Frontend basics**:
 
-* **`apiKey`:**  
-  A secret key that proves you're allowed to access the Azure OpenAI API.
+  * Using `fetch()` to call your own backend.
+  * Updating the DOM with `querySelector` and event listeners.
 
-* **`apiVersion`:**  
-  Azure requires specifying which **version of the API** you're using. Different versions may support different models and features.
+* **Troubleshooting**:
 
-* **`options` object:**  
-  You're bundling all the necessary config info (like a form) to **pass into the AzureOpenAI class** in the next step.
+  1. **404 when fetching** – Caused by serving frontend from a different origin (VS Code preview); solved by serving static files from Express on the same port.
+  2. **Browser import errors** – Removing `import { AzureOpenAI } ...` from frontend and moving that logic to the backend.
+  3. **CORS issues** – Avoided entirely by keeping frontend and backend on `localhost:3000`
 
 ---
 
-### 🔹5. `const client = new AzureOpenAI(options);`
+## 🔮 Next Steps
 
-* **What's happening:**  
-  This line **creates a connection object** to Azure OpenAI.
-
-* **`new AzureOpenAI(...)`:**  
-  You're telling JavaScript:  
-  > "Hey, use these settings to create a working OpenAI client I can talk to."
-
-* **Now you can send prompts and receive answers using this `client`.**
+* Add input validation and error messages in the UI.
+* Implement rate limiting or caching on the backend.
+* Migrate to a serverless function (e.g., Azure Functions) for easier deployment.
+* Integrate a bundler (Vite/Rollup) when moving to more complex frontend frameworks.
 
 ---
 
-### 🔹6. Send a message to the model
-
-```js
-const response = await client.chat.completions.create({
-  messages: [
-    { role:"system", content: "You are a helpful assistant." },
-    { role:"user", content: "I am going to Paris, what should I see?" }
-  ],
-  max_completion_tokens: 100000,
-  model: modelName
-});
-```
-
-* **`client.chat.completions.create()`**:  
-  This is the **main function that sends your prompt to Azure's AI model** (like ChatGPT).
-
-* **`messages`:**  
-  You're simulating a conversation:
-  * `"system"` message sets the model's **personality** or role.
-  * `"user"` message is your **actual question** to the AI.
-
-* **`max_completion_tokens`:**  
-  This sets the **maximum length of the response**. (Though the correct parameter is `max_tokens`, not `max_completion_tokens`. You may want to fix that.)
-
-* **`model`:**  
-  You're telling Azure which model to use (e.g., `"o3-mini"`).
-
----
-
-### 🔹7. Error checking (optional)
-
-```js
-if (response?.error !== undefined && response.status !== "200") {
-  throw response.error;
-}
-```
-
-* **Checks** if there’s an error in the response.
-* If so, it throws the error so it can be caught in the `catch` block.
-
-(You could remove this, since you're already handling errors in `catch`.)
-
----
-
-### 🔹8. Print the model's response
-
-```js
-console.log(response.choices[0].message.content);
-```
-
-* **`choices[0]`**:  
-  Azure sends back an array of choices (like different possible responses). You're picking the first one.
-
-* **`message.content`**:  
-  This is the **actual text reply** from the AI.
-
----
-
-### 🔹9. Error handling
-
-```js
-main().catch((err) => {
-  console.error("The sample encountered an error:", err);
-});
-```
-
-* This runs your `main()` function.
-* If anything goes wrong (like no internet, wrong key, or API error), it logs the error.
-
----
-
-### ✅ Summary
-
-| Concept              | Meaning                                                                 |
-|----------------------|-------------------------------------------------------------------------|
-| `import`             | Brings in AzureOpenAI class from the library                           |
-| `export`             | Makes the function usable in other files (optional but good practice)  |
-| `options`            | Bundle of settings (endpoint, key, version) used to configure the API  |
-| `new AzureOpenAI()`  | Connects to Azure's AI using your options                               |
-| `chat.completions.create()` | Sends your messages to the AI and gets a response                 |
-
----
+*Enjoy building with Azure OpenAI!*

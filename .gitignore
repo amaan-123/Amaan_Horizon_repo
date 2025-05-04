@@ -402,5 +402,10 @@ FodyWeavers.xsd
 # amaan-123's changes
 MSLearnJSnotes/
 demo-resume/
-.env
 demo/
+
+# Local env files
+.env
+
+# Build artifacts
+/dist
