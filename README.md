@@ -28,6 +28,7 @@ This is a repo to reflect amaan-123's assignment answers & associated files for 
 - [Chai aur Code YouTube Channel](https://www.youtube.com/@chaiaurcode) - JavaScript tutorials and projects.
 - [Traversy Media YouTube Channel](https://www.youtube.com/@TraversyMedia) - Comprehensive JavaScript tutorials.
 - [FreeCodeCamp: 20-Hour HTML, CSS, and JavaScript Crash Course](https://www.youtube.com/watch?v=zJSY8tbf_ys) - Full beginner crash course.
+- [Asynchronous JavaScript Crash Course](https://www.youtube.com/watch?v=exBgWAIeIeg&t=3324s) - callbacks, promises, async await and event loop
 - [FreeCodeCamp: Async/Await Explained with Ice Cream](https://www.youtube.com/watch?v=ZYb_ZU8LNxs&t=5122s) - Async/Await tutorial.
 - [Microsoft Learn Beginner Series (51 Videos)](https://learn.microsoft.com/en-us/shows/beginners-series-to-javascript/) - JavaScript beginner series.
 
@@ -42,3 +43,7 @@ This is a repo to reflect amaan-123's assignment answers & associated files for 
 - [Postman Academy API beginner training](https://academy.postman.com/path/api-beginner) - Learn API testing and Postman basics.
 - [Postman Documentation](https://learning.postman.com/docs/getting-started/introduction/) - Official Postman documentation.
 - [Postman YouTube Channel](https://www.youtube.com/@postman) - Tutorials and API testing guides.
+
+### C# (Backend)
+
+- [C# Setup & Tutorial - CodeWithHarry](https://www.youtube.com/watch?v=SuLiu5AK9Ps&list=LL&index=6&pp=gAQBiAQB)

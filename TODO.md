@@ -4,17 +4,14 @@ Markdown tracker with interactive checkboxes for revision and to-do items, and *
 
 ## Immediate TO-DO's
 
-- Azure OpenAI API
-  - Hide API Key using .env
-  - Style welcoming & modern
-  - Click-to-show token usage details
-
 - JS playlist: Chai
 - CSS
 - HTML Semantic
+- Then see list below for HTML/CSS/JS
 - C# playlist: continue from 1:36:00
-- Postman playlist & docs: scripts, testing & visualiser
 - Browser Reading list
+- Postman playlist & docs: scripts, testing & visualiser
+<!-- - backend as suggested in  -->
 
 > ✅ Checkbox States
 >
@@ -45,26 +42,26 @@ Markdown tracker with interactive checkboxes for revision and to-do items, and *
 
 ## 2. Git & GitHub
 
-- [x] 🟡 Git init, add, commit, push/pull
+- [x] 🟢 Git init, add, commit, push/pull
 - [x] 🟢 Creating and cloning GitHub repos
 - [x] 🟢 Using `.gitignore`
 - [x] 🔴 GitHub Copilot usage
-- [ ] 🔴 Branching and merging
+- [x] 🔴 Branching and merging
 - [ ] 🔴 Pull Requests and Code Reviews
 - [ ] 🔴 Resolving merge conflicts
-- [ ] 🔴 Rebase vs merge
+- [x] 🔴 Rebase vs merge
 - [ ] 🔴 Git tags and releases
 
 ## 3. HTML
 
 - [x] 🟢 Headings, paragraphs, links, images, lists
 - [x] 🟢 Forms and basic input types
-- [-] 🔴 HTML entities and semantic elements
-- [x] 🟡 Form attributes: `action`, `method`, `required`, etc.
-- [-] 🟡 Accessibility (ARIA, labels, alt texts)
-- [ ] 🔴 SEO-friendly HTML practices
-- [x] 🟡 HTML tables
 - [ ] 🔴 Meta tags
+- [-] 🔴 HTML entities and semantic elements
+- [ ] 🔴 SEO-friendly HTML practices
+- [x] 🟡 Form attributes: `action`, `method`, `required`, etc.
+- [x] 🟡 HTML tables
+- [-] 🟡 Accessibility (ARIA, labels, alt texts)
 
 ## 4. CSS
 
@@ -87,9 +84,9 @@ Markdown tracker with interactive checkboxes for revision and to-do items, and *
 - [x] 🟡 JSON.parse and JSON.stringify
 - [x] 🟡 Promises, async/await
 - [x] 🟡 Closures and scope
-- [ ] 🔴 Event bubbling and delegation
+- [x] 🔴 Event bubbling and delegation
 - [x] 🟡 Fetch API deep dive (headers, status codes, options)
-- [ ] 🔴 ES6+ features: spread/rest, destructuring, template literals
+- [x] 🔴 ES6+ features: spread/rest, destructuring, template literals
 - [ ] 🔴 Module system (import/export)
 - [x] 🟡 Error handling (try/catch, finally)
 - [ ] 🔴 JavaScript Classes and OOP
@@ -148,3 +145,23 @@ Markdown tracker with interactive checkboxes for revision and to-do items, and *
 - [ ] 🔴 Versioning APIs
 - [ ] 🔴 Authentication (JWT, OAuth)
 - [ ] 🔴 Clean architecture / layered architecture
+
+## 🚀 Real-World Application Essentials
+
+- [ ] 🔴 JavaScript Execution Context (Call Stack, Memory Heap)
+- [ ] 🔴 JavaScript Prototypal Inheritance
+- [ ] 🔴 Design Patterns (Singleton, Factory, Observer)
+- [ ] 🔴 SOLID Principles
+- [ ] 🔴 Testing Strategies (Unit, Integration, E2E)
+- [ ] 🔴 Performance Optimization Techniques
+- [ ] 🔴 Security Best Practices (e.g., preventing XSS, SQL Injection)
+
+## 🎯 Interview Hot Topics
+
+- [ ] 🔴 Data Structures and Algorithms (Arrays, Linked Lists, Trees, Sorting, Searching)
+- [ ] 🔴 Time Complexity (Big O notation)
+- [ ] 🔴 Common JavaScript Questions (Closures, `this` keyword, Event Loop)
+- [ ] 🔴 System Design Basics (Load Balancing, Caching)
+- [ ] 🔴 Behavioral Questions (STAR method)
+
+---
