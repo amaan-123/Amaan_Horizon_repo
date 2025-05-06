@@ -4,13 +4,19 @@ Markdown tracker with interactive checkboxes for revision and to-do items, and *
 
 ## Immediate TO-DO's
 
+- Read GPT's research
 - JS playlist: Chai
-- CSS
-- HTML Semantic
-- Then see list below for HTML/CSS/JS
+  - TBD 14min edit
+- HTML - see list below
+- CSS - see list below
+- All-in-one concepts js/html/css side proj on novel/worthy concept
+  - implement learnings like:
+    - 26min of vid 33, 10min of vid 34 ChaiAurCode
+    -
 - C# playlist: continue from 1:36:00
-- Browser Reading list
 - Postman playlist & docs: scripts, testing & visualiser
+- Browser Reading list (.NET, Azure OpenAI service, API Key safety, Postman)
+- Excalidraw vs Draw.io (account + permissions check)
 <!-- - backend as suggested in  -->
 
 > ✅ Checkbox States
@@ -107,7 +113,7 @@ Markdown tracker with interactive checkboxes for revision and to-do items, and *
 
 - [x] 🟢 Sending basic requests (GET, POST)
 - [x] 🟢 Using headers and auth tokens
-- [-] 🔴 Visualising responses
+- [x] 🟡 Visualising responses
 - [ ] 🔴 Environment variables and test scripts
 - [ ] 🔴 Saving collections
 - [ ] 🔴 Mock servers
