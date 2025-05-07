@@ -4,16 +4,19 @@ Markdown tracker with interactive checkboxes for revision and to-do items, and *
 
 ## Immediate TO-DO's
 
-- Read GPT's research
 - JS playlist: Chai
-  - TBD 14min edit
+  - 25:21 of 35th - Projects
+- C# playlist: C_Sharp.md OOPS read + start fs_mentors
 - HTML - see list below
 - CSS - see list below
+- Read GPT's research articles
 - All-in-one concepts js/html/css side proj on novel/worthy concept
   - implement learnings like:
     - 26min of vid 33, 10min of vid 34 ChaiAurCode
     -
-- C# playlist: continue from 1:36:00
+- Generative AI for everyone
+  - vector databases or retrieval-augmented generation
+- Where in the path is a good place to learn about web development security practices/application security?: research!
 - Postman playlist & docs: scripts, testing & visualiser
 - Browser Reading list (.NET, Azure OpenAI service, API Key safety, Postman)
 - Excalidraw vs Draw.io (account + permissions check)
