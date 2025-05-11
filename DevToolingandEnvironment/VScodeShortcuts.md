@@ -2,6 +2,8 @@
 
 Enhance your productivity in Visual Studio Code by mastering these essential shortcuts and commands.
 
+![alt text](image.png)
+
 ## General
 
 - **Command Palette**: Access all available commands.

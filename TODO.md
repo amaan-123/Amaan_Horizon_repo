@@ -6,7 +6,8 @@ Markdown tracker with interactive checkboxes for revision and to-do items, and *
 
 - JS playlist: Chai
   - 25:21 of 35th - Projects
-- C# playlist: C_Sharp.md OOPS read + start fs_mentors
+- C#
+  - fs-mentors continue
 - HTML - see list below
 - CSS - see list below
 - Read GPT's research articles
@@ -122,7 +123,7 @@ Markdown tracker with interactive checkboxes for revision and to-do items, and *
 - [ ] 🔴 Mock servers
 - [ ] 🔴 Testing and automation
 
-## 8. C# (using Visual Studio 2022)
+<!-- ## 8. C# (using Visual Studio 2022)
 
 - [x] 🟢 Hello World, variables, data types
 - [ ] 🔴 Control structures (if, loops)
@@ -153,7 +154,7 @@ Markdown tracker with interactive checkboxes for revision and to-do items, and *
 - [ ] 🔴 Cloud basics (e.g., deploying to Azure/AWS)
 - [ ] 🔴 Versioning APIs
 - [ ] 🔴 Authentication (JWT, OAuth)
-- [ ] 🔴 Clean architecture / layered architecture
+- [ ] 🔴 Clean architecture / layered architecture -->
 
 ## 🚀 Real-World Application Essentials
 
