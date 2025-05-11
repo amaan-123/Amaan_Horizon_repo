@@ -1,13 +1,17 @@
 # Amaan_Horizon_repo
 
-This is a repo to reflect amaan-123's assignment answers & associated files for the IT training program. Contents will keep updating as the course progresses.
+IT Training Repo: This is a repo to reflect amaan-123's assignment answers & associated files for part-1 (mostly front-end & APIs) of the IT training program. Contents will keep updating as course progresses. For C# onwards see my other repo --> C_Sharp_NET.
 
 ## Folder Structure
 
 - `DevToolingandEnvironment/` - Tools and environment setup guides.
+- `FetchAPI/` - Notes and projects related to Fetch API.
 - `GitHubAndGitBash/` - Git and GitHub-related resources and notes.
 - `HTML_CSS_JS/` - Contains HTML, CSS, and JavaScript-related projects and notes.
-- `FetchAPI/` - Notes and projects related to Fetch API.
+- `IntroToProgramming/` - Contains pseudocode for basic problems.
+- `Postman/` - Postman-related notes and projects.
+- `README.md` - This file.
+- `TODO.md` - List of tasks to be completed.
 
 ## Resources Used
 
@@ -43,7 +47,3 @@ This is a repo to reflect amaan-123's assignment answers & associated files for 
 - [Postman Academy API beginner training](https://academy.postman.com/path/api-beginner) - Learn API testing and Postman basics.
 - [Postman Documentation](https://learning.postman.com/docs/getting-started/introduction/) - Official Postman documentation.
 - [Postman YouTube Channel](https://www.youtube.com/@postman) - Tutorials and API testing guides.
-
-### C# (Backend)
-
-- [C# Setup & Tutorial - CodeWithHarry](https://www.youtube.com/watch?v=SuLiu5AK9Ps&list=LL&index=6&pp=gAQBiAQB)
