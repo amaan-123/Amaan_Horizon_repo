@@ -6,10 +6,7 @@ Markdown tracker with interactive checkboxes for revision and to-do items, and *
 
 - JS playlist: Chai
   - 25:21 of 35th - Projects
-- C#
-  - fs-mentors continue
-  - objects in lists
-  - sorting lists/collections
+
 - HTML - see list below
 - CSS - see list below
 <!-- - Read GPT's research articles
