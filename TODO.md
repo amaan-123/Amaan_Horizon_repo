@@ -8,9 +8,11 @@ Markdown tracker with interactive checkboxes for revision and to-do items, and *
   - 25:21 of 35th - Projects
 - C#
   - fs-mentors continue
+  - objects in lists
+  - sorting lists/collections
 - HTML - see list below
 - CSS - see list below
-- Read GPT's research articles
+<!-- - Read GPT's research articles
 - All-in-one concepts js/html/css side proj on novel/worthy concept
   - implement learnings like:
     - 26min of vid 33, 10min of vid 34 ChaiAurCode
@@ -20,7 +22,7 @@ Markdown tracker with interactive checkboxes for revision and to-do items, and *
 - Where in the path is a good place to learn about web development security practices/application security?: research!
 - Postman playlist & docs: scripts, testing & visualiser
 - Browser Reading list (.NET, Azure OpenAI service, API Key safety, Postman)
-- Excalidraw vs Draw.io (account + permissions check)
+- Excalidraw vs Draw.io (account + permissions check) -->
 <!-- - backend as suggested in  -->
 
 > ✅ Checkbox States
@@ -46,9 +48,9 @@ Markdown tracker with interactive checkboxes for revision and to-do items, and *
 - [x] 🔴 Command palette, multi-cursor, IntelliSense
 - [x] 🟢 Git integration in VS Code
 - [ ] 🔴 Debugger in VS Code
-- [ ] 🔴 Live Share for remote collaboration
-- [ ] 🔴 Workspace and settings sync
-- [ ] 🔴 Working with tasks and launch configurations
+<!-- - [ ] 🔴 Live Share for remote collaboration -->
+<!-- - [ ] 🔴 Workspace and settings sync -->
+<!-- - [ ] 🔴 Working with tasks and launch configurations -->
 
 ## 2. Git & GitHub
 
@@ -164,7 +166,7 @@ Markdown tracker with interactive checkboxes for revision and to-do items, and *
 - [ ] 🔴 SOLID Principles
 - [ ] 🔴 Testing Strategies (Unit, Integration, E2E)
 - [ ] 🔴 Performance Optimization Techniques
-- [ ] 🔴 Security Best Practices (e.g., preventing XSS, SQL Injection)
+- [ ] 🔴 Security Best Practices (e.g., preventing XSS, SQL Injection) -->
 
 ## 🎯 Interview Hot Topics
 

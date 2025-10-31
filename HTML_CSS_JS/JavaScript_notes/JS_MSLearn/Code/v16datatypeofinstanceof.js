@@ -1,8 +1,8 @@
 // Array, Number, String, Boolean, Object, Function
-const people = ["Aaron", "Mel", "John"]; 
+const people = ["Aaron", "Mel", "John"];
 const one = 1;
-const str = "Hello World"; 
-const b = true; 
+const str = "Hello World";
+const b = true;
 const person = {
   firstName: "Aaron",
   lastName: "Powell",
@@ -21,13 +21,12 @@ console.log(typeof b);
 console.log(typeof person);
 console.log(typeof sayHello);
 
-
-console.log("-- instanceof --"); 
-console.log(people instanceof Array); 
-console.log(one instanceof Number); 
+console.log("-- instanceof --");
+console.log(people instanceof Array);
+console.log(one instanceof Number);
 console.log(str instanceof String);
-console.log(b instanceof Boolean); 
-console.log(person instanceof Object); 
+console.log(b instanceof Boolean);
+console.log(person instanceof Object);
 console.log(sayHello instanceof Function);
 // instanceof evaluates array to be an array
 // but instanceof test compares against the instance constructor
@@ -38,10 +37,16 @@ console.log(sayHello instanceof Function);
 
 // instead if we do:
 const two = new Number(2);
+const str2 = new String("Bye Bye!");
+const yes = new Boolean(true);
 console.log("-- instanceof --");
-console.log(two instanceof Number); 
+console.log(two instanceof Number);
+console.log(str2 instanceof String);
+console.log(yes instanceof Boolean);
 // true: because it is an instance of Number constructor
 //but now, if we do:
 console.log("-- typeof --");
 console.log(typeof two);
+console.log(typeof str2);
+console.log(typeof yes);
 // object: because it was created using a constructor, not a literal
