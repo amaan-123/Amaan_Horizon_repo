@@ -6,12 +6,40 @@ Using JavaScript, you can **add or remove content from a web page without reload
 
 ## Link to JavaScript
 
-The `script` tag with `defer` is placed in the `head` section. The `defer` attribute ensures the script is executed after the HTML is fully parsed.
+### Placement of the `<script>` tag  
+
+- **At the end of `<body>`** – the most common placement; the HTML is parsed first, then the script runs, which avoids blocking rendering.  
+- **Inside `<head>`** – when the script is needed before the page renders (e.g., feature detection, polyfills).  
+
+### When to use the `defer` attribute  
+
+- The script **does not need to run until the document is fully parsed** (e.g., DOM‑manipulating libraries, analytics, or modules that rely on the complete DOM).  
+- You want the script to **download in parallel** with HTML parsing but **execute after parsing** and **in the order they appear**.  
+
+### `src` requirement for `defer`  
+
+- `defer` **only works on external scripts** that have a `src` attribute.  
+- Inline scripts (`<script>…</script>`) ignore `defer`; they execute immediately as they are encountered.  
+
+#### Example  
 
 ```html
-...
-<script src="app.js" defer></script>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Defer Example</title>
+    <!-- External script that will be deferred -->
+    <script src="main.js" defer></script>
 </head>
+<body>
+    <h1>Hello World</h1>
+    <!-- Inline script runs immediately -->
+    <script>
+        console.log('Inline script runs now');
+    </script>
+</body>
+</html>
 ```
 
 ### Add fault tolerance

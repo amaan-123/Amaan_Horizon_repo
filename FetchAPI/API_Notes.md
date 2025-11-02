@@ -382,6 +382,26 @@ async function getAllUsers() {
 }
 ```
 
+`response.json()` is a **convenience method** on the `Response` object that does two things for you:
+
+1. **Reads the response body** as a stream of bytes and converts it to a string.  
+2. **Parses that string as JSON** and returns the resulting JavaScript value (object, array, etc.).
+
+So the line
+
+```js
+const data = await response.json();
+```
+
+is equivalent to:
+
+```js
+const text = await response.text();   // get raw JSON string
+const data = JSON.parse(text);        // turn the string into an object
+```
+
+Using `response.json()` saves you from manually calling `response.text()` (or `response.blob()`) and then invoking `JSON.parse`. It also handles the asynchronous stream reading internally, keeping the code concise and readable.
+
 - The video emphasizes the importance of using **`try...catch` blocks** when using `async/await` with `fetch` to handle potential errors during the network request or JSON parsing.
 - Without a `try...catch` block, unhandled rejections in the **Promise** returned by `fetch()` can lead to errors.
 - An example of wrapping the `fetch` and `.json()` calls within a `try` block and logging any errors in the `catch` block is shown.
