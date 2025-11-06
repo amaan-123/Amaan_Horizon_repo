@@ -4,6 +4,16 @@
 
 - The video is the 39th in the "**Chai aur Javascript**" series on the "Chai aur Code" YouTube channel.
 
+## Backend  
+
+The backend is the part of a system that runs on a server and handles data storage, business logic, authentication, and other core functions. It typically exposes APIs that other components (like frontends) can call to retrieve or modify data.
+
+## Frontend  
+
+The frontend is the client‑side part that users interact with directly—usually a web page, mobile app, or desktop UI. It sends requests to the backend’s APIs and presents the returned data to the user.  
+
+**In short:** the backend provides services and data; the frontend consumes those services and displays them to the user.
+
 ## What is an API?
 
 - An **API** is a **talking language between two systems**.
@@ -206,11 +216,6 @@ xhr.onreadystatechange = function() {
 
 ![alt text](REST_API_mindmap.png)
 
-## What is a RESTful API? Explanation of REST & HTTP (Traversy Media)
-
-- The video aims to provide a basic understanding, unlike the often complicated explanations found online.
-- The presenter tries to explain complex concepts in plain English.
-
 ### What is an API first?
 
 - **API** stands for **Application Program Interface**.
@@ -235,6 +240,20 @@ xhr.onreadystatechange = function() {
 - Incorrectly formatted requests will result in an error message or response.
 - The shape can be thought of as the **API standard**, such as **JSON** or **SOAP**.
 - The output once a valid shape is inserted represents the **response**.
+
+## What is a RESTful API? Explanation of REST & HTTP (Traversy Media)
+
+**REST API** (Representational State Transfer) is a specific architectural style for building web APIs. It defines constraints such as statelessness, a uniform interface (typically HTTP verbs GET, POST, PUT, DELETE), and resource‑oriented URLs.  
+
+**What “API” covers more broadly**
+
+| Scope | Description |
+|-------|-------------|
+| **General API** | Any defined interface that allows one software component to interact with another, regardless of protocol, data format, or architecture. Examples: function libraries, OS system calls, GraphQL, gRPC, SOAP, WebSockets, MQTT, etc. |
+| **REST API** | A subset of web APIs that follow the REST constraints. It usually exchanges data in JSON or XML over HTTP. |
+| **Other web‑API styles** | • **SOAP** – XML‑based, uses a strict envelope and WS‑* standards.<br>• **GraphQL** – single endpoint where clients specify exactly what data they need.<br>• **gRPC** – binary protocol built on HTTP/2, uses Protocol Buffers for schema.<br>• **JSON‑API**, **OData**, **HAL**, etc. – conventions that sit on top of HTTP but are not pure REST. |
+
+So, **REST API is not a catch‑all term**; it refers to one particular way of designing an API. The broader term “API” includes REST as well as many other styles and protocols.
 
 ### What is REST?
 
@@ -298,6 +317,8 @@ xhr.onreadystatechange = function() {
     curl -H "Authorization: YOUR_TOKEN" https://api.github.com/user
     ```
 
+    >More info on cURL below:
+
   - **Token as URI Parameter**: The token is sent as a parameter in the URL.
 
     ```js
@@ -354,13 +375,108 @@ xhr.onreadystatechange = function() {
 
 ## Fetch API, Async/Await, and Promises (39:25 - 50:20)
 
+### Simple explanation of the FetchAPI Code (uses Promises)
+
+The provided code uses the Fetch API to make an HTTP GET request to the URL `https://jsonplaceholder.typicode.com/users/1`. Here's what it does step by step:
+
+```javascript
+fetch('https://jsonplaceholder.typicode.com/users/1')
+  .then(response => response.json())
+  .then(data => console.log(data))
+  .catch(error => console.log(error));
+```
+
+1. **`fetch()`**:
+   - Sends an HTTP GET request to the specified URL.
+   - Returns a `Promise` that resolves to a `Response` object representing the HTTP response.
+
+2. **`response.json()`**:
+   - The `Response` object has a `body` property, which is a `ReadableStream` containing the raw response data.
+   - The `.json()` method reads the `ReadableStream` and parses it as JSON.
+   - It returns a `Promise` that resolves to a JavaScript object (or array) parsed from the JSON data.
+
+3. **`.then(data => console.log(data))`**:
+   - Logs the parsed JavaScript object (the JSON data) to the console.
+
+4. **`.catch(error => console.log(error))`**:
+   - Catches and logs any errors that occur during the fetch or JSON parsing process.
+
+---
+
+#### What is the Response from `fetch` Originally?
+
+- The original response from `fetch` is a `Response` object. This object contains:
+  - Metadata about the response (e.g., HTTP status, headers).
+  - The `body` property, which is a `ReadableStream` containing the raw response data.
+
+---
+
+#### What is the Response Converted To?
+
+- The `.json()` method converts the raw response body (a `ReadableStream`) into a JavaScript object or array, depending on the structure of the JSON data.
+
+---
+
+#### What Does the `.json()` Method Do?
+
+- The `.json()` method:
+  1. Reads the `ReadableStream` from the `Response` object.
+  2. Decodes the stream into text.
+  3. Parses the text as JSON.
+  4. Returns a `Promise` that resolves to the resulting JavaScript object or array.
+
+---
+
+#### Is This Statement True?
+
+##### **"The json() method converts the ReadableStream into a JavaScript object."**
+
+- **Partially True**:
+  - The `.json()` method **reads** the `ReadableStream` and **parses** its content as JSON.
+  - However, it does not directly convert the `ReadableStream` into a JavaScript object. Instead:
+    1. It reads the stream and converts it into a string (raw JSON text).
+    2. It parses the string into a JavaScript object or array.
+
+---
+
+#### Example Response
+
+For the URL `https://jsonplaceholder.typicode.com/users/1`, the JSON response might look like this:
+
+```json
+{
+  "id": 1,
+  "name": "Leanne Graham",
+  "username": "Bret",
+  "email": "Sincere@april.biz",
+  "address": {
+    "street": "Kulas Light",
+    "suite": "Apt. 556",
+    "city": "Gwenborough",
+    "zipcode": "92998-3874",
+    "geo": {
+      "lat": "-37.3159",
+      "lng": "81.1496"
+    }
+  },
+  "phone": "1-770-736-8031 x56442",
+  "website": "hildegard.org",
+  "company": {
+    "name": "Romaguera-Crona",
+    "catchPhrase": "Multi-layered client-server neural-net",
+    "bs": "harness real-time e-markets"
+  }
+}
+```
+
+After `.json()` processes the response, this JSON data is converted into a JavaScript object, which is logged to the console.
+
 ### Using Fetch with Async/Await
 
 - The video introduces using the **`fetch` API** within an **`async` function** with **`await`**.
 - An example `async` function named `get all users` is created to fetch user data.
 - The `fetch()` function is called with a URL (`https://jsonplaceholder.typicode.com/users`), and this call returns a **Promise**.
 - The `await` keyword is used before the `fetch()` call. This means the execution of the `get all users` function will pause until the **Promise** returned by `fetch()` is resolved.
-- The resolved value of the `fetch()` **Promise** (the **Response** object) is stored in a `response` variable.
 
 ```javascript
 async function getAllUsers() {
@@ -368,11 +484,6 @@ async function getAllUsers() {
   // ... more code
 }
 ```
-
-- The video highlights that the initial `response` from `fetch()` is not the actual JSON data but a **Response** object.
-- To get the JSON data from the **Response** object, the `.json()` method is used. This `.json()` method itself also returns a **Promise**.
-- Therefore, `await` must also be used before the `response.json()` call to get the actual JSON data.
-- The resulting JSON data is then stored in a `data` variable.
 
 ```javascript
 async function getAllUsers() {
@@ -470,101 +581,7 @@ fetch('https://jsonplaceholder.typicode.com/users')
 - The presenter mentions that a more theoretical explanation of why `fetch` might complete before other seemingly earlier asynchronous tasks will be discussed in the next video, involving browser internals and event loops.
 - The video concludes by stating that the concepts of **Promises** and `async/await` are fundamental for starting projects or learning frameworks like React and React Native.
 
-## Explanation of the FetchAPI Code
-
-The provided code uses the Fetch API to make an HTTP GET request to the URL `https://jsonplaceholder.typicode.com/users/1`. Here's what it does step by step:
-
-```javascript
-fetch('https://jsonplaceholder.typicode.com/users/1')
-  .then(response => response.json())
-  .then(data => console.log(data))
-  .catch(error => console.log(error));
-```
-
-1. **`fetch()`**:
-   - Sends an HTTP GET request to the specified URL.
-   - Returns a `Promise` that resolves to a `Response` object representing the HTTP response.
-
-2. **`response.json()`**:
-   - The `Response` object has a `body` property, which is a `ReadableStream` containing the raw response data.
-   - The `.json()` method reads the `ReadableStream` and parses it as JSON.
-   - It returns a `Promise` that resolves to a JavaScript object (or array) parsed from the JSON data.
-
-3. **`.then(data => console.log(data))`**:
-   - Logs the parsed JavaScript object (the JSON data) to the console.
-
-4. **`.catch(error => console.log(error))`**:
-   - Catches and logs any errors that occur during the fetch or JSON parsing process.
-
----
-
-### What is the Response from `fetch` Originally?
-
-- The original response from `fetch` is a `Response` object. This object contains:
-  - Metadata about the response (e.g., HTTP status, headers).
-  - The `body` property, which is a `ReadableStream` containing the raw response data.
-
----
-
-### What is the Response Converted To?
-
-- The `.json()` method converts the raw response body (a `ReadableStream`) into a JavaScript object or array, depending on the structure of the JSON data.
-
----
-
-### What Does the `.json()` Method Do?
-
-- The `.json()` method:
-  1. Reads the `ReadableStream` from the `Response` object.
-  2. Decodes the stream into text.
-  3. Parses the text as JSON.
-  4. Returns a `Promise` that resolves to the resulting JavaScript object or array.
-
----
-
-### Is This Statement True?
-
-#### **"The json() method converts the ReadableStream into a JavaScript object."**
-
-- **Partially True**:
-  - The `.json()` method **reads** the `ReadableStream` and **parses** its content as JSON.
-  - However, it does not directly convert the `ReadableStream` into a JavaScript object. Instead:
-    1. It reads the stream and converts it into a string (raw JSON text).
-    2. It parses the string into a JavaScript object or array.
-
----
-
-### Example Response
-
-For the URL `https://jsonplaceholder.typicode.com/users/1`, the JSON response might look like this:
-
-```json
-{
-  "id": 1,
-  "name": "Leanne Graham",
-  "username": "Bret",
-  "email": "Sincere@april.biz",
-  "address": {
-    "street": "Kulas Light",
-    "suite": "Apt. 556",
-    "city": "Gwenborough",
-    "zipcode": "92998-3874",
-    "geo": {
-      "lat": "-37.3159",
-      "lng": "81.1496"
-    }
-  },
-  "phone": "1-770-736-8031 x56442",
-  "website": "hildegard.org",
-  "company": {
-    "name": "Romaguera-Crona",
-    "catchPhrase": "Multi-layered client-server neural-net",
-    "bs": "harness real-time e-markets"
-  }
-}
-```
-
-After `.json()` processes the response, this JSON data is converted into a JavaScript object, which is logged to the console.
+# More Info
 
 ## `console.log` and the V8 Engine
 
@@ -581,3 +598,65 @@ After `.json()` processes the response, this JSON data is converted into a JavaS
 - The `console.cc` file contains the C++ implementation of `console.log`, which essentially **writes to a file** that the browser's developer console then displays.
 - Other `console` methods like `console.error` and `console.warn` are also implemented similarly.
 - The `WriteToFile` method in `console.cc` is responsible for the core functionality of `console.log`.
+
+## curl command
+
+**cURL** (Client URL) is a command‑line tool that transfers data to or from a server using many supported protocols (HTTP, HTTPS, FTP, SFTP, etc.). It is available on Linux, macOS, Windows (via the built‑in Windows 10+ `curl.exe` or through packages such as Git for Windows).
+
+### What it usually does
+
+- **Send HTTP requests** (GET, POST, PUT, DELETE, PATCH, HEAD, etc.)  
+- **Add headers** (e.g., authentication, content‑type)  
+- **Send request bodies** (JSON, form data, files)  
+- **Receive and display the response** (status line, headers, body)  
+- **Save output to a file** (`-o filename`) or pipe it to other commands for further processing.
+
+### Basic syntax
+
+```bash
+curl [options] <URL>
+```
+
+### Common options
+
+| Option | Purpose |
+|--------|---------|
+| `-X <METHOD>` | Specify HTTP method (GET is default). |
+| `-H "<header>"` | Add a request header. |
+| `-d "<data>"` | Send data in the request body (implies `POST`). |
+| `-u user:pass` | Basic authentication. |
+| `-o <file>` | Write response body to a file. |
+| `-i` | Include response headers in the output. |
+| `-s` | Silent mode (no progress meter). |
+| `-L` | Follow redirects. |
+
+### Example explanations
+
+```bash
+curl https://api.github.com/users
+```
+
+- Sends a **GET** request to the GitHub API endpoint that lists public users.  
+- The response (JSON) is printed to the terminal.
+
+```bash
+curl -H "Authorization: YOUR_TOKEN" https://api.github.com/user
+```
+
+- Adds an **Authorization** header containing a personal access token.  
+- Calls the `/user` endpoint, which returns information about the authenticated user.  
+- Without the header the request would be unauthenticated and return an error.
+
+### Typical workflow
+
+1. **Compose the request** (method, URL, headers, body).  
+2. **Run `curl`** from the terminal.  
+3. **Inspect the output** (status code, JSON/XML payload).  
+4. Optionally **pipe** the output to tools like `jq` for JSON parsing:
+
+   ```bash
+   curl -s -H "Authorization: token $TOKEN" \
+        https://api.github.com/user | jq .
+   ```
+
+cURL is a quick way to test APIs, download files, or automate web interactions from scripts.
