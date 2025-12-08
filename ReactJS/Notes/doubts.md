@@ -592,3 +592,55 @@ It's literally:
 | `useState(Array(9).fill(null))` | React storing that array as state | React + JS | Game boards, grids  |
 
 ---
+
+# Q) What is timer inside clearTimeout here: will we call it a function expression variable? whats happening in the code, especially at return?
+
+```jsx
+import { useState, useEffect } from 'react';
+import { createRoot } from 'react-dom/client';
+
+function Timer() {
+  const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    let timer = setTimeout(() => {
+      setCount((count) => count + 1);
+    }, 1000);
+
+    return () => clearTimeout(timer)
+  }, []);
+
+  return <h1>I've rendered {count} times!</h1>;
+}
+
+createRoot(document.getElementById('root')).render(
+  <Timer />
+);
+```
+
+# A) - `timer` is a variable that holds the ID returned by `setTimeout`. In browsers that ID is a number; in Node it can be a Timer object. It's not a function or function-expression — it's a handle/identifier you pass to `clearTimeout` to cancel the scheduled callback
+
+* What happens in the code:
+  1. On first render, `useEffect` runs (dependency array is `[]`).
+  2. `setTimeout` schedules a callback to run after 1000 ms and returns a timer ID, which is stored in `timer`.
+  3. The effect returns a cleanup function `() => clearTimeout(timer)`.
+  4. If the component unmounts before the timeout fires, React calls the cleanup and `clearTimeout(timer)` cancels the pending callback.
+  5. When the timeout fires, it calls `setCount(count => count + 1)`, incrementing state and causing a re-render. Because the effect has an empty dependency array, a new timeout is not scheduled after that render (so this runs only once unless the component is remounted).
+
+* In summary: `timer` is a timer identifier (not a function); the returned function is the effect cleanup that cancels that timer when the effect is cleaned up (e.g., on unmount).
+
+# Q) in reactJS, what would this line of code do:?
+
+`const UserContext = createContext();`
+what would be value of UserContext?
+
+# A) - The line `const UserContext = createContext();` creates a React Context object  
+
+* Value/type of `UserContext`: an object with these main properties/members used by React:
+  * **Provider** — a React component (`UserContext.Provider`) used to supply a context value to descendant components.
+  * **Consumer** — a React component (`UserContext.Consumer`) for consuming the context via render-props (rarely used with hooks).
+  * Internally it also contains an identifier used by React to track the context.
+
+* The initial/default context value is whatever you pass into `createContext(defaultValue)`. Since you called `createContext()` with no argument, the default value is `undefined`. Components that call `useContext(UserContext)` or `UserContext.Consumer` will receive:
+  * the nearest provided value from a matching `UserContext.Provider` up the tree, or
+  * the default value (`undefined` here) if no Provider is present.

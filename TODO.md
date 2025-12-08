@@ -2,6 +2,13 @@
 
 Markdown tracker with interactive checkboxes for revision and to-do items, and **three simple understanding level tags**.
 
+- Avoid theory overload: limit new info per session to prevent cognitive overload.  
+- Follow the experiential cycle: do → observe results → decide what to change → experiment again.  
+- Balance learning: pair every theory chunk with immediate practice.  
+- Slow down to speed up: prioritize gradual learning so skills become habits.  
+- Automate habits: practice until skills use fewer cognitive resources before adding new theory.  
+- Use the 5:1 rule: aim for ~5 hours practice per 1 hour theory; adjust by how fast you form habits.
+
 ## Immediate TO-DO's
 
 - JS playlist: Chai
