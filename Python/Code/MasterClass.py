@@ -170,4 +170,25 @@ alphaNumeric1={"a","b","c","d",1,2,3,4,"a","b","c","d",1,2,3,4}
 # finally:
 #     print("Program complete.")
 
+# with open('./FileHandling.txt','x') as file:
+#     file.write('\'x\' for creating and writing to a new file')
 
+# with open('./FileHandling.txt','w') as file:
+#     file.write('\'w\' for writing (truncating the file if it already exists). \nIn text mode (the default, or when \'t\' is appended to the mode argument), the contents of the file are returned as strings, the bytes having been first decoded using a platform-dependent encoding or using the specified encoding if given.')
+
+# with open('./FileHandling.txt','a') as file:
+#     length = file.write('\n\n\'a\' for appending (which on some Unix systems, means that all writes append to the end of the file regardless of the current seek position)')
+#     print(length)
+
+# with open('./FileHandling.txt','w+t') as file:
+#     file.write('\'+\'open a disk file for updating (reading and writing)\nw+t = write and update')
+
+# with open('./FileHandling.txt', 'r') as file:
+#     content = file.read()
+#     print(content)
+
+class MyClass:
+    x=5
+
+obj1=MyClass()
+print(obj1.x)

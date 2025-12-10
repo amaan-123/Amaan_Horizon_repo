@@ -1,0 +1,2 @@
+'+'open a disk file for updating (reading and writing)
+w+t = write and update
