@@ -1233,3 +1233,847 @@ Use modules to **avoid reinventing code**.
 
 If you want next:
 I can give you a combined exercise that uses all three modules realistically (e.g., generating a dated report, computing values, checking a calendar).
+
+# Q) Only restricting yourself to a comparison with the following code of python, what differences should I notice compared to C#?
+
+```python
+class MyClass:
+  x = 5
+
+p1 = MyClass()
+print(p1.x)
+```
+
+# A) Key differences to notice (Python code vs equivalent C#)
+
+* Class vs instance field semantics:
+  * Python: `x = 5` inside class defines a class attribute (shared by all instances). Access `p1.x` falls back to the class attribute if instance has no `x`.
+  * C#: `public int x = 5;` declared inside a class defines an instance field (each instance gets its own copy). To get a shared field in C#, you must declare `static` (`public static int x = 5;`).
+
+* Syntax and declaration:
+  * Python: no explicit types, no access modifiers, no semicolons, indentation-based blocks.
+  * C#: requires type (`int`), optional access modifier (`public/private`), semicolons, and braces for blocks.
+
+* Object instantiation:
+  * Python: `p1 = MyClass()` calls the class to make a new instance; `__init__` method is optional.
+  * C#: `var p1 = new MyClass();` must use `new` (unless using structs or other patterns).
+
+* Printing:
+  * Python: `print(p1.x)` prints directly.
+  * C#: `Console.WriteLine(p1.x);`.
+
+* Attribute lookup / assignment behavior:
+  * Python: assigning to `p1.x = ...` creates or overrides an instance attribute, leaving the class attribute unchanged. Reading prefers instance attribute first, then class attribute.
+  * C#: assigning `p1.x = ...` writes the instance field (if `x` is instance); if `x` is `static`, you access it via `MyClass.x` (though C# allows `p1.x` but it's discouraged/compiles with a warning).
+
+* Mutability and shared-state gotchas:
+  * Python: mutable class attributes (e.g., lists) are shared across instances and can cause surprising shared-state behavior.
+  * C#: static fields are shared; instance fields are not. No implicit shared instance-field behavior.
+
+* Namespaces and accessibility:
+  * Python uses duck typing; no compile-time type checking.
+  * C# is statically typed with compile-time checks.
+
+* Default values and initialization order:
+  * Python class attributes are evaluated when the class is defined (module import time).
+  * C# field initializers run when an instance is created (for instance fields) or at type initialization for static fields.
+
+Concise C# equivalents:
+
+* Instance field equivalent:
+
+  ```py
+  public class MyClass {
+      public int x = 5;
+  }
+  var p1 = new MyClass();
+  Console.WriteLine(p1.x);
+  ```
+
+* Class/static field equivalent:
+
+  ```py
+  public class MyClass {
+      public static int x = 5;
+  }
+  Console.WriteLine(MyClass.x);
+  ```
+
+# Q) I am learning Python OOP for the first time today
+
+I have some doubts regarding it.
+A. the `__init__()` method:
+
+```python
+# way1: Using init method 
+class Person:
+  def __init__(self, name, age):
+    self.name = name
+    self.age = age
+
+p1 = Person("Emil", 36)
+
+print(p1.name)
+print(p1.age)
+
+del(p1.age) #age is no longer accessible
+
+
+# way2:Without using init method 
+class Person:
+  pass  # keyword for creating empty class
+
+p1 = Person()
+p1.name = "Tobias"
+p1.age = 25
+
+print(p1.name)
+print(p1.age)
+```
+
+Doubts on init:
+
+1. What is this weird naming syntax of underscores?? where else will I see it generally?
+2. what is better: to use init(way1) or not?
+
+B. The `self` parameter:
+
+```python
+class Person:
+  def __init__(self, name):
+    self.name = name
+
+  def greet(self):
+    return "Hello, " + self.name
+
+  def welcome(self):
+    message = self.greet()
+    print(message + "! Welcome to our website.")
+
+p1 = Person("Tobias")
+p1.welcome()
+```
+
+Doubts on `self`:
+
+1. I came to know that it must be the first parameter of any method in the class. But, it is not passed explicitly as an argument by us when we call a method. What's happening?
+2. I know that: The `self` parameter is a reference to the current instance of the class & it is used to access properties and methods that belong to the class. This is so confusing since we write `self` when assigning properties & passing parameters while in the class definition, but we don't see it at all when dealing with the instances/objects. What's up?
+
+Easy, accurate explanations on the above?
+
+# A) Below is the cleanest way to learn Python OOP
+
+**Start from the logic→ then how→ then what.**
+
+---
+
+# A) The `__init__()` Method
+
+## 1. Why the name has double underscores
+
+Names like `__init__`, `__str__`, `__len__`, `__add__`, etc. follow a pattern called **dunder methods** (double-underscore methods).
+
+You will see them whenever Python needs *special behaviour*, such as:
+
+* object creation: `__init__`
+* string representation: `__str__`
+* length: `__len__`
+* operator overloading: `__add__`
+* destruction: `__del__`
+* iteration: `__iter__`
+
+The convention is:
+**Double underscore before and after = Python calls it automatically. You don’t call it directly.**
+
+So `__init__` simply means:
+
+> *“Run this method automatically when the object is created.”*
+
+It is *not* weird—it just signals that the method controls Python’s internal behaviour.
+
+---
+
+## 2. Which is better: using `__init__` or not?
+
+### Way 1 (using `__init__`)
+
+Correct for real applications.
+Why:
+
+* ensures every object starts with required data
+* prevents mistakes (you cannot forget a property)
+* easy to read and maintain
+* standard OOP practice in Python, C#, Java, anywhere
+
+### Way 2 (no `__init__`)
+
+Useful only for:
+
+* prototyping
+* lightweight “bags of attributes”
+* quick testing
+
+The danger:
+You may create objects in inconsistent states:
+
+```python
+p = Person()
+p.name = "Sam"
+# Forgot p.age → error later
+```
+
+Therefore:
+
+**Use `__init__` almost always.
+Avoid no-init classes in serious code.**
+
+---
+
+# B) The `self` Parameter
+
+## 1. Why must `self` be the first parameter?
+
+Because Python does **not** bind methods the same way as C# or Java.
+Python does something explicit:
+
+When you call:
+
+```python
+p1.welcome()
+```
+
+Python secretly translates it to:
+
+```python
+Person.welcome(p1)
+```
+
+So the object (`p1`) is *automatically passed* as the first argument.
+
+That is why `self` exists.
+It is simply the name of that first argument.
+
+**You don’t pass it.
+Python passes it.**
+
+---
+
+## 2. Why do we write `self` in the class but never when calling?
+
+Inside the class:
+`self` means “this specific object”.
+
+Outside the class:
+Python inserts it for you.
+
+Example to illustrate the translation:
+
+### Your code
+
+```python
+p1 = Person("Tobias")
+p1.welcome()
+```
+
+### What Python does
+
+```python
+Person.welcome(p1)
+```
+
+### Therefore
+
+* Inside the method → we access data using `self.name`
+* Outside → we never write `self`, because Python already attached the object to the method
+
+This creates a clean separation:
+
+**Inside a class → talk about the object (`self`)
+Outside a class → call methods normally (`p1.welcome()`)**
+
+---
+
+# Visual Summary (most students find this helps)
+
+```
+Creation:  p1 = Person("Tobias")
+                        |
+                        v
+Automatic call:   __init__(p1, "Tobias")
+Inside init:      self.name = "Tobias"   ← self == p1
+
+Method call:      p1.welcome()
+Behind the scenes: Person.welcome(p1)
+Inside welcome:   self.name == "Tobias"
+```
+
+---
+
+# Final Answers in One Line Each
+
+### A1
+
+`__init__` uses double underscores because Python reserves that naming pattern for special methods that the interpreter calls automatically.
+
+### A2
+
+Using `__init__` is the correct, safe, professional way to initialize objects; skipping it is only useful for temporary or extremely simple classes.
+
+### B1
+
+`self` is automatically passed by Python — calling `p.welcome()` becomes `Person.welcome(p)` behind the scenes.
+
+### B2
+
+You write `self` inside the class because the method needs a reference to the object; you never write it outside because Python inserts it automatically.
+
+---
+
+If you want, I can now show:
+
+* how `self` compares to `this` in C#,
+* how to create multiple constructors (`@classmethod`),
+* how attributes behave (instance vs class variables).
+
+# Q) Why do we have the `del` keyword in python that can delete objects, variables, or parts of a list? What is the practical use of it? Do we have something like that in C# & Javascript?
+
+# A) Below is a refined, clearer, beginner-friendly explanation **+ a clean comparison table**
+
+---
+
+# 1) Easy Explanation: Why Python Has `del`
+
+Think of `del` as a tool that removes **names**, **attributes**, or **container elements**.
+
+It does *not* directly destroy memory.
+It only **removes references**, and Python’s garbage collector frees the object **when no references remain**.
+
+### What `del` is practically used for
+
+1. **Remove a variable name**
+
+   ```python
+   del x
+   ```
+
+   Meaning: “This name no longer points to that object.”
+
+2. **Remove an element from a list or dictionary (in-place)**
+
+   ```python
+   del lst[2]
+   del lst[1:4]
+   del d["key"]
+   ```
+
+3. **Remove an attribute from an object**
+
+   ```python
+   del obj.attr
+   ```
+
+4. **Free large data early in long-running scripts**
+
+   ```python
+   del big_list
+   ```
+
+---
+
+# 2) How C# and JavaScript Compare
+
+Python’s `del` is unusual.
+C# does not have this concept.
+JavaScript has a **delete operator**, but it works only on object properties—not variables.
+
+---
+
+# 3) Clear Visual Table
+
+### **Comparison of Deletion Mechanisms in Python, JavaScript, and C#**
+
+| Action / Concept                            | Python (`del`)                                           | JavaScript (`delete`)                                                             | C# (no `del`)                                                                |
+| ------------------------------------------- | -------------------------------------------------------- | --------------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
+| **Remove variable binding**                 | Yes: `del x` removes the name.                           | No (for `let`, `const`, `var`). Cannot delete local variables.                    | No direct removal. Let variable go out of scope or set to `null`.            |
+| **Remove object property / attribute**      | Yes: `del obj.attr`                                      | Yes: `delete obj.prop`                                                            | No (for normal classes). Only possible on dynamic objects (`ExpandoObject`). |
+| **Remove list/array element**               | Yes: `del lst[i]`, `del lst[a:b]` (in-place).            | `delete arr[i]` leaves a *hole* → not recommended. Use `arr.splice(i,1)` instead. | Use collection APIs: `list.RemoveAt(i)` / `RemoveRange()`.                   |
+| **Remove dictionary entry**                 | Yes: `del d[key]`                                        | Yes (if object is used like a map): `delete obj[key]`                             | Yes: `dictionary.Remove(key)`                                                |
+| **Force memory cleanup**                    | Indirect: removing references allows garbage collection. | Indirect: removing properties drops references.                                   | Indirect: set reference to `null`; GC handles cleanup.                       |
+| **Delete parts of a slice / range quickly** | Yes: `del lst[2:10]`                                     | No; must use `splice`.                                                            | Yes: `RemoveRange`.                                                          |
+| **Delete class members at runtime**         | Yes (attributes only).                                   | Yes (properties only).                                                            | No (static type system).                                                     |
+
+---
+
+# 4) Practical Guidance (Short & Clear)
+
+### In Python
+
+* Use `del` when you want to:
+
+  * delete a name
+  * remove list slices
+  * remove dictionary keys
+  * delete object attributes
+  * free large unused objects earlier
+
+### In JavaScript
+
+* Use `delete` only for removing object properties.
+* Do **not** use `delete` on arrays → use `splice()`.
+
+### In C #
+
+* No `delete`.
+* Set variables to `null` or let them go out of scope.
+* Use collection methods (`RemoveAt`, `RemoveRange`, `Remove`) to modify data structures.
+
+---
+
+If you want, I can also show small code demos side-by-side in all 3 languages for quick memory.
+
+# Q) I know that we can modify the value of properties on objects. But, I want to know if we can modify(assign) a new value to the class' property directly? and is it practical/useful in any situation?
+
+# A) To answer this correctly, you must first separate **instance attributes** from **class attributes**, because Python treats them differently
+
+---
+
+# 1) Can you modify a class’s property directly?
+
+### **Yes — if the attribute is a *class attribute*.**
+
+Example:
+
+```python
+class Person:
+    species = "Human"     # class attribute
+
+print(Person.species)     # Human
+
+Person.species = "Cyborg" # modify class attribute
+print(Person.species)     # Cyborg
+```
+
+And now:
+
+```python
+p1 = Person()
+p2 = Person()
+
+print(p1.species)   # Cyborg
+print(p2.species)   # Cyborg
+```
+
+Why?
+Because both instances *read* this attribute from the class unless they define their own version.
+
+---
+
+# 2) But what happens if you assign to it *from an instance*?
+
+```python
+p1.species = "Alien"
+```
+
+This **does not change the class attribute**.
+Instead, it creates an **instance attribute** that shadows the class attribute.
+
+```
+Person.species → Cyborg
+p1.species     → Alien  (instance-specific)
+p2.species     → Cyborg
+```
+
+---
+
+# 3) Practical usefulness: When should you modify class attributes?
+
+### **Valid, practical use-cases:**
+
+1. **Constants shared by all objects**
+
+   ```python
+   class Config:
+       VERSION = "1.0.0"
+       API_URL = "https://example.com"
+   ```
+
+2. **Shared default settings**
+
+   ```python
+   class Car:
+       wheels = 4
+   ```
+
+3. **Counters shared by all instances**
+
+   ```python
+   class User:
+       count = 0
+       def __init__(self):
+           User.count += 1
+   ```
+
+4. **Changing global behaviour for all future instances**
+
+   ```python
+   Logger.log_level = "DEBUG"
+   ```
+
+### These are **common and practical** in Python
+
+---
+
+# 4) When should you NOT modify class attributes?
+
+### Avoid if the attribute is meant to be per-instance
+
+Example of a mistake:
+
+```python
+class Person:
+    friends = []
+
+p1 = Person()
+p2 = Person()
+
+p1.friends.append("Ali")
+
+print(p2.friends)  # Ali (unexpected!)
+```
+
+Reason: both share the same list → class-level mutation affects all instances.
+
+**Never put mutable objects (list/dict/set) as class attributes unless you truly want them shared.**
+
+---
+
+# 5) Summary Table
+
+| Type of Attribute                          | Defined Where                   | Modified How?                      | Effect                                                          |
+| ------------------------------------------ | ------------------------------- | ---------------------------------- | --------------------------------------------------------------- |
+| **Class attribute**                        | Inside class body               | `Person.attr = value`              | Changes value for the class and all instances (unless shadowed) |
+| **Instance attribute**                     | Inside `__init__` or via object | `p1.attr = value`                  | Changes only that object's version of the attribute             |
+| **Assign via instance to class attribute** | `p1.attr = value`               | Creates a *new* instance attribute | Does **not** modify class attribute                             |
+
+---
+
+# 6) Direct answer to your question
+
+### **Yes, you can assign a new value to class-level attributes directly, and it is practical in real situations.**
+
+Use it for:
+
+* constants
+* shared configuration
+* counters
+* behaviour flags
+* default values for every instance
+
+Avoid it when attributes must be unique per object.
+
+---
+
+If you want, I can show you:
+
+* how class attributes behave in inheritance
+* how to safely use mutable class attributes
+* how to detect when a property is coming from class vs instance
+
+# Q) I read in python that: "The **str**() method is a special method that controls what is returned when the object is printed: For example
+
+What would be the equivalents of the same in C# & Javascript?
+
+```python
+class Person:
+  def __init__(self, name, age):
+    self.name = name
+    self.age = age
+
+  def __str__(self):
+    return f"{self.name} ({self.age})"
+
+p1 = Person("Tobias", 36)
+print(p1)
+```
+
+"
+
+# A) Below is the clean, practical cross-language mapping
+
+---
+
+# 1) Python: `__str__()`
+
+Controls what `print(object)` shows.
+
+```python
+class Person:
+    def __str__(self):
+        return f"{self.name} ({self.age})"
+```
+
+---
+
+# 2) C#: Equivalent → **override `ToString()`**
+
+C# uses `ToString()` for the same purpose.
+
+```csharp
+public class Person
+{
+    public string Name { get; }
+    public int Age { get; }
+
+    public Person(string name, int age)
+    {
+        Name = name;
+        Age = age;
+    }
+
+    public override string ToString()
+    {
+        return $"{Name} ({Age})";
+    }
+}
+
+var p1 = new Person("Tobias", 36);
+Console.WriteLine(p1);      // calls ToString()
+```
+
+### Notes
+
+* Every C# class inherits `ToString()` from `object`.
+* Overriding it is very common for debugging, logging, and display.
+
+---
+
+# 3) JavaScript: Equivalent → **override `toString()` method**
+
+JavaScript also uses `toString()` for string conversion.
+
+```javascript
+class Person {
+  constructor(name, age) {
+    this.name = name;
+    this.age = age;
+  }
+
+  toString() {
+    return `${this.name} (${this.age})`;
+  }
+}
+
+const p1 = new Person("Tobias", 36);
+console.log(String(p1));   // or console.log(p1.toString())
+```
+
+### Notes
+
+* `console.log(p1)` will NOT always call `toString()` automatically.
+  It prints an object representation.
+* But `String(p1)` or concatenation `" " + p1` will call `toString()`.
+
+Example:
+
+```javascript
+console.log("" + p1);   // Tobias (36)
+```
+
+---
+
+# 4) Final Comparison Table
+
+| Language       | Method to Override                  | When It Is Used                                            |
+| -------------- | ----------------------------------- | ---------------------------------------------------------- |
+| **Python**     | `__str__(self)`                     | Used by `print(obj)` and `str(obj)`                        |
+| **C#**         | `public override string ToString()` | Used by `Console.WriteLine(obj)`                           |
+| **JavaScript** | `toString()`                        | Used by `String(obj)`, `" " + obj`, template strings, etc. |
+
+---
+
+# 5) Minimal Summary
+
+* Python → `__str__`
+* C# → `ToString()`
+* JavaScript → `toString()`
+
+All three control the **human-readable** representation of your objects.
+
+If you want, I can also show how the *debug representation* differs (Python `__repr__()`, C# `DebuggerDisplay`, JS `inspect()`).
+
+# Q) What is the difference between using super() vs simply writing the parent's name in the ***init***() as below
+
+```python
+# calling parent's init function and super() function
+class Person:
+  def __init__(self, fname, lname):
+    self.firstname = fname
+    self.lastname = lname
+
+  def printname(self):
+    print(self.firstname, self.lastname)
+
+class Student(Person):
+  def __init__(self, fname, lname):
+    super().__init__(fname, lname)
+
+class Teacher(Person):
+def __init__(self, fname, lname):
+    Person.__init__(self, fname, lname)
+
+x = Student("Mike", "Olsen")
+x.printname()
+
+y = Teacher("John", "Doe")
+y.printname()
+
+```
+
+# A) Below is the clearest, practical distinction between
+
+```
+super().__init__(...)
+```
+
+and
+
+```
+Person.__init__(self, ...)
+```
+
+---
+
+# 1) The **conceptual** difference
+
+### **`super()` = follow the inheritance chain automatically**
+
+Python looks at the class hierarchy (MRO — Method Resolution Order) and calls the **next** class in line.
+
+### **Calling `Parent.__init__()` = hard-coding the parent class**
+
+Python calls exactly that specific class.
+It does **not** follow inheritance order.
+
+---
+
+# 2) Why this matters
+
+## Case A — **Single inheritance (1 parent)**
+
+Both ways *appear* to work the same.
+
+```python
+super().__init__(...)         # dynamic, recommended
+Person.__init__(self, ...)   # hard-coded, works but rigid
+```
+
+But “appears” is the key word — the differences show up the moment your class hierarchy grows.
+
+---
+
+# 3) The real difference appears in **multiple inheritance**
+
+### Example where `super()` works safely
+
+```python
+class A:
+    def __init__(self):
+        print("A init")
+        super().__init__()
+
+class B:
+    def __init__(self):
+        print("B init")
+        super().__init__()
+
+class C(A, B):
+    def __init__(self):
+        print("C init")
+        super().__init__()
+```
+
+Calling:
+
+```python
+C()
+```
+
+Outputs:
+
+```
+C init
+A init
+B init
+```
+
+Each class runs **exactly once**, in correct order, because Python uses the MRO.
+
+---
+
+### Now what happens if you hard-code the parent?
+
+```python
+class A:
+    def __init__(self):
+        print("A init")
+
+class B:
+    def __init__(self):
+        print("B init")
+
+class C(A, B):
+    def __init__(self):
+        A.__init__(self)
+        B.__init__(self)
+```
+
+Problems:
+
+1. You manually call two parents → fragile, error-prone
+2. If hierarchy changes, all child classes must be rewritten
+3. Diamond inheritance becomes a disaster:
+
+   ```
+       A
+      / \
+     B   C
+      \ /
+       D
+   ```
+
+   Without `super()`, A might be called *twice*, or not at all.
+
+---
+
+# 4) Practical guidance (what developers actually do)
+
+| Situation                                   | Recommended                  | Why                                          |
+| ------------------------------------------- | ---------------------------- | -------------------------------------------- |
+| **Basic single inheritance**                | Use `super()`                | Clean, modern, no hard-coding                |
+| **Complex inheritance (multiple)**          | Use `super()` always         | Ensures correct MRO, prevents double-calling |
+| **Calling a specific parent intentionally** | Use `Parent.method(self, …)` | Only when you *really* want to skip the MRO  |
+
+---
+
+# 5) Simple summary
+
+| Feature                               | `super()` | `Parent.__init__(self, ...)`     |
+| ------------------------------------- | --------- | -------------------------------- |
+| Follows class hierarchy (MRO)         | ✔ Yes     | ✘ No                             |
+| Works safely in multiple inheritance  | ✔ Yes     | ✘ Can break                      |
+| Avoids hard-coding class names        | ✔ Yes     | ✘ Hard-coded                     |
+| Calls each parent exactly once        | ✔ Yes     | ✘ Risk of multiple calls         |
+| Allows refactoring class names freely | ✔ Yes     | ✘ Breaks if parent class renamed |
+| Modern Python style                   | ✔ Yes     | ✘ Legacy style                   |
+
+---
+
+# 6) Final Answer (short)
+
+* `super()` is dynamic, safe, MRO-aware, and recommended.
+* Calling the parent directly is rigid and breaks easily in multiple inheritance.
+* They look similar in simple cases, but **super() is the correct practice** in real applications.
+
+---
+
+If you want, I can also explain *how* Python computes the MRO (C3 linearization) with a diagram.
