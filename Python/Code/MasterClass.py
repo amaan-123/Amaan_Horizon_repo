@@ -187,8 +187,130 @@ alphaNumeric1={"a","b","c","d",1,2,3,4,"a","b","c","d",1,2,3,4}
 #     content = file.read()
 #     print(content)
 
-class MyClass:
-    x=5
+# class MyClass:
+#     x=5
+# obj1=MyClass()
+# print(obj1.x)
 
-obj1=MyClass()
-print(obj1.x)
+
+# # Using init method
+# class Person:
+#   def __init__(self, name, age):
+#     self.name = name
+#     self.age = age
+# p1 = Person("Emil", 36)
+# print(p1.name)
+# print(p1.age)
+# del(p1.age) #age is no longer accessible
+# # print(p1.age)
+
+# # Without using init method
+# class Person:
+#   pass  # keyword for creating empty class
+# p1 = Person()
+# p1.name = "Tobias"
+# p1.age = 25
+# print(p1.name)
+# print(p1.age)
+
+# # Class Properties vs Object Properties
+# # Properties defined inside __init__() belong to each object (instance properties).
+# # Properties defined outside methods belong to the class itself (class properties) and are shared by all objects:
+# class Person:
+#   species = "Human" # Class property
+#   def __init__(self, name):
+#     self.name = name # Instance property
+# p1 = Person("Emil")
+# p2 = Person("Tobias")
+# print(p1.name)
+# print(p2.name)
+# print(p1.species)
+# print(p2.species)
+
+# # When should you NOT modify class attributes?
+# # Avoid if the attribute is meant to be per-instance.
+# class Person:
+#     friends = []
+# p1 = Person()
+# p2 = Person()
+# p1.friends.append("Ali")
+# print(p2.friends)  # Ali (unexpected!)
+# # # Never put mutable objects (list/dict/set) as class attributes unless you truly want them shared.
+
+# # The __str__() method is a special method that controls what is returned when the object is printed:
+# # Without the __str__() method:
+# class Person:
+#   def __init__(self, name, age):
+#     self.name = name
+#     self.age = age
+# p1 = Person("Emil", 36)
+# print(p1)
+
+# class Person:
+#   def __init__(self, name, age):
+#     self.name = name
+#     self.age = age
+#   def __str__(self):
+#     return f"{self.name} ({self.age})"    
+# p1 = Person("Tobias", 36)
+# print(p1)
+
+# # Multiple Methods
+# # A class can have multiple methods that work together:
+# class Playlist:
+#   def __init__(self, name):
+#     self.name = name
+#     self.songs = []
+#   def add_song(self, song):
+#     self.songs.append(song)
+#     print(f"Added: {song}")
+#   def remove_song(self, song):
+#     if song in self.songs:
+#       self.songs.remove(song)
+#       print(f"Removed: {song}")
+#   def show_songs(self):
+#     print(f"Playlist '{self.name}':")
+#     for song in self.songs:
+#       print(f"- {song}")
+# my_playlist = Playlist("Favorites")
+# my_playlist.add_song("RAAG RAAG RAAG...")
+# my_playlist.add_song("AAG AAG AAG...")
+# my_playlist.add_song("JAAG JAAG JAAG...")
+# my_playlist.remove_song("AAG AAG AAG...")
+# my_playlist.show_songs()
+
+# # Inheritance
+# # child class will inherit the init function of parent class
+# class Person:
+#   def __init__(self, fname, lname):
+#     self.firstname = fname
+#     self.lastname = lname
+#   def printname(self):
+#     print(self.firstname, self.lastname)
+#   def welcome(self):
+#     print("Welcome", self.firstname, self.lastname)
+
+# class Student(Person):
+#   def __init__(self, fname, lname, year):
+#     super().__init__(fname, lname)
+#     self.graduationyear = year
+#   def welcome(self):
+#     print("Welcome", self.firstname, self.lastname, "to the class of", self.graduationyear)
+# x = Student("Mike", "Olsen", 2024)
+# x.welcome()
+
+# super() = follow the inheritance chain automatically
+# Python looks at the class hierarchy (MRO — Method Resolution Order) and calls the next class in line.
+class A:
+    def __init__(self):
+        print("A init")
+        super().__init__()
+class B:
+    def __init__(self):
+        print("B init")
+        super().__init__()
+class C(A, B):
+    def __init__(self):
+        print("C init")
+        super().__init__()
+C()
