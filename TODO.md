@@ -11,6 +11,9 @@ Markdown tracker with interactive checkboxes for revision and to-do items, and *
 
 ## Immediate TO-DO's
 
+- Python
+  - Less
+    - Implement other sorting algos instead of bubble sort in Exercise-1
 - JS playlist: Chai
   - 25:21 of 35th - Projects
 
