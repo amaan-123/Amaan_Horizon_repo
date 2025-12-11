@@ -2077,3 +2077,259 @@ Problems:
 ---
 
 If you want, I can also explain *how* Python computes the MRO (C3 linearization) with a diagram.
+
+# Q) Above, did you create an object when you wrote: `C()` , why did you mention calling it, as if it's a method?
+
+# A) `C()` **does** create an object
+
+I said “calling `C()`” because in Python the syntax for **creating an object** is the same as **calling a function**.
+
+Here is the correct mental model:
+
+---
+
+# 1) In Python, **a class is callable**
+
+A class is actually a **callable object** (like a function).
+When you write:
+
+```python
+c = C()
+```
+
+Python performs these steps:
+
+1. **Call the class object** → `C()`
+2. Python allocates memory for a new instance
+3. Python calls `C.__init__(new_instance, …)`
+4. Returns the initialized object
+5. Assigns it to `c`
+
+So:
+
+* `C()` = *call to the class object*
+* The result = *a newly created instance*
+
+This is why we phrase it as “calling `C()`”.
+
+---
+
+# 2) Why it looks like a method call
+
+Because Python uses the exact same parentheses syntax:
+
+```python
+function()
+class()
+```
+
+Both trigger execution:
+
+* `function()` executes code in the function
+* `class()` triggers object construction + `__init__`
+
+Thus, “calling” is the right description even though the purpose is **object creation**.
+
+---
+
+# 3) Visual breakdown
+
+```
+C()  
+  → triggers class call
+      → allocates instance
+      → runs __init__
+      → returns instance
+```
+
+So writing:
+
+```python
+C()
+```
+
+is equivalent (conceptually) to:
+
+```python
+instance = C.__new__(C)
+C.__init__(instance)
+return instance
+```
+
+You never see this mechanism because Python hides it behind the function-call syntax.
+
+---
+
+# 4) Short answer
+
+* Yes, `C()` **creates an object**.
+* In Python, creating an object **looks like calling a function**, because classes are callable.
+* That’s why we say “when you call `C()`”, even though the result is an instance.
+
+---
+
+If you'd like, I can also show how this contrasts with C# (`new C()`) and JavaScript (`new C()`).
+
+# Q) I am learning encapsulation in Python and I came across the following behaviour of private vs protected properties:
+
+1. private properties
+
+```python
+# Create a private class property named __age:
+class Person:
+  def __init__(self, name, age):
+    self.name = name
+    self.__age = age # Private property
+p1 = Person("Emil", 25)
+print(p1.name)
+print(p1.__age) # Note: Private properties cannot be accessed directly from outside the class.
+```
+
+2. Protected Properties 
+Python also has a convention for protected properties using a single underscore _ prefix:
+
+Example
+```python
+# Create a protected property: 
+
+class Person:
+  def __init__(self, name, salary):
+    self.name = name
+    self._salary = salary # Protected property
+
+p1 = Person("Linus", 50000)
+print(p1.name)
+print(p1._salary) # Can access, but shouldn't
+# Note: A single underscore _ is just a convention. It tells other programmers that the property is intended for internal use, but Python doesn't enforce this restriction. 
+```
+
+Explain difference?
+```
+
+# A) In Python, **encapsulation exists by convention**, not strict enforcement.
+The key is understanding *what Python truly does* vs *what you are expected to do as a programmer*.
+
+Below is the cleanest explanation of **private vs protected** in Python.
+
+---
+
+# 1) Protected Attributes (single underscore: `_salary`)
+
+### Meaning:
+
+* **Not enforced by Python**
+* **Just a warning**: “This is internal. Don’t use it unless you really know what you’re doing.”
+
+### You *can* still access it:
+
+```python
+obj._salary   # allowed
+```
+
+### Purpose:
+
+* Signals that the attribute is meant for **internal use or subclasses**.
+* Helps maintain clean API boundaries.
+
+### Used for:
+
+* Semi-private internal data
+* Methods/attributes not part of the public interface
+* Something subclasses may override or read
+
+### Quick summary:
+
+> **_name → "protected" by convention only. No restrictions.**
+
+---
+
+# 2) Private Attributes (double underscore: `__age`)
+
+### Meaning:
+
+Python performs **name-mangling**.
+
+What you write:
+
+```python
+self.__age
+```
+
+Python internally renames to:
+
+```python
+self._Person__age
+```
+
+### This prevents:
+
+* accidental access
+* accidental override in subclasses
+
+### But it does **not** provide full security.
+
+Trying to access directly:
+
+```python
+p1.__age   # Error
+```
+
+But accessing via mangled name *works*:
+
+```python
+p1._Person__age   # Works
+```
+
+Why?
+Because the goal is **protection against accidental misuse**, not real hiding.
+
+### Used for:
+
+* Attributes that truly should not be touched outside the class
+* Avoiding naming conflicts in inheritance
+* Encapsulation where stricter boundaries are helpful
+
+### Quick summary:
+
+> **__name → name-mangled; outside access is discouraged and harder but still possible.**
+
+---
+
+# 3) Clean Comparison Table
+
+| Feature                                          | Protected (`_attr`)           | Private (`__attr`)                        |
+| ------------------------------------------------ | ----------------------------- | ----------------------------------------- |
+| Python enforces it?                              | No                            | Yes (via name-mangling)                   |
+| Can access from outside?                         | Yes (normal access)           | Not directly (`p.__age` fails)            |
+| Can still access with workaround?                | Not needed                    | Yes (`p._ClassName__age`)                 |
+| Purpose                                          | “Internal use — please avoid” | “Do not touch — internal & subclass-safe” |
+| Prevents attribute name collision in subclasses? | No                            | Yes                                       |
+| Common use                                       | Semi-private data             | Stronger encapsulation                    |
+
+---
+
+# 4) Short, practical interpretation
+
+### Use `_single_underscore` when:
+
+* Attribute is “internal” but not sensitive
+* You trust developers not to misuse it
+* You want subclasses to have access
+
+### Use `__double_underscore` when:
+
+* You want to avoid naming conflicts
+* You want stronger encapsulation
+* Attribute should not be modified outside the class
+
+---
+
+# 5) Final concise summary
+
+* `_attr` = **protected by convention**. Still accessible.
+* `__attr` = **private via name-mangling**. Harder to access, avoids subclass collisions.
+* Python does encapsulation through **trust and conventions**, not strict access control like Java/C#.
+
+---
+
+If you want, I can show how this compares with C# (`public`, `private`, `protected`) and JavaScript (`#privateFields`).
