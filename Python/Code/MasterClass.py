@@ -299,18 +299,185 @@ alphaNumeric1={"a","b","c","d",1,2,3,4,"a","b","c","d",1,2,3,4}
 # x = Student("Mike", "Olsen", 2024)
 # x.welcome()
 
-# super() = follow the inheritance chain automatically
-# Python looks at the class hierarchy (MRO — Method Resolution Order) and calls the next class in line.
-class A:
+# # super() = follow the inheritance chain automatically
+# # Python looks at the class hierarchy (MRO — Method Resolution Order) and calls the next class in line.
+# class A:
+#     def __init__(self):
+#         print("A init")
+#         super().__init__()
+# class B:
+#     def __init__(self):
+#         print("B init")
+#         super().__init__()
+# class C(A, B):
+#     def __init__(self):
+#         print("C init")
+#         super().__init__()
+# C()
+
+
+# # Polymorphism
+# # Function Polymorphism
+# # An example of a Python function that can be used on different objects is the len() function.
+# mytuple = ("apple", "banana", "cherry")
+# print(len(mytuple))
+
+# thisdict = {
+#   "brand": "Ford",
+#   "model": "Mustang",
+#   "year": 1964
+# }
+# print(len(thisdict))
+
+
+# # Class Polymorphism
+# # Polymorphism is often used in Class methods, where we can have multiple classes with the same method name.
+# class Car:
+#   def __init__(self, brand, model):
+#     self.brand = brand
+#     self.model = model
+#   def move(self):
+#     print("Drive!")
+# class Boat:
+#   def __init__(self, brand, model):
+#     self.brand = brand
+#     self.model = model
+#   def move(self):
+#     print("Sail!")
+# class Plane:
+#   def __init__(self, brand, model):
+#     self.brand = brand
+#     self.model = model
+#   def move(self):
+#     print("Fly!")
+
+# car1 = Car("Ford", "Mustang")       #Create a Car object
+# boat1 = Boat("Ibiza", "Touring 20") #Create a Boat object
+# plane1 = Plane("Boeing", "747")     #Create a Plane object
+
+# for x in (car1, boat1, plane1):
+#   x.move()
+
+# # Inheritance Class Polymorphism
+# # What about classes with child classes with the same name? Can we use polymorphism there?
+# # Yes. If we use the example above and make a parent class called Vehicle, and make Car, Boat, Plane child classes of Vehicle, the child classes inherits the Vehicle methods, but can override them
+# class Vehicle:
+#   def __init__(self, brand, model):
+#     self.brand = brand
+#     self.model = model
+
+#   def move(self):
+#     print("Move!")
+
+# class Car(Vehicle):
+#   pass
+
+# class Boat(Vehicle):
+#   def move(self):
+#     print("Sail!")
+
+# class Plane(Vehicle):
+#   def move(self):
+#     print("Fly!")
+
+# car1 = Car("Ford", "Mustang") #Create a Car object
+# boat1 = Boat("Ibiza", "Touring 20") #Create a Boat object
+# plane1 = Plane("Boeing", "747") #Create a Plane object
+
+# for x in (car1, boat1, plane1):
+#     x.move()
+#     print(f"\r{x.brand} {x.model}")
+
+
+# # Encapsulation
+# # Create a private class property named __age:
+# class Person:
+#   def __init__(self, name, age):
+#     self.name = name
+#     self.__age = age # Private property
+# p1 = Person("Emil", 25)
+# print(p1.name)
+# print(p1.__age) # Note: Private properties cannot be accessed directly from outside the class.
+# # But it does not provide full security.
+# # Because accessing via mangled name works
+# # Because the goal is protection against accidental misuse, not real hiding.
+# p1._Person__age
+# Note: While you can access private properties using the mangled name, it's not recommended. 
+# It defeats the purpose of encapsulation.
+
+# # Use a getter method to access a private property:
+# class Person:
+#   def __init__(self, name, age):
+#     self.name = name
+#     self.__age = age
+#   def get_age(self):
+#     return self.__age
+# p1 = Person("Tobias", 25)
+# print(p1.get_age())
+
+# # To modify a private property, you can create a setter method.
+# # The setter method can also validate the value before setting it:
+# # Example
+# class Person:
+#   def __init__(self, name, age):
+#     self.name = name
+#     self.__age = age
+
+#   def get_age(self):
+#     return self.__age
+
+#   def set_age(self, age):
+#     if age > 0:
+#       self.__age = age
+#     else:
+#       print("Age must be positive")
+
+# p1 = Person("Tobias", 25)
+# print(p1.get_age())
+
+# p1.set_age(26)
+# print(p1.get_age())
+
+# class Student:
+#   def __init__(self, name):
+#     self.name = name
+#     self.__grade = 0
+
+#   def set_grade(self, grade):
+#     if 0 <= grade <= 100:
+#       self.__grade = grade
+#     else:
+#       print("Grade must be between 0 and 100")
+
+#   def get_grade(self):
+#     return self.__grade
+
+#   def get_status(self):
+#     if self.__grade >= 60:
+#       return "Passed"
+#     else:
+#       return "Failed"
+
+# student = Student("Emil")
+# student.set_grade(85)
+# print(student.get_grade())
+# print(student.get_status())
+
+# Accessing Inner Class from the Outside
+# To access the inner class, create an object of the outer class, and then create an object of the inner class:
+# Example
+# Access the inner class and create an object:
+class Outer:
+  def __init__(self):
+    self.name = "Outer"
+
+  class Inner:
     def __init__(self):
-        print("A init")
-        super().__init__()
-class B:
-    def __init__(self):
-        print("B init")
-        super().__init__()
-class C(A, B):
-    def __init__(self):
-        print("C init")
-        super().__init__()
-C()
+      self.name = "Inner"
+
+    def display(self):
+      print("Hello from inner class")
+
+outer = Outer()
+inner = outer.Inner()
+inner.display()
