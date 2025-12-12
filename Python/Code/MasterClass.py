@@ -463,21 +463,181 @@ alphaNumeric1={"a","b","c","d",1,2,3,4,"a","b","c","d",1,2,3,4}
 # print(student.get_grade())
 # print(student.get_status())
 
-# Accessing Inner Class from the Outside
-# To access the inner class, create an object of the outer class, and then create an object of the inner class:
-# Example
-# Access the inner class and create an object:
-class Outer:
-  def __init__(self):
-    self.name = "Outer"
 
-  class Inner:
-    def __init__(self):
-      self.name = "Inner"
+# # Python Inner Classes
+# # An inner class is a class defined inside another class. The inner class can access the properties and methods of the outer class.
+# # Inner classes are useful for grouping classes that are only used in one place, making your code more organized.
+# # Create an inner class:
+# class Outer:
+#   def __init__(self):
+#     self.name = "Outer Class"
+#   class Inner:
+#     def __init__(self):
+#       self.name = "Inner Class"
 
-    def display(self):
-      print("Hello from inner class")
+#     def display(self):
+#       print("This is the inner class")
+# outer = Outer()
+# print(outer.name)
 
-outer = Outer()
-inner = outer.Inner()
-inner.display()
+# # Accessing Inner Class from the Outside
+# # To access the inner class, create an object of the outer class, and then create an object of the inner class:
+# # Example
+# # Access the inner class and create an object:
+# class Outer:
+#   def __init__(self):
+#     self.name = "Outer"
+
+#   class Inner:
+#     def __init__(self):
+#       self.name = "Inner"
+
+#     def display(self):
+#       print("Hello from inner class")
+
+# outer = Outer()
+# inner = outer.Inner()
+# inner.display()
+
+# # Accessing Outer Class from Inner Class
+# # Inner classes in Python do not automatically have access to the outer class instance.
+# # If you want the inner class to access the outer class, you need to pass the outer class instance as a parameter:
+# # Example
+# # Pass the outer class instance to the inner class:
+# class Outer:
+#   def __init__(self):
+#     self.name = "Emil"
+#   class Inner:
+#     def __init__(self, outer):
+#       self.outer = outer
+#     def display(self):
+#       print(f"Outer class name: {self.outer.name}")
+# outer = Outer()
+# inner = outer.Inner(outer)
+# inner.display()
+
+# # Practical Example
+# # Inner classes are useful for creating helper classes that are only used within the context of the outer class:
+# # Use an inner class to represent a car's engine:
+
+# class Car:
+#   def __init__(self, brand, model):
+#     self.brand = brand
+#     self.model = model
+#     self.engine = self.Engine()
+#   class Engine:
+#     def __init__(self):
+#       self.status = "Off"
+#     def start(self):
+#       self.status = "Running"
+#       print("Engine started")
+#     def stop(self):
+#       self.status = "Off"
+#       print("Engine stopped")
+#   def drive(self):
+#     if self.engine.status == "Running":
+#       print(f"Driving the {self.brand} {self.model}")
+#     else:
+#       print("Start the engine first!")
+# car = Car("Toyota", "Corolla")
+# car.drive()
+# car.engine.start()
+# car.drive()
+
+# # Multiple Inner Classes
+# # A class can have multiple inner classes:
+# # Create multiple inner classes:
+# class Computer:
+#   def __init__(self):
+#     self.cpu = self.CPU()
+#     self.ram = self.RAM()
+#   class CPU:
+#     def process(self):
+#       print("Processing data...")
+#   class RAM:
+#     def store(self):
+#       print("Storing data...")
+# computer = Computer()
+# computer.cpu.process()
+# computer.ram.store()
+
+# # Create an Iterator
+# # To create an object/class as an iterator you have to implement the methods __iter__() and __next__() to your object.
+# # As you will learn in the Python Classes/Objects chapter, all classes have a function called __init__(), which allows you to do some initializing when the object is being created.
+# # The __iter__() method acts similar, you can do operations (initializing etc.), but must always return the iterator object itself.
+# # The __next__() method also allows you to do operations, and must return the next item in the sequence.
+# # Example
+# # Create an iterator that returns numbers, starting with 1, and each sequence will increase by one (returning 1,2,3,4,5 etc.):
+# class MyNumbers:
+#   def __iter__(self):
+#     self.a = 1
+#     return self
+#   def __next__(self):
+#     x = self.a
+#     self.a += 1
+#     return x
+# myclass = MyNumbers()
+# myiter = iter(myclass)
+# print(next(myiter))
+# print(next(myiter))
+# print(next(myiter))
+# print(next(myiter))
+# print(next(myiter))
+
+# # StopIteration
+# # Stop after 20 iterations:
+
+# class MyNumbers:
+#   def __iter__(self):
+#     self.a = 1
+#     return self
+
+#   def __next__(self):
+#     if self.a <= 20:
+#       x = self.a
+#       self.a += 1
+#       return x
+#     else:
+#       raise StopIteration
+
+# myclass = MyNumbers()
+# myiter = iter(myclass)
+
+# for x in myiter:
+#   print(x)
+
+# # Generators are functions that can pause and resume their execution.
+# # When a generator function is called, it returns a generator object, which is an iterator.
+# # The code inside the function is not executed yet, it is only compiled. The function only executes when you iterate over the generator.
+# # Example
+# # A simple generator function:
+# def my_generator():
+#   yield 1
+#   yield 2
+#   yield 3
+# for value in my_generator():
+#   print(value)
+
+# # The yield keyword is what makes a function a generator.
+# # When yield is encountered, the function's state is saved, and the value is returned. The next time the generator is called, it continues from where it left off.
+# # Example
+# # Generator that yields numbers:
+
+# def count_up_to(n):
+#   count = 1
+#   while count <= n:
+#     yield count
+#     count += 1
+
+# for num in count_up_to(5):
+#   print(num)
+
+# # Generator for large sequences:
+# def large_sequence(n):
+#   for i in range(n):
+#     yield i
+# # This doesn't create a million numbers in memory
+# gen = large_sequence(1000000)
+# print(next(gen))
+# print(next(gen))
+# print(next(gen))
