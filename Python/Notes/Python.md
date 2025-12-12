@@ -2333,3 +2333,233 @@ Because the goal is **protection against accidental misuse**, not real hiding.
 ---
 
 If you want, I can show how this compares with C# (`public`, `private`, `protected`) and JavaScript (`#privateFields`).
+
+# Q) I read the tutorial text below on iterators & in the example. They define a class with an iter method, but not an init method, and the variable of the iter method is accessed as if it's available to all other methods. Does the same hold true in case of a variable defined in methods other than init & iter? What is the use of iter if we have the for loop to iterate over lists, tuuples, dicts, and sets? 
+
+"Create an Iterator 
+To create an object/class as an iterator you have to implement the methods __iter__() and __next__() to your object.
+
+As you will learn in the Python Classes/Objects chapter, all classes have a function called __init__(), which allows you to do some initializing when the object is being created.
+
+The __iter__() method acts similar, you can do operations (initializing etc.), but must always return the iterator object itself.
+
+The __next__() method also allows you to do operations, and must return the next item in the sequence.
+
+Example
+Create an iterator that returns numbers, starting with 1, and each sequence will increase by one (returning 1,2,3,4,5 etc.):
+
+```py
+class MyNumbers:
+  def __iter__(self):
+    self.a = 1
+    return self
+
+  def __next__(self):
+    x = self.a
+    self.a += 1
+    return x
+
+myclass = MyNumbers()
+myiter = iter(myclass)
+
+print(next(myiter))
+print(next(myiter))
+print(next(myiter))
+print(next(myiter))
+print(next(myiter))
+```"
+
+# A) Below is the clean, practical explanation you need.
+The key is to separate **how Python attributes work** from **how iterators work**.
+
+---
+
+# 1) Why does the example work *without* `__init__()`?
+
+In this example:
+
+```python
+class MyNumbers:
+    def __iter__(self):
+        self.a = 1
+        return self
+```
+
+The line:
+
+```python
+self.a = 1
+```
+
+creates an **instance attribute**.
+
+In Python:
+
+> **Any attribute created anywhere on `self` becomes part of the object.**
+
+So you *don’t* need `__init__()` for attributes to exist.
+You can assign them in any method:
+
+```python
+class Test:
+    def set_x(self):
+        self.x = 10   # valid
+
+    def show_x(self):
+        print(self.x)
+```
+
+As long as `set_x()` is called before `show_x()`, `self.x` will exist.
+
+### Key rule:
+
+**Attributes belong to the object, not to the method where they were created.**
+
+That's why `self.a` created in `__iter__()` is accessible in `__next__()`.
+
+---
+
+# 2) Does this hold true for variables created *in any method*?
+
+Yes — but only if the method is called **before** you try to use the attribute.
+
+Example:
+
+```python
+class Demo:
+    def m1(self):
+        self.value = 42
+    
+    def m2(self):
+        print(self.value)
+
+d = Demo()
+d.m1()
+d.m2()   # OK
+```
+
+But:
+
+```python
+d = Demo()
+d.m2()   # ERROR: value does not exist yet
+```
+
+This is why in real applications, attributes are **always initialized in `__init__()`** — to guarantee they exist.
+
+---
+
+# 3) So then… why doesn’t the iterator example use `__init__()`?
+
+Because it wants `self.a` to reset **every time a new iterator is created**.
+
+`__init__()` runs only once (at object creation).
+`__iter__()` runs every time you do:
+
+```python
+iter(my_object)
+```
+
+Thus:
+
+* `__init__()` → create the object
+* `__iter__()` → prepare/reset iterator state
+
+This allows the same object to be re-iterated correctly.
+
+---
+
+# 4) What is the use of writing custom iterators when Python already has `for` loop, lists, etc.?
+
+The `for` loop **uses iterators internally**.
+
+You need custom iterators when:
+
+### A) You want to generate infinite sequences
+
+Example from tutorial:
+
+```python
+1, 2, 3, 4, ...
+```
+
+A list cannot hold infinite items, but an iterator can generate them on demand.
+
+### B) You want to stream data lazily
+
+* huge files
+* database records
+* network streams
+* logs
+
+Iterators return items *one at a time*, using almost no memory.
+
+### C) You want to define *custom* iteration logic
+
+Examples:
+
+* iterate over a tree (DFS, BFS)
+* iterate over file chunks (4KB each)
+* iterate over custom objects (like rows in your own database class)
+
+### D) You want classes to be usable in `for` loops
+
+If you write:
+
+```python
+for product in ProductList:
+```
+
+Your class must implement:
+
+```python
+__iter__()
+__next__()
+```
+
+---
+
+# 5) Why do built-in types (list, tuple, dict, set) not require this?
+
+Because they *already* implement the iterator protocol internally.
+
+When you do:
+
+```python
+for x in [1,2,3]:
+```
+
+Python actually does:
+
+```python
+it = iter([1,2,3])   # __iter__()
+next(it)             # __next__()
+next(it)
+...
+```
+
+You don’t see this mechanism, but it is always happening under the hood.
+
+---
+
+# 6) Clean Summary Table
+
+| Concept                                        | Meaning                                       | Example                    | Notes                                        |
+| ---------------------------------------------- | --------------------------------------------- | -------------------------- | -------------------------------------------- |
+| Instance attribute created in any method       | Stays with the object                         | `self.a = 10`              | Valid anywhere; exists only after assignment |
+| Why no `__init__()` needed in iterator example | Initialization happens in `__iter__()`        | `self.a = 1`               | Ensures iterator resets each time            |
+| Purpose of `__iter__()`                        | Returns iterator object                       | `return self`              | Called by `iter(obj)`                        |
+| Purpose of `__next__()`                        | Returns next item                             | `return x`                 | Called by `next(obj)`                        |
+| Why custom iterators exist                     | For laziness, infinite data, custom iteration | trees, streams, generators | Built-ins already implement it               |
+
+---
+
+# 7) The cleanest rule to remember
+
+> **Use `__init__()` for object setup.
+> Use `__iter__()` to prepare the object for iteration.
+> Any attribute created on `self` exists across methods, regardless of where it came from.**
+
+---
+
+If you'd like, I can show you the same example rewritten using a **generator** (`yield`), which is far more Pythonic and much easier than manually writing `__iter__` and `__next__`.
