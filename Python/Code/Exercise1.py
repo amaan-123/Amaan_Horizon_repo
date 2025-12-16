@@ -1,28 +1,28 @@
-from typing import List
+# from typing import List
 
-def bubble_sort(arr: List[int]) -> List[int]:
-    """Return a new list with elements sorted ascending using bubble sort.
-    This does not modify the input list.
-    """
-    n = len(arr)
-    out = arr.copy()               # do not mutate caller's list
-    if n < 2:
-        return out
+# def bubble_sort(arr: List[int]) -> List[int]:
+#     """Return a new list with elements sorted ascending using bubble sort.
+#     This does not modify the input list.
+#     """
+#     n = len(arr)
+#     out = arr.copy()               # do not mutate caller's list
+#     if n < 2:
+#         return out
 
-    for i in range(n - 1):        # i = number of completed passes
-        swapped = False
-        for j in range(n - 1 - i):# last i elements are already in place
-            if out[j] > out[j + 1]:
-                out[j], out[j + 1] = out[j + 1], out[j]
-                swapped = True
-        if not swapped:
-            break                # early exit: array already sorted
-    return out
+#     for i in range(n - 1):        # i = number of completed passes
+#         swapped = False
+#         for j in range(n - 1 - i):# last i elements are already in place
+#             if out[j] > out[j + 1]:
+#                 out[j], out[j + 1] = out[j + 1], out[j]
+#                 swapped = True
+#         if not swapped:
+#             break                # early exit: array already sorted
+#     return out
 
-# quick test
-data = [24, -3, 24, -3, 2, 0, 17, 1]
-print(bubble_sort(data))  # -> [-3, -3, 0, 1, 2, 17, 24, 24]
-print(data)                # original unchanged
+# # quick test
+# data = [24, -3, 24, -3, 2, 0, 17, 1]
+# print(bubble_sort(data))  # -> [-3, -3, 0, 1, 2, 17, 24, 24]
+# print(data)                # original unchanged
 
 # # My attempt:
 # input = [24, -3, 24, -3, 2, 0, 17, 1]
@@ -51,3 +51,14 @@ print(data)                # original unchanged
         
 
 # bubble_sort(input)
+# print(input)
+
+# a = [1,2,3]
+# b = a
+# b.append(4)
+# print(a)
+# print(b)
+
+data = [24, -3, 24, -3, 2, 0, 17, 1]
+data.sort()
+print(data)
