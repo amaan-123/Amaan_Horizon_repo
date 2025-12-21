@@ -12,6 +12,9 @@ Markdown tracker with interactive checkboxes for revision and to-do items, and *
 ## Immediate TO-DO's
 
 - Python
+  - Generators onwards in Materclass.md
+  - Revision + Certifications
+  - File Handling + a bit of how LLMs File handle
   - Less
     - Implement other sorting algos instead of bubble sort in Exercise-1
 - JS playlist: Chai
