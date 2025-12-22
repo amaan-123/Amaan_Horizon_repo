@@ -553,7 +553,7 @@ while True:
         break
 ```
 
-2) do-while style with an initial run then while
+1) do-while style with an initial run then while
 
 ```python
 # initial run
@@ -562,7 +562,7 @@ while condition:
     do_something()
 ```
 
-3) use a flag
+1) use a flag
 
 ```python
 first = True
@@ -2170,7 +2170,7 @@ You never see this mechanism because Python hides it behind the function-call sy
 
 If you'd like, I can also show how this contrasts with C# (`new C()`) and JavaScript (`new C()`).
 
-# Q) I am learning encapsulation in Python and I came across the following behaviour of private vs protected properties:
+# Q) I am learning encapsulation in Python and I came across the following behaviour of private vs protected properties
 
 1. private properties
 
@@ -2185,10 +2185,11 @@ print(p1.name)
 print(p1.__age) # Note: Private properties cannot be accessed directly from outside the class.
 ```
 
-2. Protected Properties 
+1. Protected Properties
 Python also has a convention for protected properties using a single underscore _ prefix:
 
 Example
+
 ```python
 # Create a protected property: 
 
@@ -2204,6 +2205,7 @@ print(p1._salary) # Can access, but shouldn't
 ```
 
 Explain difference?
+
 ```
 
 # A) In Python, **encapsulation exists by convention**, not strict enforcement.
@@ -2226,18 +2228,18 @@ Below is the cleanest explanation of **private vs protected** in Python.
 obj._salary   # allowed
 ```
 
-### Purpose:
+### Purpose
 
 * Signals that the attribute is meant for **internal use or subclasses**.
 * Helps maintain clean API boundaries.
 
-### Used for:
+### Used for
 
 * Semi-private internal data
 * Methods/attributes not part of the public interface
 * Something subclasses may override or read
 
-### Quick summary:
+### Quick summary
 
 > **_name → "protected" by convention only. No restrictions.**
 
@@ -2245,7 +2247,7 @@ obj._salary   # allowed
 
 # 2) Private Attributes (double underscore: `__age`)
 
-### Meaning:
+### Meaning
 
 Python performs **name-mangling**.
 
@@ -2261,12 +2263,12 @@ Python internally renames to:
 self._Person__age
 ```
 
-### This prevents:
+### This prevents
 
 * accidental access
 * accidental override in subclasses
 
-### But it does **not** provide full security.
+### But it does **not** provide full security
 
 Trying to access directly:
 
@@ -2283,13 +2285,13 @@ p1._Person__age   # Works
 Why?
 Because the goal is **protection against accidental misuse**, not real hiding.
 
-### Used for:
+### Used for
 
 * Attributes that truly should not be touched outside the class
 * Avoiding naming conflicts in inheritance
 * Encapsulation where stricter boundaries are helpful
 
-### Quick summary:
+### Quick summary
 
 > **__name → name-mangled; outside access is discouraged and harder but still possible.**
 
@@ -2310,13 +2312,13 @@ Because the goal is **protection against accidental misuse**, not real hiding.
 
 # 4) Short, practical interpretation
 
-### Use `_single_underscore` when:
+### Use `_single_underscore` when
 
 * Attribute is “internal” but not sensitive
 * You trust developers not to misuse it
 * You want subclasses to have access
 
-### Use `__double_underscore` when:
+### Use `__double_underscore` when
 
 * You want to avoid naming conflicts
 * You want stronger encapsulation
@@ -2334,16 +2336,16 @@ Because the goal is **protection against accidental misuse**, not real hiding.
 
 If you want, I can show how this compares with C# (`public`, `private`, `protected`) and JavaScript (`#privateFields`).
 
-# Q) I read the tutorial text below on iterators & in the example. They define a class with an iter method, but not an init method, and the variable of the iter method is accessed as if it's available to all other methods. Does the same hold true in case of a variable defined in methods other than init & iter? What is the use of iter if we have the for loop to iterate over lists, tuuples, dicts, and sets? 
+# Q) I read the tutorial text below on iterators & in the example. They define a class with an iter method, but not an init method, and the variable of the iter method is accessed as if it's available to all other methods. Does the same hold true in case of a variable defined in methods other than init & iter? What is the use of iter if we have the for loop to iterate over lists, tuples, dicts, and sets?
 
-"Create an Iterator 
-To create an object/class as an iterator you have to implement the methods __iter__() and __next__() to your object.
+"Create an Iterator
+To create an object/class as an iterator you have to implement the methods **iter**() and **next**() to your object.
 
-As you will learn in the Python Classes/Objects chapter, all classes have a function called __init__(), which allows you to do some initializing when the object is being created.
+As you will learn in the Python Classes/Objects chapter, all classes have a function called **init**(), which allows you to do some initializing when the object is being created.
 
-The __iter__() method acts similar, you can do operations (initializing etc.), but must always return the iterator object itself.
+The **iter**() method acts similar, you can do operations (initializing etc.), but must always return the iterator object itself.
 
-The __next__() method also allows you to do operations, and must return the next item in the sequence.
+The **next**() method also allows you to do operations, and must return the next item in the sequence.
 
 Example
 Create an iterator that returns numbers, starting with 1, and each sequence will increase by one (returning 1,2,3,4,5 etc.):
@@ -2411,7 +2413,7 @@ class Test:
 
 As long as `set_x()` is called before `show_x()`, `self.x` will exist.
 
-### Key rule:
+### Key rule
 
 **Attributes belong to the object, not to the method where they were created.**
 
