@@ -405,3 +405,139 @@ If you want, next we can:
 - add version pinning rules (`~=`, `==`, `>=`)
 - compare `pip freeze` vs curated requirements
 - introduce `pip-tools` (`pip-compile`) for best practice
+
+### Q) I am in my virtual environment & FastAPI is installed in it, but the following line of my file main.py: `from fastapi import FastAPI
+
+` shows error: "Import "fastapi" could not be resolved"
+
+### A) This is **not a FastAPI runtime problem**. It is an **editor / interpreter selection problem**
+
+Python is installed correctly in the virtual environment, but **VS Code is not using that virtual environment for analysis**.
+
+---
+
+## Why this happens (important concept first)
+
+Python imports are resolved by **the interpreter that the editor is configured to use**, not by whatever shell you last activated.
+
+- Your terminal: ✅ virtual environment active
+- VS Code language server (Pylance): ❌ still pointing to a *different* Python interpreter
+- Result: `fastapi` exists at runtime, but **VS Code cannot see it**, so it shows
+
+  > Import "fastapi" could not be resolved
+
+This is one of the most common beginner issues and has **nothing to do with FastAPI itself**.
+
+---
+
+## How to verify the root cause (quick check)
+
+In the VS Code **terminal** (with venv activated), run:
+
+```bash
+python -c "import fastapi; print(fastapi.__version__)"
+```
+
+- If this works → FastAPI is installed correctly.
+- If it fails → then FastAPI is not installed in this venv (unlikely in your case).
+
+Given your description, this command will succeed.
+
+---
+
+## Correct fix (do this exactly)
+
+### Step 1: Select the correct Python interpreter in VS Code
+
+1. Press **Ctrl + Shift + P**
+2. Type: **Python: Select Interpreter**
+3. Choose the interpreter that points to:
+
+```
+.venv\Scripts\python.exe
+```
+
+(Windows + venv = always under `.venv\Scripts\python.exe`)
+
+⚠️ Do **not** choose:
+
+- Global Python
+- Microsoft Store Python
+- Python outside your project folder
+
+---
+
+### Step 2: Reload VS Code window
+
+After selecting the interpreter:
+
+- Press **Ctrl + Shift + P**
+- Run: **Developer: Reload Window**
+
+This restarts Pylance and re-indexes imports.
+
+---
+
+### Step 3: Confirm interpreter binding
+
+Open **any `.py` file**, bottom-right of VS Code should show something like:
+
+```
+Python 3.x.x ('.venv': venv)
+```
+
+If it does, the import error will disappear.
+
+---
+
+## Why activating venv in terminal is not enough
+
+| Component             | Uses venv?                       |
+| --------------------- | -------------------------------- |
+| Terminal execution    | ✅                                |
+| VS Code IntelliSense  | ❌ unless interpreter is selected |
+| Pylance import checks | ❌ unless interpreter is selected |
+
+VS Code **does not infer** the interpreter from `source .venv/...`.
+
+You must explicitly select it.
+
+---
+
+## Final sanity check
+
+Your `main.py` is correct:
+
+```python
+from fastapi import FastAPI
+
+app = FastAPI()
+```
+
+If after selecting the interpreter the error still appears:
+
+```bash
+pip show fastapi
+```
+
+Ensure it shows a path inside `.venv`.
+
+---
+
+## Key learning (remember this going forward)
+
+> **In Python projects, always align three things:**
+>
+> 1. Virtual environment
+> 2. `pip` installs
+> 3. VS Code interpreter
+
+If any one is misaligned, imports will “fail” visually even when code runs.
+
+---
+
+If you want, next we can:
+
+- Lock this with `python.defaultInterpreterPath`
+- Create a clean FastAPI project structure
+- Or explain how `fastapi dev` discovers the app internally
