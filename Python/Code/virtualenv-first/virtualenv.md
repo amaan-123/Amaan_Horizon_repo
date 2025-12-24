@@ -92,13 +92,13 @@ pip install -r requirements.txt
 **Analogy for Understanding:**
 Think of a virtual environment like a **dedicated toolbox** for a specific project. Instead of having one giant, messy shed where every tool you've ever bought is thrown together (the global system), you create a small, organized box that only contains the specific wrenches and screwdrivers needed for one task. This ensures that if you upgrade to a heavy-duty power drill for a new project, it doesn't accidentally damage the delicate work you're doing on an older one.
 
-## Doubts
+# Doubts
 
-### Q) virtual environments help in python
+## Q) virtual environments help in python
 
 My pwd is "/c/Users/User Name/OneDrive - Institute/MOD Documents/SOFTWARES/ALL_Git_Repos/Amaan_Horizon_repo/Python/Code/virtualenv-first". I create a virtual environment using command: `py -m venv .venv`. But, when I try: `source .venv/bin/activate` in git bash from my pwd, it doesn't work. However, when I try: `.venv\Scripts\activate.bat` from my pwd, it works. Correct command for bash?
 
-### A) **Why this happens (root cause)**
+## A) **Why this happens (root cause)**
 
 On **Windows**, a Python virtual environment is created with **different activation scripts for different shells**.
 
@@ -203,11 +203,11 @@ If you want, next we can cover:
 - when to commit or ignore `.venv`
 - how this differs on Linux/macOS
 
-### Q) For learning, I ran the command: `pip install requests pandas flask` and now I want to uninstall all from my virtual environment, deactivate my virtual environment, then create a requirements.txt & requirements-dev.txt, then start my virtual environment & install them
+## Q) For learning, I ran the command: `pip install requests pandas flask` and now I want to uninstall all from my virtual environment, deactivate my virtual environment, then create a requirements.txt & requirements-dev.txt, then start my virtual environment & install them
 
 Is my thought process above correct for learning? Provide the steps with any correction required.
 
-### A) **Why your approach makes sense (learning logic)**
+## A) **Why your approach makes sense (learning logic)**
 
 Yes — your thought process is **correct and good for learning**.
 
@@ -406,11 +406,11 @@ If you want, next we can:
 - compare `pip freeze` vs curated requirements
 - introduce `pip-tools` (`pip-compile`) for best practice
 
-### Q) I am in my virtual environment & FastAPI is installed in it, but the following line of my file main.py: `from fastapi import FastAPI
+## Q) I am in my virtual environment & FastAPI is installed in it, but the following line of my file main.py: `from fastapi import FastAPI
 
 ` shows error: "Import "fastapi" could not be resolved"
 
-### A) This is **not a FastAPI runtime problem**. It is an **editor / interpreter selection problem**
+## A) This is **not a FastAPI runtime problem**. It is an **editor / interpreter selection problem**
 
 Python is installed correctly in the virtual environment, but **VS Code is not using that virtual environment for analysis**.
 
@@ -541,3 +541,232 @@ If you want, next we can:
 - Lock this with `python.defaultInterpreterPath`
 - Create a clean FastAPI project structure
 - Or explain how `fastapi dev` discovers the app internally
+
+## Q) what do I need to write in my requirements.txt if I need fastapi (the standard that comes with unicorn)?
+
+## A) ### Why this matters (logic first)
+
+`requirements.txt` must express **exactly what your project depends on**, not *how* you installed it earlier.
+Pip **does understand extras**, so you should record the dependency **with its extra**, not the individual transitive packages.
+
+This ensures:
+
+- Reproducible installs
+- Correct ASGI server included
+- No manual `uvicorn` step needed later
+
+---
+
+### What to write in `requirements.txt`
+
+```txt
+fastapi[standard]
+```
+
+That is sufficient.
+
+---
+
+### What this implies (important understanding)
+
+- `fastapi[standard]` **pulls in Uvicorn** and other commonly required dependencies.
+- You **do not** list `uvicorn` separately if you rely on the standard extra.
+- Pip will resolve and install everything automatically.
+
+Equivalent (but more verbose) alternative:
+
+```txt
+fastapi
+uvicorn[standard]
+```
+
+Both work, but the first is the **modern, recommended approach**.
+
+---
+
+### Optional: version pinning (best practice)
+
+Once things work, you may later lock versions:
+
+```txt
+fastapi[standard]>=0.110,<1.0
+```
+
+or (after `pip freeze`):
+
+```txt
+fastapi==0.115.0
+```
+
+For learning, **do not over-pin yet**.
+
+---
+
+### Quick verification after install
+
+```bash
+pip install -r requirements.txt
+python -c "import fastapi, uvicorn; print(fastapi.__version__)"
+```
+
+If both import successfully, your setup is correct.
+
+---
+
+### Key takeaway (remember this)
+
+> **Extras belong in `requirements.txt` exactly as installed.**
+> If you installed `fastapi[standard]`, you write `fastapi[standard]`.
+
+If you want, next we can:
+
+- Split `requirements.txt` vs `requirements-dev.txt`
+- Explain why `fastapi dev` works without explicitly calling Uvicorn
+- Set up a clean FastAPI project layout for learning
+
+## Q) I wrote the following code lines in my `database.py` file
+
+```py
+from sqlalchemy import create_engine
+engine = create_engine('sqlite:///:memory:', echo=True)
+```
+
+Error message from Pylance: "Import "sqlalchemy" could not be resolved".
+How do I fix this?
+
+## A) This is the **same class of problem as before**, but with a different dependency
+
+It is **not a SQLAlchemy syntax issue**.
+It is either:
+
+1. SQLAlchemy is **not installed in your virtual environment**, or
+2. VS Code is **not using the virtual environment interpreter**
+
+---
+
+## Why this error occurs (reason first)
+
+`Pylance` resolves imports by looking at **installed packages in the active Python interpreter**.
+
+When it says:
+
+> Import "sqlalchemy" could not be resolved
+
+it means **this interpreter cannot see SQLAlchemy**.
+
+That happens if:
+
+- You never installed SQLAlchemy in this venv, **or**
+- VS Code is pointing to the wrong Python interpreter
+
+---
+
+## Step 1 — Confirm SQLAlchemy is installed (terminal truth)
+
+In the VS Code terminal **with your venv activated**, run:
+
+```bash
+pip show sqlalchemy
+```
+
+### Outcomes
+
+- ❌ Nothing shown → SQLAlchemy is **not installed**
+- ✅ Package details shown → Installed correctly
+
+If not installed, install it now:
+
+```bash
+pip install sqlalchemy
+```
+
+For FastAPI tutorials, this is expected — SQLAlchemy is **not bundled** with FastAPI.
+
+---
+
+## Step 2 — Ensure VS Code is using the venv interpreter
+
+Even if installation is correct, Pylance will still complain if the interpreter is wrong.
+
+Do this **once per project**:
+
+1. **Ctrl + Shift + P**
+2. **Python: Select Interpreter**
+3. Choose:
+
+   ```
+   .venv\Scripts\python.exe
+   ```
+
+4. Reload:
+   **Ctrl + Shift + P → Developer: Reload Window**
+
+---
+
+## Step 3 — Verify resolution
+
+After reload, this should work **without red underline**:
+
+```python
+from sqlalchemy import create_engine
+```
+
+Optional sanity check:
+
+```bash
+python -c "import sqlalchemy; print(sqlalchemy.__version__)"
+```
+
+---
+
+## Why FastAPI didn’t install SQLAlchemy automatically
+
+Important architectural understanding:
+
+- **FastAPI** → web framework
+- **SQLAlchemy** → ORM (optional)
+- **SQLModel** → wrapper over SQLAlchemy (optional)
+
+FastAPI deliberately **does not force a database choice**.
+
+That’s why you must explicitly add SQLAlchemy.
+
+---
+
+## About your engine line (quick correctness note)
+
+Your code is syntactically correct:
+
+```python
+engine = create_engine("sqlite:///:memory:", echo=True)
+```
+
+But conceptually:
+
+- `:memory:` → database exists **only while process is alive**
+- For learning CRUD across requests, you will usually want:
+
+  ```python
+  sqlite:///./test.db
+  ```
+
+You can keep `:memory:` temporarily, but be aware of its behavior.
+
+---
+
+## Key takeaway (lock this in)
+
+> **Every import error in FastAPI so far has had the same root cause:**
+>
+> - Dependency not installed in venv
+> - OR VS Code not bound to that venv
+
+Fix the environment once → imports stop failing.
+
+---
+
+If you want, next we can:
+
+- Finalize `requirements.txt` (FastAPI + SQLAlchemy)
+- Set up a clean `database.py` (engine, SessionLocal, Base)
+- Explain why SQLAlchemy examples often look “boilerplate-heavy” and what each line actually does
