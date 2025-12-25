@@ -6,6 +6,7 @@ from fastapi import Depends, FastAPI, HTTPException, Response, status
 
 from . import models, schemas
 from .database import SessionLocal, engine
+from .hashing import Hash
 
 app = FastAPI()
 
@@ -74,8 +75,9 @@ def update(id, request: schemas.Blog, db: Session = Depends(get_db)):
 
 @app.post("/user", status_code=status.HTTP_201_CREATED)
 def create_user(request: schemas.User, db: Session = Depends(get_db)):
+    hashed_password = Hash.argon2(request.password)
     new_user = models.User(
-        name=request.name, email=request.email, password=request.password
+        name=request.name, email=request.email, password=hashed_password
     )
     db.add(new_user)
     db.commit()
