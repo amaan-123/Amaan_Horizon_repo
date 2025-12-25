@@ -8,11 +8,17 @@ class Blog(BaseModel):
 
 # Say we don't want to show id
 class ShowBlog(Blog):
-    class Config:
-        orm_mode = True
+    pass
+    # class Config:
+    #     orm_mode = True
 
 
 class User(BaseModel):
     name: str
     email: str
     password: str
+
+
+class ShowUser(BaseModel):
+    name: str
+    email: str
