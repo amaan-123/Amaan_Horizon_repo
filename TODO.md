@@ -11,7 +11,19 @@ Markdown tracker with interactive checkboxes for revision and to-do items, and *
 
 ## Immediate TO-DO's
 
+- FastAPI
+  - read + implement FastAPI masterclass.md
+  - depends(DI?), multiple roles doctor+admin+patient
+  - query param
+  - blob azure AI service + FastAPI
+  - what must be the structure of a FastAPI Project based on clean architecture?
+  - How should I map/make connections to WebAPI/MVC concepts to FastAPI for my learning? Is it good to relate via a map from one to the other?
+
+  - what is the general structure + must-haves/most common practical attributes for decorators & their associated functions?
+
+  - must every operation(post/get/put/delete have a return keyword with something returned)?
 - Python
+  - Async funcstions
   - Generators onwards in Materclass.md
   - Revision + Certifications
   - File Handling + a bit of how LLMs File handle

@@ -1,4 +1,4 @@
-fastapi[standard]
+fastapi[standard] # uvicorn
 sqlalchemy
-passlib[argon2]
-# bcrypt
+passlib[argon2] # no bcrypt
+python-jose[cryptography] # pyJWT
