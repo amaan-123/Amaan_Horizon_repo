@@ -13,6 +13,7 @@ Markdown tracker with interactive checkboxes for revision and to-do items, and *
 
 - FastAPI
   - read + implement FastAPI masterclass.md
+  - are all fastapi functions async by default? when to use async vs sync?
   - depends(DI?), multiple roles doctor+admin+patient
   - query param
   - blob azure AI service + FastAPI

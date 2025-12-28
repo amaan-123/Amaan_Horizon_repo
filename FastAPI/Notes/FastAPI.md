@@ -1,14 +1,401 @@
+# [FastAPI Masterclass.md](https://github.com/HorizonDreamVision/fs-mentors-master-classes/blob/maryam/fast-api/007-Python-and-FastAPI/FastAPI-Master-Class.md): Summary
+
+Below is a **fast, exam-oriented, industry-relevant walkthrough** of **everything in your FastAPI MasterClass file**, explained **why → how → what**, with **practical examples you can say aloud in an evaluation**.
+All explanations are grounded in the uploaded file .
+
+---
+
+![Image](https://miro.medium.com/0%2AyGZ5EF4hsMe2JSOu)
+
+![Image](https://miro.medium.com/v2/resize%3Afit%3A1400/1%2AEiy3cso38OVxSlaMq6LYtQ.png)
+
+![Image](https://python-gino.org/docs/en/master/_images/gino-fastapi.svg)
+
+![Image](https://kinsta.com/wp-content/uploads/2022/11/swagger-ui-fastapi-documentation-interface.png)
+
+# 0. What FastAPI really is (1-minute answer)
+
+**Why FastAPI exists**
+
+* Traditional APIs are slow to write, poorly validated, and badly documented.
+* Frontend + mobile teams need **clear contracts** and **auto docs**.
+
+**How FastAPI solves this**
+
+* Uses **Python type hints** as the single source of truth.
+* Built on **Starlette** (speed) and **Pydantic** (validation).
+* Automatically generates Swagger & ReDoc.
+
+**What you get**
+
+* High-performance APIs
+* Zero-effort documentation
+* Fewer runtime bugs
+
+---
+
+# 1. First FastAPI app (Hello World)
+
+```py
+from fastapi import FastAPI
+app = FastAPI()
+
+@app.get("/")
+async def root():
+    return {"message": "Hello World"}
+```
+
+**Why**
+
+* Every API is just *HTTP request → Python function → JSON response*.
+
+**How**
+
+* `@app.get("/")` binds URL + HTTP method to a function.
+* `async` allows non-blocking I/O (DB, network).
+
+**What happens**
+
+* Request → ASGI server → FastAPI → function → JSON.
+
+Run with:
+
+* `fastapi dev main.py` (new dev shortcut)
+* or `uvicorn main:app`
+
+ASGI server used: **Uvicorn**
+
+Docs:
+
+* `/docs` → **Swagger UI**
+* `/redoc` → **ReDoc**
+
+---
+
+# 2. Path Parameters (URLs that carry data)
+
+### Example
+
+```py
+@app.get("/items/{item_id}")
+async def read_item(item_id: int):
+    return {"item_id": item_id}
+```
+
+**Why**
+
+* REST APIs model *resources* using URLs.
+* `/items/10` clearly means “item with ID 10”.
+
+**How**
+
+* `{item_id}` is extracted from the URL.
+* Type hint `int` → auto validation.
+
+**What FastAPI does**
+
+* `/items/abc` → ❌ 422 error automatically.
+* No manual checks needed.
+
+### Fixed vs variable paths
+
+```py
+/users/me     # must be declared BEFORE
+/users/{id}
+```
+
+**Why**
+
+* Routing is matched top-to-bottom.
+
+---
+
+# 3. Query Parameters (filters & options)
+
+URL:
+
+```
+/items?color=red&category=fruit
+```
+
+```py
+@app.get("/items")
+async def list_items(color: str = "red", category: str | None = None):
+```
+
+**Why**
+
+* Query params represent **filters, pagination, search**.
+* They should NOT change the identity of the resource.
+
+**How**
+
+* Anything not in path = query param.
+* Optional with defaults.
+
+**Industry example**
+
+* `/products?minPrice=100&inStock=true`
+* `/users?skip=0&limit=20`
+
+---
+
+# 4. Extra validation with `Annotated`, `Query`, `Path`
+
+```py
+q: Annotated[str | None, Query(max_length=5)]
+```
+
+**Why**
+
+* APIs are contracts.
+* Invalid data must be rejected **before business logic**.
+
+**How**
+
+* Metadata + validation rules live beside the parameter.
+* Validation errors are automatic and consistent.
+
+**What you gain**
+
+* Cleaner controllers
+* Self-documenting APIs
+* Swagger shows constraints automatically
+
+---
+
+# 5. Pydantic Models (core FastAPI skill)
+
+```py
+class ItemFilter(BaseModel):
+    category: str = Field(..., min_length=3)
+    price: float | None = Field(gt=0)
+```
+
+**Why**
+
+* APIs deal with **structured data**, not loose dictionaries.
+* Validation + parsing + documentation in one place.
+
+**How**
+
+* Pydantic converts JSON → Python object.
+* Rejects bad data automatically.
+
+**Industry usage**
+
+* Request bodies
+* Response schemas
+* DB transfer objects (DTOs)
+
+---
+
+# 6. Body Parameters (POST / PUT data)
+
+```py
+@app.post("/items/{item_id}")
+async def add_item(item_id: int, item: Item):
+```
+
+**Why**
+
+* Body = data being created or updated.
+* Path = resource identity.
+
+**How**
+
+* JSON body → Pydantic model.
+* `embed=True` controls JSON nesting.
+
+**HTTP methods**
+
+| Method | Meaning |
+| ------ | ------- |
+| GET    | Read    |
+| POST   | Create  |
+| PUT    | Replace |
+| DELETE | Remove  |
+
+---
+
+# 7. Response Models (security & contracts)
+
+```py
+@app.post("/user/", response_model=UserOut)
+```
+
+**Why**
+
+* Never return sensitive fields (passwords, tokens).
+* Frontend should see only what it needs.
+
+**How**
+
+* Response model **filters output**, even if function returns more.
+
+**Industry example**
+
+* Input: `UserCreate(password)`
+* Output: `UserPublic(no password)`
+
+---
+
+# 8. HTTP Status Codes (professional APIs)
+
+```py
+status_code=status.HTTP_201_CREATED
+```
+
+**Why**
+
+* Clients depend on status codes for logic.
+* 200 vs 201 vs 404 matters.
+
+**Common ones**
+
+* 200 OK
+* 201 Created
+* 400 Bad Request
+* 401 Unauthorized
+* 404 Not Found
+* 500 Server Error
+
+---
+
+# 9. Error Handling with `HTTPException`
+
+```py
+raise HTTPException(status_code=404, detail="Item not found")
+```
+
+**Why**
+
+* Errors are part of normal API flow.
+* Must be explicit and predictable.
+
+**How**
+
+* Stops execution
+* Returns JSON error automatically
+
+---
+
+# 10. Routing with `APIRouter` (real-world structure)
+
+![Image](https://fastapi.tiangolo.com/img/tutorial/bigger-applications/image01.png)
+
+![Image](https://static.wixstatic.com/media/90b6f2_bf6e3476400d4012b6129c98481a8f77~mv2.png/v1/fill/w_980%2Ch_551%2Cal_c%2Cq_90%2Cusm_0.66_1.00_0.01%2Cenc_avif%2Cquality_auto/90b6f2_bf6e3476400d4012b6129c98481a8f77~mv2.png)
+
+![Image](https://media2.dev.to/cdn-cgi/image/width%3D800%2Cheight%3D%2Cfit%3Dscale-down%2Cgravity%3Dauto%2Cformat%3Dauto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Farticles%2Fz83vfznqlsqs9jg0m3jn.png)
+
+**Why**
+
+* Large apps cannot live in `main.py`.
+* Teams work on different modules.
+
+**How**
+
+* Each feature = router.
+* Combined using `include_router()`.
+
+**What evaluators like**
+
+* Clean separation
+* Tags in Swagger
+* Scalable structure
+
+---
+
+# 11. Dependencies (Dependency Injection)
+
+```py
+def common_parameters(...):
+    return {...}
+
+Depends(common_parameters)
+```
+
+**Why**
+
+* Cross-cutting concerns:
+
+  * Auth
+  * Pagination
+  * DB sessions
+  * Logging
+
+**How**
+
+* FastAPI resolves dependencies automatically.
+* Injects results into route.
+
+**Industry analogy**
+
+* Constructor injection in C#/Spring.
+
+---
+
+# 12. SQL Integration (real backend work)
+
+![Image](https://christophergs.com/assets/images/ultimate-fastapi-tut-pt-7/diagram-overall.jpeg)
+
+![Image](https://miro.medium.com/1%2AUSSyCQ6YRECBd3thjOGa7A.png)
+
+![Image](https://sqlmodel.tiangolo.com/assets/images/social/tutorial/fastapi/session-with-dependency.png)
+
+Uses **SQLModel**
+(built on **SQLAlchemy** + Pydantic)
+
+**Why**
+
+* APIs usually persist data.
+* ORM prevents raw SQL bugs.
+
+**How**
+
+* Model = table
+* Session = DB transaction
+* Dependency injects session per request
+
+**Critical industry concept**
+
+* One DB session per request
+* Commit → refresh → return
+
+---
+
+# 30-minute evaluation survival checklist
+
+Say these confidently:
+
+* “FastAPI uses Python type hints to generate validation and OpenAPI docs automatically.”
+* “Pydantic models define request and response contracts.”
+* “Response models prevent data leakage.”
+* “Dependencies enable reusable logic like auth and DB sessions.”
+* “APIRouter helps scale APIs in production.”
+* “SQLModel integrates ORM + validation cleanly.”
+
+---
+
+If you want next:
+
+* **10 most likely viva questions + answers**
+* **One end-to-end CRUD explanation**
+* **Comparison with Flask / Django REST**
+
+Say which one.
+
 # [FastAPI - A python framework | Full Course | Bitfumes](https://www.youtube.com/watch?v=7t2alSnE2-I)
 
 ## **Introduction to FastAPI**
 
 FastAPI is a modern, high-performance Python web framework designed for building APIs quickly. It is built on top of **Starlette** and **Pydantic**, leveraging modern Python features like type hinting.
 
-- **Key Features**:
-  - **Automatic Documentation**: FastAPI automatically generates interactive API documentation using **Swagger UI** and **ReDoc**.
-  - **Speed**: It is extremely fast and supports **asynchronous programming**, a feature often lacking in older frameworks like Django.
-  - **Standards-Based**: It is fully based on **OpenAPI** and **JSON Schema** standards.
-  - **Developer Productivity**: It offers excellent code editor autocomplete support in IDEs like VS Code and PyCharm.
+* **Key Features**:
+  * **Automatic Documentation**: FastAPI automatically generates interactive API documentation using **Swagger UI** and **ReDoc**.
+  * **Speed**: It is extremely fast and supports **asynchronous programming**, a feature often lacking in older frameworks like Django.
+  * **Standards-Based**: It is fully based on **OpenAPI** and **JSON Schema** standards.
+  * **Developer Productivity**: It offers excellent code editor autocomplete support in IDEs like VS Code and PyCharm.
 
 ---
 
@@ -18,19 +405,19 @@ FastAPI is a modern, high-performance Python web framework designed for building
 
 FastAPI requires **Python 3.6 or higher**. It is recommended to use a virtual environment to manage dependencies.
 
-- **Create a virtual environment**:
+* **Create a virtual environment**:
 
 ```bash
 python -m venv fastapi_env
 ```
 
-- **Activate the environment (Mac/Linux)**:
+* **Activate the environment (Mac/Linux)**:
 
 ```bash
 source fastapi_env/bin/activate
 ```
 
-- **Install FastAPI and Uvicorn**:
+* **Install FastAPI and Uvicorn**:
 FastAPI handles the framework logic, while **Uvicorn** serves as the ASGI server to run the application.
 
 ```bash
@@ -71,7 +458,7 @@ def show(id: int):
     return {"data": id}
 ```
 
-- **Order Matters**: FastAPI processes routes sequentially. Specific static routes (like `/blog/unpublished`) must be defined **before** dynamic routes (like `/blog/{id}`) to avoid being captured as parameters.
+* **Order Matters**: FastAPI processes routes sequentially. Specific static routes (like `/blog/unpublished`) must be defined **before** dynamic routes (like `/blog/{id}`) to avoid being captured as parameters.
 
 ### **Query Parameters**
 
@@ -91,7 +478,7 @@ def index(limit: int = 10, published: bool = True, sort: Optional[str] = None):
 
 When sending data from a client to an API, it is sent as a **request body**. FastAPI uses **Pydantic models** to define the structure of this data.
 
-- **Pydantic Schemas**: These classes inherit from `BaseModel` and define the required fields and their types.
+* **Pydantic Schemas**: These classes inherit from `BaseModel` and define the required fields and their types.
 
 ```python
 from pydantic import BaseModel
@@ -125,8 +512,8 @@ Base = declarative_base()
 
 ### **Models vs. Schemas**
 
-- **Models**: These (SQLAlchemy) define the actual **database table structure**.
-- **Schemas**: These (Pydantic) define the **data validation** for requests and responses.
+* **Models**: These (SQLAlchemy) define the actual **database table structure**.
+* **Schemas**: These (Pydantic) define the **data validation** for requests and responses.
 
 ---
 
@@ -159,7 +546,7 @@ if not blog:
 
 **Response models** allow you to control exactly which fields are returned in the API response. This is useful for hiding sensitive data like passwords.
 
-- **ORM Mode**: To allow Pydantic to read data from ORM objects (like SQLAlchemy models), you must set `orm_mode = True` in the schema's configuration class.
+* **ORM Mode**: To allow Pydantic to read data from ORM objects (like SQLAlchemy models), you must set `orm_mode = True` in the schema's configuration class.
 
 ```python
 class ShowBlog(BaseModel):
@@ -179,9 +566,9 @@ Relationships in SQLAlchemy allow you to link tables, such as connecting a blog 
 
 As an application grows, it should be refactored into multiple files using **APIRouter**.
 
-- **Routers**: Group related routes (e.g., users, blogs) into separate modules.
-- **Repositories**: Extract database logic into separate files to keep the router files clean and focused on routing.
-- **Tags and Prefixes**: Use `tags` for better documentation organization and `prefix` to avoid repeating base paths in every route.
+* **Routers**: Group related routes (e.g., users, blogs) into separate modules.
+* **Repositories**: Extract database logic into separate files to keep the router files clean and focused on routing.
+* **Tags and Prefixes**: Use `tags` for better documentation organization and `prefix` to avoid repeating base paths in every route.
 
 ---
 
@@ -189,9 +576,9 @@ As an application grows, it should be refactored into multiple files using **API
 
 FastAPI provides built-in support for **OAuth2 with JWT (JSON Web Tokens)**.
 
-- **Password Hashing**: Use the `passlib` library with the **Bcrypt** algorithm to hash passwords before storing them.
-- **JWT Tokens**: Tokens are generated upon successful login and must be sent in the `Authorization` header as a **Bearer token** for protected routes.
-- **Dependencies**: Use FastAPI's **dependency injection** system to protect routes by requiring a valid token before the path operation function executes.
+* **Password Hashing**: Use the `passlib` library with the **Bcrypt** algorithm to hash passwords before storing them.
+* **JWT Tokens**: Tokens are generated upon successful login and must be sent in the `Authorization` header as a **Bearer token** for protected routes.
+* **Dependencies**: Use FastAPI's **dependency injection** system to protect routes by requiring a valid token before the path operation function executes.
 
 ---
 
@@ -199,8 +586,8 @@ FastAPI provides built-in support for **OAuth2 with JWT (JSON Web Tokens)**.
 
 The application can be deployed to platforms like **Deta** (now Deta Space).
 
-- **Preparation**: Ensure a `requirements.txt` file is present.
-- **CLI**: Use the Deta CLI to create a new "micro" and deploy the code with the `deta new` and `deta deploy` commands.
+* **Preparation**: Ensure a `requirements.txt` file is present.
+* **CLI**: Use the Deta CLI to create a new "micro" and deploy the code with the `deta new` and `deta deploy` commands.
 
 **Think of FastAPI as a high-speed assembly line:** Pydantic acts as the quality control inspector at every station, ensuring every part (data) matches the blueprint (schema) before it moves further down the line or is packaged for the customer.
 
@@ -220,9 +607,9 @@ FastAPI is **only the web framework** — it does not itself serve HTTP requests
 
 ### **What has changed**
 
-- Older tutorials often installed FastAPI and **assumed Uvicorn is present** or taught it separately.
-- Current docs clarify that **FastAPI itself doesn’t include a web server by default** — you *must* install an ASGI server like Uvicorn. ([Real Python][1])
-- When you install via:
+* Older tutorials often installed FastAPI and **assumed Uvicorn is present** or taught it separately.
+* Current docs clarify that **FastAPI itself doesn’t include a web server by default** — you *must* install an ASGI server like Uvicorn. ([Real Python][1])
+* When you install via:
 
   ```bash
   pip install "fastapi[standard]"
@@ -241,9 +628,9 @@ Python packages can define optional extras — sets of related dependencies you 
 
 ### **What you should know**
 
-- `fastapi` alone = only core framework.
-- `fastapi[standard]` = FastAPI + Uvicorn + commonly useful tools. ([fastapi.tiangolo.com][2])
-- There used to be (and still is) `fastapi[all]` historically — this brings *even more* optional dependencies — but docs now recommend `standard` for typical use. ([fastapi.tiangolo.com][3])
+* `fastapi` alone = only core framework.
+* `fastapi[standard]` = FastAPI + Uvicorn + commonly useful tools. ([fastapi.tiangolo.com][2])
+* There used to be (and still is) `fastapi[all]` historically — this brings *even more* optional dependencies — but docs now recommend `standard` for typical use. ([fastapi.tiangolo.com][3])
 
 So in 2021 the tutorial may have shown:
 
@@ -270,7 +657,7 @@ FastAPI added **official CLI commands** (`fastapi dev`, `fastapi run`) to improv
 
 ### **Today**
 
-- **Development (auto-reload):**
+* **Development (auto-reload):**
 
   ```bash
   fastapi dev main.py
@@ -278,7 +665,7 @@ FastAPI added **official CLI commands** (`fastapi dev`, `fastapi run`) to improv
 
   This wraps Uvicorn with auto-reload built in. ([Real Python][1])
 
-- **Production (no reload):**
+* **Production (no reload):**
 
   ```bash
   fastapi run main.py
@@ -304,8 +691,8 @@ FastAPI depends on modern Python features like type hints and async/await. Pytho
 
 ### **Current context**
 
-- You should use at least **Python 3.10** or newer for the best support, type-checking features, and compatibility with recent dependency versions.
-- Pydantic (used for models) is now at **v2**, which has changes versus older minor versions — this slightly affects how models and validation behave (esp. import paths and behaviors).
+* You should use at least **Python 3.10** or newer for the best support, type-checking features, and compatibility with recent dependency versions.
+* Pydantic (used for models) is now at **v2**, which has changes versus older minor versions — this slightly affects how models and validation behave (esp. import paths and behaviors).
   (Not in your current focus, but worth knowing as you expand into models.)
 
 ---
@@ -316,9 +703,9 @@ FastAPI depends on modern Python features like type hints and async/await. Pytho
 
 As FastAPI is now widely used in production, docs and ecosystem tooling have improved:
 
-- More formal **deployment instructions** using Uvicorn/Gunicorn combos.
-- Clarification of when to use a process manager or containerization.
-- More emphasis on environment variables and security practices. ([fastapi.tiangolo.com][5])
+* More formal **deployment instructions** using Uvicorn/Gunicorn combos.
+* Clarification of when to use a process manager or containerization.
+* More emphasis on environment variables and security practices. ([fastapi.tiangolo.com][5])
 
 Your tutorial from 2021 may not cover these modern best practices.
 
@@ -400,8 +787,8 @@ It expects a **dictionary of column → value mappings**.
 
 You are passing:
 
-- `request` → a **Pydantic object** (`schemas.Blog`)
-- SQLAlchemy expects → `dict[str, Any]`
+* `request` → a **Pydantic object** (`schemas.Blog`)
+* SQLAlchemy expects → `dict[str, Any]`
 
 At runtime, SQLAlchemy tries to iterate over `request` as a mapping and crashes → **500 error**.
 
@@ -441,8 +828,8 @@ return "Updated"
 
 ### Why this matters
 
-- **204** means *no response body*
-- Returning content violates HTTP semantics
+* **204** means *no response body*
+* Returning content violates HTTP semantics
 
 This will not usually cause a 500, but it is incorrect.
 
@@ -495,9 +882,9 @@ This separation is intentional and fundamental.
 
 If you want next:
 
-- Why `query.update()` is often discouraged
-- How to update via ORM object instead (safer pattern)
-- How this changes when using SQLModel
+* Why `query.update()` is often discouraged
+* How to update via ORM object instead (safer pattern)
+* How this changes when using SQLModel
 
 ## Q) 1. It was clearly observable that in all the post operations, we also do db.refresh() other than the db.commit() which is common across all operations. When is refresh needed?
 
@@ -515,21 +902,21 @@ Also, explain:
 
 Think in layers:
 
-- **ORM object (Python memory)**
-- **Database row (actual persisted state)**
+* **ORM object (Python memory)**
+* **Database row (actual persisted state)**
 
 `db.commit()`:
 
-- Flushes pending changes
-- Ends the transaction
-- **Does NOT guarantee your Python object reflects the final DB state**
+* Flushes pending changes
+* Ends the transaction
+* **Does NOT guarantee your Python object reflects the final DB state**
 
 Many values are **generated by the database**, not by you:
 
-- Auto-increment `id`
-- Default timestamps (`created_at`)
-- Triggers
-- Computed columns
+* Auto-increment `id`
+* Default timestamps (`created_at`)
+* Triggers
+* Computed columns
 
 After `commit()`, those values exist **only in the database**, not yet in your Python object.
 
@@ -541,9 +928,9 @@ After `commit()`, those values exist **only in the database**, not yet in your P
 db.refresh(blog)
 ```
 
-- Issues a `SELECT` for that row
-- Reloads DB-generated values into the ORM object
-- Syncs Python state with database truth
+* Issues a `SELECT` for that row
+* Reloads DB-generated values into the ORM object
+* Syncs Python state with database truth
 
 ---
 
@@ -563,19 +950,19 @@ return blog
 
 Without `refresh()`:
 
-- `blog.id` may be `None`
-- timestamps may be missing
+* `blog.id` may be `None`
+* timestamps may be missing
 
 ---
 
 ### When `refresh()` is NOT required
 
-- UPDATE operations where:
+* UPDATE operations where:
 
-  - You already know the values
-  - You do not need to return the updated object
-- DELETE operations
-- Bulk operations (`query.update()`)
+  * You already know the values
+  * You do not need to return the updated object
+* DELETE operations
+* Bulk operations (`query.update()`)
 
 In your PUT returning **204 No Content**, `refresh()` is unnecessary.
 
@@ -597,14 +984,14 @@ In your PUT returning **204 No Content**, `refresh()` is unnecessary.
 db.query(Blog).filter(Blog.id == id).update({...})
 ```
 
-- Generates a direct `UPDATE table SET ...`
-- **Bypasses ORM object loading**
-- Bypasses:
+* Generates a direct `UPDATE table SET ...`
+* **Bypasses ORM object loading**
+* Bypasses:
 
-  - ORM validation hooks
-  - Python-side logic
-  - Relationship handling
-  - Events / listeners
+  * ORM validation hooks
+  * Python-side logic
+  * Relationship handling
+  * Events / listeners
 
 ---
 
@@ -612,14 +999,14 @@ db.query(Blog).filter(Blog.id == id).update({...})
 
 #### 1. Skips ORM lifecycle
 
-- No `before_update`
-- No attribute validation
-- No relationship synchronization
+* No `before_update`
+* No attribute validation
+* No relationship synchronization
 
 #### 2. Harder to reason about
 
-- You don’t “see” the object
-- Debugging becomes SQL-centric
+* You don’t “see” the object
+* Debugging becomes SQL-centric
 
 #### 3. Easy to misuse with Pydantic
 
@@ -643,10 +1030,10 @@ This is an **advanced escape hatch**, not beginner-safe.
 
 ### When `query.update()` *is* acceptable
 
-- Bulk updates
-- Admin scripts
-- Performance-critical jobs
-- When ORM hooks are irrelevant
+* Bulk updates
+* Admin scripts
+* Performance-critical jobs
+* When ORM hooks are irrelevant
 
 **Not recommended for typical CRUD APIs.**
 
@@ -660,10 +1047,10 @@ This is the **canonical FastAPI + SQLAlchemy update pattern**.
 
 ### Why this pattern is safer
 
-- Uses ORM identity map
-- Respects validation and relationships
-- Easy to debug
-- Matches mental model: *fetch → modify → save*
+* Uses ORM identity map
+* Respects validation and relationships
+* Easy to debug
+* Matches mental model: *fetch → modify → save*
 
 ---
 
@@ -694,10 +1081,10 @@ def update(
 
 ### Why this works cleanly
 
-- `blog` is a **tracked ORM instance**
-- `setattr` updates in-memory state
-- SQLAlchemy detects changes automatically
-- `commit()` flushes only changed fields
+* `blog` is a **tracked ORM instance**
+* `setattr` updates in-memory state
+* SQLAlchemy detects changes automatically
+* `commit()` flushes only changed fields
 
 No `synchronize_session`, no bulk hacks, no surprises.
 
@@ -740,9 +1127,9 @@ If you follow this model, **500 errors drop dramatically** and your code remains
 
 If you want next:
 
-- A 2-minute explanation script for FastAPI + SQLAlchemy lifecycle
-- Common ORM mistakes evaluators watch for
-- How this pattern changes with async SQLAlchemy
+* A 2-minute explanation script for FastAPI + SQLAlchemy lifecycle
+* Common ORM mistakes evaluators watch for
+* How this pattern changes with async SQLAlchemy
 
 ## Q) Right now these are my dependencies in requirements.txt
 
@@ -770,9 +1157,9 @@ FastAPI’s **official security docs and examples** have historically used **`py
 
 That means:
 
-- Most tutorials
-- Most Q&A answers
-- Most evaluator mental models
+* Most tutorials
+* Most Q&A answers
+* Most evaluator mental models
 
 …still align with `python-jose`.
 
@@ -800,9 +1187,9 @@ FastAPI docs **show PyJWT as an alternative**, not a replacement.
 
 Reasons:
 
-- PyJWT is lighter
-- More general Python adoption
-- Simpler API for minimal JWT use
+* PyJWT is lighter
+* More general Python adoption
+* Simpler API for minimal JWT use
 
 But **FastAPI has NOT deprecated `python-jose`**.
 
@@ -829,9 +1216,9 @@ python-jose[cryptography]
 
 Notes:
 
-- Remove plain `passlib` → use `passlib[argon2]`
-- Remove stray `argon2` line (it’s pulled by passlib extra)
-- bcrypt can stay commented or removed
+* Remove plain `passlib` → use `passlib[argon2]`
+* Remove stray `argon2` line (it’s pulled by passlib extra)
+* bcrypt can stay commented or removed
 
 ---
 
@@ -839,10 +1226,10 @@ Notes:
 
 Switching to PyJWT means:
 
-- Relearning encode/decode API
-- Rewriting tutorial code
-- Debugging subtle claim handling differences
-- Zero evaluation upside
+* Relearning encode/decode API
+* Rewriting tutorial code
+* Debugging subtle claim handling differences
+* Zero evaluation upside
 
 That’s **unnecessary risk 4 days before evaluation**.
 
@@ -860,9 +1247,9 @@ That answer is **technically correct and pragmatic**.
 
 Once the evaluation is over:
 
-- Try PyJWT in a side branch
-- Compare APIs
-- Decide based on project needs
+* Try PyJWT in a side branch
+* Compare APIs
+* Decide based on project needs
 
 At that point, it’s an **optimization**, not a gamble.
 
@@ -870,22 +1257,22 @@ At that point, it’s an **optimization**, not a gamble.
 
 ## Final recommendation (lock this in)
 
-- ❌ Do not switch libraries now
-- ✅ Use `python-jose`
-- ✅ Clean up `requirements.txt`
-- ✅ Focus on correctness and explanation
+* ❌ Do not switch libraries now
+* ✅ Use `python-jose`
+* ✅ Clean up `requirements.txt`
+* ✅ Focus on correctness and explanation
 
 If you want next:
 
-- Minimal JWT utility file (create/verify token)
-- Common JWT mistakes evaluators watch for
-- How to wire JWT auth into Swagger properly
+* Minimal JWT utility file (create/verify token)
+* Common JWT mistakes evaluators watch for
+* How to wire JWT auth into Swagger properly
 
 # General Doubts
 
 ## Q) Teach me Data Validation - Annotated[], Query(), Path(), as in the following code
 
-```main.py
+```py
 from typing import Annotated
 
 from fastapi import FastAPI, Path, Query
@@ -903,7 +1290,7 @@ async def read_items(
     return results
 ```
 
-## A) ### Data validation in FastAPI — *why → how → what*
+## A) Data validation in FastAPI — *why → how → what*
 
 ---
 
@@ -949,8 +1336,8 @@ FastAPI also needs **constraints and documentation** about that data.
 Annotated[int, Path(...)]
 ```
 
-- `int` → the actual type
-- `Path(...)` → validation + documentation rules
+* `int` → the actual type
+* `Path(...)` → validation + documentation rules
 
 Without `Annotated`, you would mix concerns or rely on defaults.
 
@@ -962,9 +1349,9 @@ Without `Annotated`, you would mix concerns or rely on defaults.
 
 Path parameters:
 
-- Are **required** (by URL structure)
-- Must match **exactly** what the path expects
-- Are commonly used as identifiers
+* Are **required** (by URL structure)
+* Must match **exactly** what the path expects
+* Are commonly used as identifiers
 
 FastAPI enforces this strictly.
 
@@ -976,10 +1363,10 @@ item_id: Annotated[int, Path(description="The ID of the item to get")]
 
 **What happens:**
 
-- FastAPI extracts `{item_id}` from the URL
-- Converts it to `int`
-- If conversion fails → `422 Unprocessable Entity`
-- Adds description to Swagger
+* FastAPI extracts `{item_id}` from the URL
+* Converts it to `int`
+* If conversion fails → `422 Unprocessable Entity`
+* Adds description to Swagger
 
 ### Typical constraints you can add
 
@@ -1001,9 +1388,9 @@ Use `Path()` **only** for path variables.
 
 Query params are:
 
-- Optional by default
-- User-controlled
-- Often used for filtering, searching, pagination
+* Optional by default
+* User-controlled
+* Often used for filtering, searching, pagination
 
 Unchecked query values are a common bug source.
 
@@ -1015,10 +1402,10 @@ q: Annotated[str | None, Query(max_length=5)] = None
 
 Breakdown:
 
-- `str | None` → optional parameter
-- `= None` → not required
-- `max_length=5` → validation rule
-- `Query()` → tells FastAPI this comes from the query string
+* `str | None` → optional parameter
+* `= None` → not required
+* `max_length=5` → validation rule
+* `Query()` → tells FastAPI this comes from the query string
 
 ### Behavior
 
@@ -1042,10 +1429,10 @@ q: str | None = None
 
 This works and validates type, but you **cannot**:
 
-- Add length constraints
-- Add regex rules
-- Add documentation
-- Add examples
+* Add length constraints
+* Add regex rules
+* Add documentation
+* Add examples
 
 `Query()` exists to solve this.
 
@@ -1101,10 +1488,10 @@ FastAPI serializes the response to JSON automatically.
 
 ## Mental model to remember
 
-- **Type hint** → data shape
-- **Annotated** → attach rules to the type
-- **Path / Query** → where data comes from
-- **Validation happens before your function runs**
+* **Type hint** → data shape
+* **Annotated** → attach rules to the type
+* **Path / Query** → where data comes from
+* **Validation happens before your function runs**
 
 If validation fails, **your function is never executed**.
 
@@ -1116,10 +1503,10 @@ If validation fails, **your function is never executed**.
 
 If you want, next logical steps are:
 
-- Required vs optional queries
-- `Query(..., alias=...)`
-- Regex and numeric constraints
-- When to stop using `Query` and switch to Pydantic models
+* Required vs optional queries
+* `Query(..., alias=...)`
+* Regex and numeric constraints
+* When to stop using `Query` and switch to Pydantic models
 
 ## Q) Give brief answer for
 
@@ -1133,26 +1520,26 @@ Stop using `Query()` when request data becomes **structured, related, or reusabl
 
 Use **`Query()`** when:
 
-- You have **1–3 simple, independent values**
-- Parameters are **flat** (no nesting)
-- Logic is trivial (filters, search text, pagination)
-- The data is **endpoint-specific**
+* You have **1–3 simple, independent values**
+* Parameters are **flat** (no nesting)
+* Logic is trivial (filters, search text, pagination)
+* The data is **endpoint-specific**
 
 Use **Pydantic models** when:
 
-- You have **many parameters** (readability suffers)
-- Fields are **logically related** (belong to one concept)
-- You need **cross-field validation**
-- The same data shape is **reused across endpoints**
-- The request body is **JSON**, not just query params
-- Validation rules become **complex**
+* You have **many parameters** (readability suffers)
+* Fields are **logically related** (belong to one concept)
+* You need **cross-field validation**
+* The same data shape is **reused across endpoints**
+* The request body is **JSON**, not just query params
+* Validation rules become **complex**
 
 **Key signal to switch:**
 If you think *“this feels like an object”*, it **is** a model.
 
 **Example switch point:**
 
-- `?q=&page=&size=&sort=&min_price=&max_price=` → **Pydantic model**
+* `?q=&page=&size=&sort=&min_price=&max_price=` → **Pydantic model**
 
 **Mental model:**
 `Query()` = individual knobs
