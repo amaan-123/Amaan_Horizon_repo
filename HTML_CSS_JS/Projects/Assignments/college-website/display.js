@@ -9,14 +9,29 @@ console.log('Retrieved form data from localStorage:', formData);
 const displayDiv = document.getElementById('displayData');
 if (formData) {
     console.log('Form data exists, displaying it on the page');
-    displayDiv.innerHTML = `
-        <p><strong>Full Name:</strong> ${formData.fullName}</p>
-        <p><strong>Email:</strong> ${formData.email}</p>
-        <p><strong>Phone:</strong> ${formData.phone}</p>
-        <p><strong>Date of Birth:</strong> ${formData.dob}</p>
-        <p><strong>Course:</strong> ${formData.course}</p>
-        <p><strong>Address:</strong> ${formData.address}</p>
-    `;
+
+    // Clear any existing content
+    displayDiv.innerHTML = '';
+
+    // Helper function to create a paragraph with a label and a text value
+    function addField(labelText, valueText) {
+        const p = document.createElement('p');
+        const strong = document.createElement('strong');
+        strong.textContent = labelText;
+        p.appendChild(strong);
+        // Add a space between the label and the value
+        p.appendChild(document.createTextNode(' '));
+        // Add the user-provided value as plain text to avoid interpreting it as HTML
+        p.appendChild(document.createTextNode(valueText != null ? String(valueText) : ''));
+        displayDiv.appendChild(p);
+    }
+
+    addField('Full Name:', formData.fullName);
+    addField('Email:', formData.email);
+    addField('Phone:', formData.phone);
+    addField('Date of Birth:', formData.dob);
+    addField('Course:', formData.course);
+    addField('Address:', formData.address);
 
     // Clear the form data from localStorage after displaying it
     localStorage.removeItem('formData'); // Use this to clear only the form data
